@@ -1,0 +1,1 @@
+# reportportal-testcafe-plugin
