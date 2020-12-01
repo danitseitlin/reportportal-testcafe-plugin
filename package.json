@@ -13,6 +13,7 @@
     "lib"
   ],
   "scripts": {
+    "build": "tsc --module commonjs src/index.ts",
     "test": "gulp test",
     "publish-please": "publish-please",
     "prepublish": "publish-please guard"
@@ -40,8 +41,9 @@
     "testcafe": "^1.0.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.4",
+    "babel-runtime": "^6.26.0",
     "cli-argument-parser": "^0.3.4",
-    "reportportal-js-client": "^2.1.0"
+    "reportportal-js-client": "^2.1.0",
+    "ts-node": "^9.0.0"
   }
 }

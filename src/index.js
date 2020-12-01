@@ -1,6 +1,7 @@
-import { ReportPortal } from './report-portal';
+/* eslint-disable no-undefined */
+const RP = require('./report-portal');
 
-module.exports = function () {
+exports['default'] = () => {
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
             this.startTime = startTime;
@@ -9,21 +10,22 @@ module.exports = function () {
             this.write(`Running tests in: ${userAgents}`)
                 .newline()
                 .newline();
-            this.client = new ReportPortal();
-            this.client.connect();
-            this.client.startLaunch();
+            
+            this.client = new RP();
+            await this.client.startLaunch();
         },
 
-        async reportFixtureStart (name, path, meta) {
+        async reportFixtureStart (name, /*path, meta*/) {
             this.currentFixtureName = name;
-            this.client.startTest()
+            await this.client.startTest();
         },
 
-        async reportTestDone (name, testRunInfo, meta) {
+        async reportTestDone (name, testRunInfo, /*meta*/) {
             const errors      = testRunInfo.errs;
             const warnings    = testRunInfo.warnings;
-            const hasErrors   = !!errors.length;
-            const hasWarnings = !!warnings.length;
+            const hasErrors   = errors !== undefined ? !!errors.length : false;
+            const hasWarnings = warnings !== undefined ? !!warnings.length : false;
+            // eslint-disable-next-line no-nested-ternary
             const result = testRunInfo.skipped ? 'skipped' : hasErrors ? 'failed' : 'passed';
 
             name = `${this.currentFixtureName} - ${name}`;
@@ -35,22 +37,22 @@ module.exports = function () {
             if (hasErrors) {
                 this.newline().write('Errors:');
 
-                errors.forEach(error => {
+                errors.forEach(async error => {
                     this.newline().write(this.formatError(error));
-                    this.client.sendTestLogs(this.client.curTest.tmpId, 'error', this.formatError(error))
+                    await this.client.sendTestLogs(await this.client.curTest.tmpId, 'error', this.formatError(error));
                 });
-                this.client.sendTestLogs(this.client.curTest.tmpId, 'error', errors)
+                await this.client.sendTestLogs(await this.client.curTest.tmpId, 'error', errors);
             }
 
             if (hasWarnings) {
                 this.newline().write('Warnings:');
 
-                warnings.forEach(warning => {
+                warnings.forEach(async warning => {
                     this.newline().write(warning);
-                    this.client.sendTestLogs(this.client.curTest.tmpId, 'warning', this.formatError(error))
+                    await this.client.sendTestLogs(await this.client.curTest.tmpId, 'warning', this.formatError(warning));
                 });
             }
-            this.client.finishTest(this.client.curTest.tmpId, result);
+            await this.client.finishTest(await this.client.curTest.tmpId, result);
         },
 
         async reportTaskDone (endTime, passed, warnings, result) {
@@ -65,7 +67,9 @@ module.exports = function () {
 
             this.write(footer)
                 .newline();
-            this.client.finishLaunch()
+            await this.client.finishLaunch();
         }
     };
 };
+
+module.exports = exports['default'];
