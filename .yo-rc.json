@@ -1,0 +1,8 @@
+{
+  "generator-testcafe-reporter": {
+    "promptValues": {
+      "githubUsername": "danitseitlin",
+      "website": "https://github.com/danitseitlin"
+    }
+  }
+}
