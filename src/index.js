@@ -17,42 +17,47 @@ exports['default'] = () => {
 
         async reportFixtureStart (name, /*path, meta*/) {
             this.currentFixtureName = name;
-            await this.client.startTest();
+            await this.client.startSuite(name);
         },
 
         async reportTestDone (name, testRunInfo, /*meta*/) {
+            await this.client.startTest(name);
             const errors      = testRunInfo.errs;
             const warnings    = testRunInfo.warnings;
             const hasErrors   = errors !== undefined ? !!errors.length : false;
             const hasWarnings = warnings !== undefined ? !!warnings.length : false;
+
+            console.log(hasErrors);
+            console.log(hasWarnings);
             // eslint-disable-next-line no-nested-ternary
             const result = testRunInfo.skipped ? 'skipped' : hasErrors ? 'failed' : 'passed';
 
             name = `${this.currentFixtureName} - ${name}`;
 
-            const title = `${result} ${name}`;
+            const title = `(${result}) ${name}`;
 
             this.write(title);
 
             if (hasErrors) {
                 this.newline().write('Errors:');
 
-                errors.forEach(async error => {
+                errors.forEach(error => {
                     this.newline().write(this.formatError(error));
-                    await this.client.sendTestLogs(await this.client.curTest.tmpId, 'error', this.formatError(error));
+                    this.client.sendTestLogs(this.client.curTest.tempId, 'error', this.formatError(error));
                 });
-                await this.client.sendTestLogs(await this.client.curTest.tmpId, 'error', errors);
             }
 
             if (hasWarnings) {
                 this.newline().write('Warnings:');
 
-                warnings.forEach(async warning => {
+                warnings.forEach(warning => {
                     this.newline().write(warning);
-                    await this.client.sendTestLogs(await this.client.curTest.tmpId, 'warning', this.formatError(warning));
+                    this.client.sendTestLogs(this.client.curTest.tempId, 'warning', this.formatError(warning));
                 });
             }
-            await this.client.finishTest(await this.client.curTest.tmpId, result);
+            console.log(this.client.curTest.tempId);
+            console.log(result);
+            await this.client.finishTest(await this.client.curTest.tempId, result);
         },
 
         async reportTaskDone (endTime, passed, warnings, result) {
@@ -67,6 +72,7 @@ exports['default'] = () => {
 
             this.write(footer)
                 .newline();
+            await this.client.finishSuite(this.client.suite.tempId, 'passed');
             await this.client.finishLaunch();
         }
     };
