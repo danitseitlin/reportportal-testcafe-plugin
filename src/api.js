@@ -5,71 +5,88 @@ class API {
 
     constructor (options) {
         this.client = axios.create({
-            protocol: options.protocol,
-            baseURL:  `${options.domain}`,
-            headers:  { 'Content-type': 'application/json' }
+            baseURL: `${options.protocol}://${options.domain}${options.apiPath}`,
+            headers: { 'Content-type': 'application/json', 'Authorization': `Bearer ${options.token}` }
         });
     }
 
     async checkConnect () {
-        return await this.client.get('/');
+        try {
+            return this.handleResponse(await this.client.get('/user'));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
     }
 
     async createLaunch (projectName, options) {
-        return await this.client.post(`/api/v1/${projectName}/launch`, options);
+        try {
+            return this.handleResponse(await this.client.post(`/${projectName}/launch`, options));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
     }
 
     async finishLaunch (projectName, launchId, options) {
-        ///v1/{projectName}/launch/{launchId}/finish
-        return await this.client.put(`/api/v1/${projectName}/launch/${launchId}/finish`, options);
-        //console.log('running finishLaunch');
-        //console.log(this.launch.tempId);
-        //await this.client.finishLaunch(this.launch.tempId, {
-        //    endTime: await this.client.helpers.now()
-        //});
+        try {
+            return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/finish`, options));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
     }
 
     async forceStopLaunch (projectName, launchId, options) {
-        ///v1/{projectName}/launch/{launchId}/finish
-        return await this.client.put(`/api/v1/${projectName}/launch/${launchId}/stop`, options);
-        //console.log('running finishLaunch');
-        //console.log(this.launch.tempId);
-        //await this.client.finishLaunch(this.launch.tempId, {
-        //    endTime: await this.client.helpers.now()
-        //});
+        try {
+            return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/stop`, options));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
     }
 
     async createTestItem (projectName, options) {
-        //console.log('running startTest');
-        //this.curTest = await this.client.startTestItem({
-        //    name:      name,
-        //    startTime: await this.client.helpers.now(),
-        //    type:      'TEST'
-        //}, this.launch.tempId, this.suite.tempId);
-        return await this.client.post(`/api/v1/${projectName}/item`, options);
+        try {
+            return this.handleResponse(await this.client.post(`/${projectName}/item`, options));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
     }
 
     async finishTestItem (projectName, testItemId, options) {
-        ///v1/{projectName}/item/{testItemId}
-        return await this.client.put(`/api/v1/${projectName}/item/${testItemId}`, options);
-        //console.log(`running finishTest, testId: ${testId}, status: ${status}`);
-        //await this.client.finishTestItem(testId, {
-        //    status: status
-        //});
+        try {
+            return this.handleResponse(await this.client.put(`/${projectName}/item/${testItemId}`, options));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
     }
 
-    async sendLogs (projectName, options) { ///v1/{projectName}/log
-        return await this.client.post(`/api/v1/${projectName}/log`, options);
-        //console.log('running sendTestLogs');
-        //await this.client.sendLog(testId, {
-        //    level:   level,
-        //    message: message,
-        //    time:    await this.client.helpers.now()
-        //});
+    async sendLog (projectName, options) { ///v1/{projectName}/log
+        try {
+            console.log('Sending logs..');
+            return this.handleResponse(await this.client.post(`/${projectName}/log`, options));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
     }
 
     now () {
         return new Date().valueOf();
+    }
+
+    handleResponse (response) {
+        return response.data;
     }
 }
 

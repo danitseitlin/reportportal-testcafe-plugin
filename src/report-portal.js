@@ -4,72 +4,60 @@ const Arguments = require('cli-argument-parser').cliArguments;
 class ReportPortal { 
     constructor () {
         console.log(Arguments);
+        if (!Arguments.rdomain)
+            throw new Error('Missing argument --rdomain');
+        if (!Arguments.rtoken)
+            throw new Error('Missing argument --rtoken');
+        if (!Arguments.rlaunch)
+            throw new Error('Missing argument --rlaunch');
+        if (!Arguments.rproject)
+            throw new Error('Missing argument --rproject');
         this.client = new RPClient({
             protocol: 'https',
             domain:   Arguments.rdomain,
-            //token:    Arguments.rtoken,
-            //endpoint: `https://${Arguments.rdomain}/api/v2`,
-            //launch:   Arguments.rlaunch,
-            //project:  Arguments.rproject,
-            //debug:    true
+            apiPath:  '/api/v1',
+            token:    Arguments.rtoken,
         });
         this.connected = true;
-        console.log('connecting....');
-        this.client.checkConnect().then((response) => {
+        this.client.checkConnect().then(() => {
             this.connected = true;
-            console.log('You have successfully connected to the server.');
-            console.log(`You are using an account: ${response.fullName}`);
         }, (error) => {
-            console.log('Error connection to server');
+            console.log('Error connection to the Report Portal server');
             console.dir(error);
             this.connected = false;
         });
         this.launchName = Arguments.rlaunch;
         this.projectName = Arguments.rproject;
-    }
-
-    async connect () {
-        await this.client.checkConnect().then((response) => {
-            this.connected = true;
-            console.log('You have successfully connected to the server.');
-            console.log(`You are using an account: ${response.fullName}`);
-        }, (error) => {
-            console.log('Error connection to server');
-            console.dir(error);
-            this.connected = false;
-        });
+        //this.noFixture = Arguments
     }
 
     async startLaunch () {
         if (!this.connected) throw Error('Report portal is not connected!');
         this.launch = await this.client.createLaunch(this.projectName, {
+            name:        this.launchName,
             startTime:   this.client.now(),
             description: `Running ${this.launchName} tests`,
         });
-        //this.suite = this.createSuite(this.launch.tempId);
     }
 
     async startSuite (name) {
-        console.log(`running startSuite, launchId: ${this.launch.tempId}`);
-        this.suite = await this.client.createTestItem(this.projectName, this.launch.tempId, {
-            name:      name,
-            startTime: this.client.now(),
-            type:      'SUITE'
+        this.suite = await this.client.createTestItem(this.projectName, {
+            launchUuid: this.launch.id,
+            name:       name,
+            startTime:  this.client.now(),
+            type:       'SUITE'
         });
     }
 
     async finishLaunch () {
-        console.log('running finishLaunch');
-        console.log(this.launch.tempId);
-        await this.client.finishLaunch(this.launch.tempId, {
+        await this.client.finishLaunch(this.projectName, this.launch.id, {
             endTime: this.client.now()
         });
     }
 
     async startTest (name) {
-        console.log('running startTest');
-        this.curTest = await this.client.createTestItem({
-            launchUuid: this.launch.tempId,
+        this.curTest = await this.client.createTestItem(this.projectName, {
+            launchUuid: this.launch.id,
             name:       name,
             startTime:  this.client.now(),
             type:       'TEST'
@@ -77,29 +65,29 @@ class ReportPortal {
     }
 
     async finishTest (testId, status) {
-        console.log(`running finishTest, testId: ${testId}, status: ${status}`);
         await this.client.finishTestItem(this.projectName, testId, {
-            launchUuid: this.launch.tempId,
-            status:     status
+            launchUuid: this.launch.id,
+            status:     status,
+            endTime:    this.client.now()
         });
     }
 
     async finishSuite (suiteId, status) {
-        console.log(`running finishSuite, suiteId: ${suiteId}, status: ${status}`);
         await this.client.finishTestItem(this.projectName, suiteId, {
-            launchUuid: this.launch.tempId,
-            status:     status
+            launchUuid: this.launch.id,
+            status:     status,
+            endTime:    this.client.now()
         });
     }
 
     async sendTestLogs (testId, level, message) {
-        console.log('running sendTestLogs');
-        await this.client.sendLog(this.projectName, {
-            launchUuid: this.launch.tempId,
+        console.log(await this.client.sendLog(this.projectName, {
+            itemUuid:   testId,
+            launchUuid: this.launch.id,
             level:      level,
             message:    message,
             time:       this.client.now()
-        });
+        }));
     }
 }
 
