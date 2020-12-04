@@ -3,7 +3,6 @@ const Arguments = require('cli-argument-parser').cliArguments;
 
 class ReportPortal { 
     constructor () {
-        console.log(Arguments);
         if (!Arguments.rdomain)
             throw new Error('Missing argument --rdomain');
         if (!Arguments.rtoken)
@@ -28,7 +27,10 @@ class ReportPortal {
         });
         this.launchName = Arguments.rlaunch;
         this.projectName = Arguments.rproject;
-        //this.noFixture = Arguments
+        if (Arguments.rsuite) {
+            this.suiteName = Arguments.rsuite;
+            this.suiteStatus = 'passed';
+        }
     }
 
     async startLaunch () {
@@ -38,6 +40,8 @@ class ReportPortal {
             startTime:   this.client.now(),
             description: `Running ${this.launchName} tests`,
         });
+        if (this.suiteName)
+            await this.startSuite(this.suiteName);
     }
 
     async startSuite (name) {
@@ -50,21 +54,31 @@ class ReportPortal {
     }
 
     async finishLaunch () {
+        if (this.suiteName)
+            await this.finishSuite(this.suite.id, this.suiteStatus);
         await this.client.finishLaunch(this.projectName, this.launch.id, {
             endTime: this.client.now()
         });
     }
 
     async startTest (name) {
-        this.curTest = await this.client.createTestItem(this.projectName, {
+        const options = {
             launchUuid: this.launch.id,
             name:       name,
             startTime:  this.client.now(),
             type:       'TEST'
-        });
+        };
+
+        if (this.suiteName)
+            this.curTest = await this.client.createChildTestItem(this.projectName, this.suite.id, options);
+        else
+            this.curTest = await this.client.createTestItem(this.projectName, options);
     }
 
     async finishTest (testId, status) {
+        if (this.suiteName && status === 'failed')
+            this.suiteStatus = 'failed';
+
         await this.client.finishTestItem(this.projectName, testId, {
             launchUuid: this.launch.id,
             status:     status,
@@ -80,14 +94,14 @@ class ReportPortal {
         });
     }
 
-    async sendTestLogs (testId, level, message) {
-        console.log(await this.client.sendLog(this.projectName, {
+    async sendTestLogs (testId, level, message, time = this.client.now()) {
+        await this.client.sendLog(this.projectName, {
             itemUuid:   testId,
             launchUuid: this.launch.id,
             level:      level,
             message:    message,
-            time:       this.client.now()
-        }));
+            time:       time
+        });
     }
 }
 

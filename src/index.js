@@ -5,19 +5,19 @@ const RP = require('./report-portal');
 exports['default'] = () => {
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
-            this.log = [];
-
-            console.log = function (d) {
-                //this.log.push(d);
-                process.stdout.write(d + '\n');
-            };
             this.startTime = startTime;
             this.testCount = testCount;
-            //const logs = [`Running tests in: ${userAgents}\n\n`];
             
-            this.write(`Running tests in: ${userAgents}`)
-                .newline()
+            this.setIndent(1)
+                .useWordWrap(true)
+                .write(this.chalk.bold('Running tests in:'))
                 .newline();
+
+            userAgents.forEach(ua => {
+                this
+                    .write(`- ${this.chalk.blue(ua)}`)
+                    .newline();
+            });
             
             this.client = new RP();
             await this.client.startLaunch();
@@ -25,79 +25,140 @@ exports['default'] = () => {
 
         async reportFixtureStart (name, /*path, meta*/) {
             this.currentFixtureName = name;
-            console.log(`${this.chalk.gray('-')} Fixture '${name}'`);
-            //await this.client.startSuite(name);
+            this.setIndent(1)
+                .useWordWrap(true);
+
+            if (this.afterErrorList)
+                this.afterErrorList = false;
+            else
+                this.newline();
+
+            this.write(name)
+                .newline()
+                .newline();
         },
         async reportTestStart ( name /*, meta */) {
-            // NOTE: This method is optional.
-            console.log(`- Test '${name}'\n`);
+            process.logs = [];
+            console.log = function (d) {
+                process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
+                process.stdout.write(d + '\n');
+            };
+            console.error = function (d) {
+                process.logs.push({ type: 'error', log: d, time: new Date().valueOf() });
+                process.stdout.write(d + '\n');
+            };
+            console.warning = function (d) {
+                process.logs.push({ type: 'warning', log: d, time: new Date().valueOf() });
+                process.stdout.write(d + '\n');
+            };
+            process.logs.push({ type: 'debug', log: `Starting test ${name}...`, time: new Date().valueOf() });
             await this.client.startTest(name);
-            await this.client.sendTestLogs(this.client.curTest.id, 'info', `${this.chalk.gray('-')} Test '${name}'`);
         },
         async reportTestDone (name, testRunInfo, /*meta*/) {
             const errors      = testRunInfo.errs;
-            const warnings    = testRunInfo.warnings;
             const hasErrors   = errors !== undefined ? !!errors.length : false;
-            const hasWarnings = warnings !== undefined ? !!warnings.length : false;
 
-            // eslint-disable-next-line no-nested-ternary
+            let symbol    = null;
+
+            let nameStyle = null;
+
+            if (testRunInfo.skipped) {
+                this.skipped++;
+
+                symbol    = this.chalk.cyan('-');
+                nameStyle = this.chalk.cyan;
+            }
+            else if (hasErrors) {
+                symbol    = this.chalk.red.bold(this.symbols.err);
+                nameStyle = this.chalk.red.bold;
+            }
+            else {
+                symbol    = this.chalk.green(this.symbols.ok);
+                nameStyle = this.chalk.grey;
+            }
+
+            let title = `${symbol} ${nameStyle(name)}`;
+
+            this.setIndent(1)
+                .useWordWrap(true);
+
+            if (testRunInfo.unstable)
+                title += this.chalk.yellow(' (unstable)');
+
+            if (testRunInfo.screenshotPath)
+                title += ` (screenshots: ${this.chalk.underline.grey(testRunInfo.screenshotPath)})`;
+
+            this.newline().write(title);
+
+            if (hasErrors)
+                this._renderErrors(testRunInfo.errs);
+
+            process.logs.forEach(async (item) => {
+                item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
+                await this.client.sendTestLogs(this.client.curTest.id, item.type, item.log, item.time );
+            });
             const result = testRunInfo.skipped ? 'skipped' : hasErrors ? 'failed' : 'passed';
 
-            name = `${this.currentFixtureName} - ${name}`;
-
-            const title = `${result === 'passed' ? this.chalk.green('✓') : result === 'skipped' ? this.chalk.blue('-') : this.chalk.red('✖')} ${name}`;
-        
-            this.setIndent(0)
-                .write(`${title}`)
-                .newline();
-
-            if (hasErrors) {
-                //this.newline().write('Errors:');
-                //
-                //errors.forEach(error => {
-                //    this.newline().write(error);
-                //    this.client.sendTestLogs(this.client.curTest.id, 'error', error);
-                //});
-                errors.forEach(async (error, idx) => {
-                    this.newline()
-                        .write(this.formatError(error, `${idx + 1}) `))
-                        .newline();
-                    //this.client.sendTestLogs(this.client.curTest.id, 'error', error);
-                });
-            }
-
-            if (hasWarnings) {
-                //this.newline().write('Warnings:');
-                //
-                warnings.forEach(warning => {
-                    this.newline().write(warning);
-                    this.client.sendTestLogs(this.client.curTest.id, 'warning', warning);
-                });
-                warnings.forEach((warning, idx) => {
-                    this.newline()
-                        .write(this.formatError(warning, `${idx + 1}) `))
-                        .newline();
-                });
-            }
             await this.client.finishTest(this.client.curTest.id, result);
+
+            this.afterErrorList = hasErrors;
+
+            this.newline();
+            process.logs.push({ type: 'debug', log: `Test ${name} has ended...`, time: new Date().valueOf() });
         },
 
-        async reportTaskDone (endTime, passed, warnings, result) {
+        async reportTaskDone (endTime, passed, warnings) {
             const durationMs  = endTime - this.startTime;
             const durationStr = this.moment.duration(durationMs).format('h[h] mm[m] ss[s]');
 
-            let footer = result.failedCount ? `${result.failedCount}/${this.testCount} failed` : `${result.passedCount} passed`;
+            var footer = passed === this.testCount ?
+                this.chalk.bold.green(`${this.testCount} passed`) :
+                this.chalk.bold.red(`${this.testCount - passed}/${this.testCount} failed`);
 
-            footer += ` (Duration: ${durationStr})`;
-            footer += ` (Skipped: ${result.skippedCount})`;
-            footer += ` (Warnings: ${warnings.length})`;
+            footer += this.chalk.grey(` (${durationStr})`);
 
             this.newline()
                 .setIndent(0)
                 .write(footer)
                 .newline();
-            //await this.client.finishSuite(this.client.suite.id, 'passed');
+
+            if (this.skipped > 0) {
+                this.write(this.chalk.cyan(`${this.skipped} skipped`))
+                    .newline();
+            }
+
+            if (warnings.length)
+                this._renderWarnings(warnings);
             await this.client.finishLaunch();
+        },
+        _renderErrors (errs) {
+            this.setIndent(3)
+                .newline();
+
+            errs.forEach((err, idx) => {
+                process.logs.push({ type: 'error', log: JSON.stringify(err), time: new Date().valueOf() });
+                var prefix = this.chalk.red(`${idx + 1}) `);
+
+                this.newline()
+                    .write(this.formatError(err, prefix))
+                    .newline()
+                    .newline();
+            });
+        },
+        _renderWarnings (warnings) {
+            this.newline()
+                .setIndent(1)
+                .write(this.chalk.bold.yellow(`Warnings (${warnings.length}):`))
+                .newline();
+
+            warnings.forEach(msg => {
+                this.setIndent(1)
+                    .write(this.chalk.bold.yellow('--'))
+                    .newline()
+                    .setIndent(2)
+                    .write(msg)
+                    .newline();
+            });
         }
     };
 };

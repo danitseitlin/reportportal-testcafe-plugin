@@ -60,6 +60,16 @@ class API {
         }
     }
 
+    async createChildTestItem (projectName, parentItem, options) {
+        try {
+            return this.handleResponse(await this.client.post(`/${projectName}/item/${parentItem}`, options));
+        }
+        catch (error) {
+            console.log(error);
+            throw Error(error);
+        }
+    }
+
     async finishTestItem (projectName, testItemId, options) {
         try {
             return this.handleResponse(await this.client.put(`/${projectName}/item/${testItemId}`, options));
@@ -70,9 +80,8 @@ class API {
         }
     }
 
-    async sendLog (projectName, options) { ///v1/{projectName}/log
+    async sendLog (projectName, options) {
         try {
-            console.log('Sending logs..');
             return this.handleResponse(await this.client.post(`/${projectName}/log`, options));
         }
         catch (error) {
