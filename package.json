@@ -1,6 +1,6 @@
 {
   "name": "testcafe-reporter-reportportal-plugin",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "reportportal-testcafe-plugin TestCafe reporter plugin.",
   "repository": "https://github.com/danitseitlin/testcafe-reporter-reportportal-plugin",
   "author": {
