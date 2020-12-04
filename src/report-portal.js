@@ -18,13 +18,7 @@ class ReportPortal {
             token:    Arguments.rtoken,
         });
         this.connected = true;
-        this.client.checkConnect().then(() => {
-            this.connected = true;
-        }, (error) => {
-            console.log('Error connection to the Report Portal server');
-            console.dir(error);
-            this.connected = false;
-        });
+        
         this.launchName = Arguments.rlaunch;
         this.projectName = Arguments.rproject;
         if (Arguments.rsuite) {
@@ -33,6 +27,16 @@ class ReportPortal {
         }
     }
 
+    async verifyConnection () {
+        this.client.checkConnect().then(() => {
+            this.connected = true;
+        }, (error) => {
+            console.log('Error connection to the Report Portal server');
+            console.dir(error);
+            this.connected = false;
+        });
+    }
+    
     async startLaunch () {
         if (!this.connected) throw Error('Report portal is not connected!');
         this.launch = await this.client.createLaunch(this.projectName, {
