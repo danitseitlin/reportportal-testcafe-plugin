@@ -27,17 +27,26 @@ class ReportPortal {
         }
     }
 
+    /**
+     * Verifying the connection to Report Portal
+     */
     async verifyConnection () {
-        this.client.checkConnect().then(() => {
+        try {
+            await this.client.checkConnect();
             this.connected = true;
-        }, (error) => {
+        } 
+        catch (error) {
             console.log('Error connection to the Report Portal server');
             console.dir(error);
             this.connected = false;
-        });
+        }
     }
-    
+
+    /**
+     * Starting a new launch
+     */
     async startLaunch () {
+        await this.verifyConnection();
         if (!this.connected) throw Error('Report portal is not connected!');
         this.launch = await this.client.createLaunch(this.projectName, {
             name:        this.launchName,
@@ -48,6 +57,10 @@ class ReportPortal {
             await this.startSuite(this.suiteName);
     }
 
+    /**
+     * Creating a new suite
+     * @param {*} name The name of the suite
+     */
     async startSuite (name) {
         this.suite = await this.client.createTestItem(this.projectName, {
             launchUuid: this.launch.id,
@@ -57,6 +70,9 @@ class ReportPortal {
         });
     }
 
+    /**
+     * Finishing a launch
+     */
     async finishLaunch () {
         if (this.suiteName)
             await this.finishSuite(this.suite.id, this.suiteStatus);
@@ -65,6 +81,10 @@ class ReportPortal {
         });
     }
 
+    /**
+     * Starting a new test
+     * @param {*} name The name of the test
+     */
     async startTest (name) {
         const options = {
             launchUuid: this.launch.id,
@@ -73,12 +93,18 @@ class ReportPortal {
             type:       'TEST'
         };
 
+        //Incase the test needs to be under a suite
         if (this.suiteName)
             this.curTest = await this.client.createChildTestItem(this.projectName, this.suite.id, options);
         else
             this.curTest = await this.client.createTestItem(this.projectName, options);
     }
 
+    /**
+     * Finishing a test 
+     * @param {*} testId The id of the test 
+     * @param {*} status The final status of the test
+     */
     async finishTest (testId, status) {
         if (this.suiteName && status === 'failed')
             this.suiteStatus = 'failed';
@@ -90,6 +116,11 @@ class ReportPortal {
         });
     }
 
+    /**
+     * Finishing a suite
+     * @param {*} suiteId The id of the suite 
+     * @param {*} status The final status of the suite
+     */
     async finishSuite (suiteId, status) {
         await this.client.finishTestItem(this.projectName, suiteId, {
             launchUuid: this.launch.id,
@@ -98,6 +129,13 @@ class ReportPortal {
         });
     }
 
+    /**
+     * Sending testing logs
+     * @param {*} testId The id of the test
+     * @param {*} level The level of the log (error/info/waiting, etc.)
+     * @param {*} message The contents of the log message
+     * @param {*} time The time it was sent/written. Default: current time.
+     */
     async sendTestLogs (testId, level, message, time = this.client.now()) {
         await this.client.sendLog(this.projectName, {
             itemUuid:   testId,
