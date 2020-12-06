@@ -3,14 +3,16 @@ const Arguments = require('cli-argument-parser').cliArguments;
 
 class ReportPortal { 
     constructor () {
+        console.log(Arguments);
         if (!Arguments.rdomain)
             throw new Error('Missing argument --rdomain');
         if (!Arguments.rtoken)
             throw new Error('Missing argument --rtoken');
-        if (!Arguments.rlaunch)
-            throw new Error('Missing argument --rlaunch');
+        if (!Arguments.rlaunch && !Arguments['rlaunch-id'])
+            throw new Error('Missing argument --rlaunch/--rlaunch-id');
         if (!Arguments.rproject)
             throw new Error('Missing argument --rproject');
+        
         this.client = new RPClient({
             protocol: 'https',
             domain:   Arguments.rdomain,
@@ -18,7 +20,6 @@ class ReportPortal {
             token:    Arguments.rtoken,
         });
         this.connected = true;
-        
         this.launchName = Arguments.rlaunch;
         this.projectName = Arguments.rproject;
         if (Arguments.rsuite) {
@@ -48,11 +49,15 @@ class ReportPortal {
     async startLaunch () {
         await this.verifyConnection();
         if (!this.connected) throw Error('Report portal is not connected!');
-        this.launch = await this.client.createLaunch(this.projectName, {
-            name:        this.launchName,
-            startTime:   this.client.now(),
-            description: `Running ${this.launchName} tests`,
-        });
+        if (this.launchName) {
+            this.launch = await this.client.createLaunch(this.projectName, {
+                name:        this.launchName,
+                startTime:   this.client.now(),
+                description: `Running ${this.launchName} tests`,
+            });
+        }
+        else
+            this.launch = { id: Arguments['rlaunch-id'] };
         if (this.suiteName)
             await this.startSuite(this.suiteName);
     }
@@ -76,9 +81,7 @@ class ReportPortal {
     async finishLaunch () {
         if (this.suiteName)
             await this.finishSuite(this.suite.id, this.suiteStatus);
-        await this.client.finishLaunch(this.projectName, this.launch.id, {
-            endTime: this.client.now()
-        });
+        await this.client.finishLaunch(this.projectName, this.launch.id, { endTime: this.client.now() });
     }
 
     /**
@@ -95,9 +98,9 @@ class ReportPortal {
 
         //Incase the test needs to be under a suite
         if (this.suiteName)
-            this.curTest = await this.client.createChildTestItem(this.projectName, this.suite.id, options);
+            this.test = await this.client.createChildTestItem(this.projectName, this.suite.id, options);
         else
-            this.curTest = await this.client.createTestItem(this.projectName, options);
+            this.test = await this.client.createTestItem(this.projectName, options);
     }
 
     /**

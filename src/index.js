@@ -93,18 +93,17 @@ exports['default'] = () => {
             if (hasErrors)
                 this._renderErrors(testRunInfo.errs);
 
-            process.logs.forEach(async (item) => {
-                item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
-                await this.client.sendTestLogs(this.client.curTest.id, item.type, item.log, item.time );
-            });
             const result = testRunInfo.skipped ? 'skipped' : hasErrors ? 'failed' : 'passed';
-
-            await this.client.finishTest(this.client.curTest.id, result);
 
             this.afterErrorList = hasErrors;
 
             this.newline();
             process.logs.push({ type: 'debug', log: `Test ${name} has ended...`, time: new Date().valueOf() });
+            process.logs.forEach(async (item) => {
+                item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
+                await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time );
+            });
+            await this.client.finishTest(this.client.test.id, result);
         },
 
         async reportTaskDone (endTime, passed, warnings) {
