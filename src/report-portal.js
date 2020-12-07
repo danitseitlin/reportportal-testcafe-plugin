@@ -3,7 +3,6 @@ const Arguments = require('cli-argument-parser').cliArguments;
 
 class ReportPortal { 
     constructor () {
-        console.log(Arguments);
         if (!Arguments.rdomain)
             throw new Error('Missing argument --rdomain');
         if (!Arguments.rtoken)
@@ -81,7 +80,8 @@ class ReportPortal {
     async finishLaunch () {
         if (this.suiteName)
             await this.finishSuite(this.suite.id, this.suiteStatus);
-        await this.client.finishLaunch(this.projectName, this.launch.id, { endTime: this.client.now() });
+        if (this.launchName)
+            await this.client.finishLaunch(this.projectName, this.launch.id, { endTime: this.client.now() });
     }
 
     /**
