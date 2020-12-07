@@ -100,8 +100,13 @@ exports['default'] = () => {
             this.newline();
             process.logs.push({ type: 'debug', log: `Test ${name} has ended...`, time: new Date().valueOf() });
             process.logs.forEach(async (item) => {
-                item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
-                await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time );
+                try {
+                    item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
+                    await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time);
+                } 
+                catch (e) {
+                    console.log(e);
+                }
             });
             await this.client.finishTest(this.client.test.id, result);
         },
