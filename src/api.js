@@ -82,6 +82,7 @@ class API {
 
     async sendLog (projectName, options) {
         try {
+            options.message = this.isJSON(options.message) || Array.isArray(options.message) ? JSON.stringify(options.message): options.message
             return this.handleResponse(await this.client.post(`/${projectName}/log`, options));
         }
         catch (error) {
@@ -89,7 +90,16 @@ class API {
             throw Error(error);
         }
     }
-
+    
+    isJSON(json) {
+        try {
+            JSON.parse(json)
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
     now () {
         return new Date().valueOf();
     }
