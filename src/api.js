@@ -82,7 +82,7 @@ class API {
 
     async sendLog (projectName, options) {
         try {
-            options.message = this.isJSON(options.message) || Array.isArray(options.message) ? JSON.stringify(options.message): options.message
+            options.message = this.isJSON(options.message) || Array.isArray(options.message) ? JSON.stringify(options.message) : options.message;
             return this.handleResponse(await this.client.post(`/${projectName}/log`, options));
         }
         catch (error) {
@@ -91,9 +91,9 @@ class API {
         }
     }
     
-    isJSON(json) {
+    isJSON (json) {
         try {
-            JSON.parse(json)
+            JSON.parse(json);
             return true;
         }
         catch (e) {
