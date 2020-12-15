@@ -16,6 +16,9 @@ class API {
         });
     }
 
+    /**
+     * Checking the connection to the report portal server
+     */
     async checkConnect () {
         try {
             return this.handleResponse(await this.client.get('/user'));
@@ -25,6 +28,11 @@ class API {
         }
     }
 
+    /**
+     * Creating a launch
+     * @param {*} projectName The name of the project
+     * @param {*} options The options of the launch
+     */
     async createLaunch (projectName, options) {
         try {
             return this.handleResponse(await this.client.post(`/${projectName}/launch`, options));
@@ -34,6 +42,12 @@ class API {
         }
     }
 
+    /**
+     * Finishing an existing launch
+     * @param {*} projectName The name of the project
+     * @param {*} launchId The id of the launch
+     * @param {*} options The options of the launch
+     */
     async finishLaunch (projectName, launchId, options) {
         try {
             return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/finish`, options));
@@ -43,6 +57,12 @@ class API {
         }
     }
 
+    /**
+     * Force stoping a launch
+     * @param {*} projectName The name of the project 
+     * @param {*} launchId The id of the launch
+     * @param {*} options The options of the launch
+     */
     async forceStopLaunch (projectName, launchId, options) {
         try {
             return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/stop`, options));
@@ -52,6 +72,11 @@ class API {
         }
     }
 
+    /**
+     * Creating a test item
+     * @param {*} projectName The name of the project 
+     * @param {*} options The options of the launch
+     */
     async createTestItem (projectName, options) {
         try {
             return this.handleResponse(await this.client.post(`/${projectName}/item`, options));
@@ -61,6 +86,12 @@ class API {
         }
     }
 
+    /**
+     * Creating a child test item
+     * @param {*} projectName The name of the project
+     * @param {*} parentItem The parent item of the test item
+     * @param {*} options The options of the child test item
+     */
     async createChildTestItem (projectName, parentItem, options) {
         try {
             return this.handleResponse(await this.client.post(`/${projectName}/item/${parentItem}`, options));
@@ -70,6 +101,12 @@ class API {
         }
     }
 
+    /**
+     * Finishing a test item
+     * @param {*} projectName The name of the project 
+     * @param {*} testItemId The id of the test item
+     * @param {*} options The options of the test item
+     */
     async finishTestItem (projectName, testItemId, options) {
         try {
             return this.handleResponse(await this.client.put(`/${projectName}/item/${testItemId}`, options));
@@ -79,6 +116,12 @@ class API {
         }
     }
 
+    /**
+     * Building a multi part stream (JSON + file)
+     * @param {*} jsonPart The JSON object
+     * @param {*} filePart The file
+     * @param {*} boundary The boundary
+     */
     buildMultiPartStream (jsonPart, filePart, boundary) {
         const eol = '\r\n';
         const bx = `--${boundary}`;
@@ -102,6 +145,12 @@ class API {
 
         return Buffer.concat(buffers);
     }
+
+    /**
+     * Sending logs to a test item
+     * @param {*} projectName The name of the project
+     * @param {*} options The options of the log item
+     */
     async sendLog (projectName, options) {
         try {
             options.message = this.isJSON(options.message) || Array.isArray(options.message) ? JSON.stringify(options.message) : options.message;
@@ -155,6 +204,10 @@ class API {
         return response.data;
     }
     
+    /**
+     * Handling an Axios error
+     * @param {*} error The error response
+     */
     handleError (error) {
         const errorMessage = error.message;
         const responseData = error.response && error.response.data;

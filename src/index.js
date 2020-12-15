@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undefined */
 const RP = require('./report-portal');
-//const fs = require('fs');
 
 exports['default'] = () => {
     return {
