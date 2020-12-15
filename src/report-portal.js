@@ -1,5 +1,7 @@
+/* eslint-disable no-undefined */
 const RPClient = require('./api');
 const Arguments = require('cli-argument-parser').cliArguments;
+//const fs = require('fs');
 
 class ReportPortal { 
     constructor () {
@@ -139,14 +141,20 @@ class ReportPortal {
      * @param {*} message The contents of the log message
      * @param {*} time The time it was sent/written. Default: current time.
      */
-    async sendTestLogs (testId, level, message, time = this.client.now()) {
-        await this.client.sendLog(this.projectName, {
-            itemUuid:   testId,
-            launchUuid: this.launch.id,
-            level:      level,
-            message:    message,
-            time:       time
-        });
+    async sendTestLogs (testId, level, message, time = this.client.now(), attachment) {
+        try {
+            await this.client.sendLog(this.projectName, {
+                itemUuid:   testId,
+                launchUuid: this.launch.id,
+                level:      level,
+                message:    message,
+                time:       time,
+                file:       attachment
+            });
+        } 
+        catch (error) {
+            this.client.handleError(error);
+        }
     }
 }
 

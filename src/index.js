@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undefined */
 const RP = require('./report-portal');
+//const fs = require('fs');
 
 exports['default'] = () => {
     return {
@@ -98,14 +99,20 @@ exports['default'] = () => {
             this.afterErrorList = hasErrors;
 
             this.newline();
+            if (testRunInfo.screenshots) {
+                testRunInfo.screenshots.forEach((screenshot, idx) => {
+                    process.logs.push({ type: 'debug', log: `Taking screenshot (${name}-${idx}.png)`, file: { name: `${name}-${idx}.png`, path: screenshot.screenshotPath }, time: new Date().valueOf() });
+                });
+            }
             process.logs.push({ type: 'debug', log: `Test ${name} has ended...`, time: new Date().valueOf() });
             process.logs.forEach(async (item) => {
                 try {
-                    item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
-                    await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time);
+                    if (item.log !== undefined)
+                        item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
+                    await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
                 } 
-                catch (e) {
-                    console.log(e);
+                catch (error) {
+                    this.client.handleError(error);
                 }
             });
             await this.client.finishTest(this.client.test.id, result);
