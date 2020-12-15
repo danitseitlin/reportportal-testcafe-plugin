@@ -1,6 +1,6 @@
 {
   "name": "testcafe-reporter-reportportal-plugin",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "reportportal-testcafe-plugin TestCafe reporter plugin.",
   "repository": "https://github.com/danitseitlin/testcafe-reporter-reportportal-plugin",
   "author": {
@@ -15,9 +15,7 @@
   "scripts": {
     "build": "gulp build",
     "test": "gulp test",
-    "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
-    "publish-please": "publish-please",
-    "prepublishOnly": "publish-please guard"
+    "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin"
   },
   "keywords": [
     "testcafe",
@@ -37,7 +35,6 @@
     "gulp-eslint": "^5.0.0",
     "gulp-mocha": "^6.0.0",
     "normalize-newline": "^1.0.2",
-    "publish-please": "^5.4.3",
     "read-file-relative": "^1.2.0",
     "testcafe": "^1.0.1"
   },
