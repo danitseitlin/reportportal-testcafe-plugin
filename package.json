@@ -26,8 +26,8 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
     "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "babel-eslint": "^10.0.1",
     "callsite-record": "^3.2.0",
     "del": "^1.2.0",
@@ -36,6 +36,7 @@
     "gulp-eslint": "^5.0.0",
     "gulp-mocha": "^6.0.0",
     "normalize-newline": "^1.0.2",
+    "npm-package-deployer": "^0.3.3",
     "read-file-relative": "^1.2.0",
     "testcafe": "^1.0.1"
   },
