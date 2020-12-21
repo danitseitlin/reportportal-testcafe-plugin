@@ -3,10 +3,6 @@
 
 This is the **reportportal-plugin** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
-<p align="center">
-    <img src="https://raw.github.com/danitseitlin/reportportal-testcafe-plugin/master/media/preview.png" alt="preview" />
-</p>
-
 ## Install
 
 ```
