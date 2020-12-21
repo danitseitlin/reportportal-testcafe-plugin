@@ -1,7 +1,6 @@
-/* eslint-disable no-undefined */
-const RPClient = require('./api');
-const Arguments = require('cli-argument-parser').cliArguments;
-//const fs = require('fs');
+/* eslint-disable no-console */
+import RPClient from './api';
+import { cliArguments as Arguments } from 'cli-argument-parser';
 
 class ReportPortal { 
     constructor () {
@@ -158,4 +157,4 @@ class ReportPortal {
     }
 }
 
-module.exports = ReportPortal;
+export default ReportPortal;

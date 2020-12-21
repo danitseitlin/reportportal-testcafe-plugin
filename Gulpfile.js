@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 var gulp    = require('gulp');
 var eslint  = require('gulp-eslint');
 var babel   = require('gulp-babel');
