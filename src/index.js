@@ -49,6 +49,10 @@ exports['default'] = () => {
                 process.logs.push({ type: 'warning', log: d, time: new Date().valueOf() });
                 process.stdout.write(d + '\n');
             };
+            console.debug = function (d) {
+                process.logs.push({ type: 'debug', log: d, time: new Date().valueOf() });
+                process.stdout.write(d + '\n');
+            };
             process.logs.push({ type: 'debug', log: `Starting test ${name}...`, time: new Date().valueOf() });
             await this.client.startTest(name);
         },
