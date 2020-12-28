@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import RPClient from './api';
-import { cliArguments as Arguments } from 'cli-argument-parser';
+/* eslint-disable no-undefined */
+const RPClient = require('./api');
+const Arguments = require('cli-argument-parser').cliArguments;
 
 class ReportPortal { 
     constructor () {
@@ -14,7 +15,7 @@ class ReportPortal {
             throw new Error('Missing argument --rproject');
         
         this.client = new RPClient({
-            protocol: 'https',
+            protocol: (Arguments.rprotocol) ? Arguments.rprotocol: 'https',
             domain:   Arguments.rdomain,
             apiPath:  '/api/v1',
             token:    Arguments.rtoken,
@@ -157,4 +158,4 @@ class ReportPortal {
     }
 }
 
-export default ReportPortal;
+module.exports = ReportPortal;

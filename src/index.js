@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
-import RP from './report-portal';
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-undefined */
+const RP = require('./report-portal');
 
 exports['default'] = () => {
     return {
@@ -105,8 +107,10 @@ exports['default'] = () => {
             process.logs.push({ type: 'debug', log: `Test ${name} has ended...`, time: new Date().valueOf() });
             process.logs.forEach(async (item) => {
                 try {
+                    const isJSON = this.client.client.isJSON(item.log);
+                    if(isJSON && JSON.parse(item.log).errMsg !== undefined) item.log = JSON.parse(item.log).errMsg;
                     if (item.log !== undefined)
-                        item.log = item.log.indexOf('{') !== -1 && item.log.indexOf('}') !== -1 ? JSON.stringify(item.log) : item.log;
+                        item.log = this.client.client.isJSON(item.log) ? JSON.stringify(item.log) : item.log;
                     await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
                 } 
                 catch (error) {
@@ -172,4 +176,4 @@ exports['default'] = () => {
     };
 };
 
-export default exports['default'];
+module.exports = exports['default'];

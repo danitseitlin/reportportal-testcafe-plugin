@@ -32,14 +32,15 @@ testCafe
     .run();
 ```
 
-| Required | Argument   | Description                                                                                                     | example | 
-| -------- | ---------- | --------------------------------------------------------------------------------------------------------------- | ------- |
-| Yes      | rdomain    | The domain of the report portal. https://{domain}/                                                              | --rdomain=reports.pl.portal.com
-| Yes      | rtoken     | The token to auth report portal with. Taken from the 'Profile' of your user.                                    | --rtoken=gfkbv5994350mg
-| Yes      | rlaunch    | The name of your launch. Required (Unless replaced by rlaunch-id argument).                                     | --rlaunch=my-launch
-| Yes      | rproject   | The name of your project.                                                                                       | --rproject=my-project
-| No       | rlaunch-id | The ID of an existing launch, can replace the rlaunch parameter.                                                | --rlaunch-id=fjvkdnvjgnf
-| No       | rsuite     | An optional suite name, adding a suite will put all tests under the suite instead of directly under the launch. | --rsuite=my-suite-name
+| Required | Argument   | Description                                                                                                     | Example                         | 
+| -------- | ---------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| Yes      | rdomain    | The domain of the report portal. https://{domain}/                                                              | --rdomain=reports.pl.portal.com |
+| Yes      | rtoken     | The token to auth report portal with. Taken from the 'Profile' of your user.                                    | --rtoken=gfkbv5994350mg         |
+| Yes      | rlaunch    | The name of your launch. Required (Unless replaced by rlaunch-id argument).                                     | --rlaunch=my-launch             |
+| Yes      | rproject   | The name of your project.                                                                                       | --rproject=my-project           |
+| No       | rlaunch-id | The ID of an existing launch, can replace the rlaunch parameter.                                                | --rlaunch-id=fjvkdnvjgnf        |
+| No       | rsuite     | An optional suite name, adding a suite will put all tests under the suite instead of directly under the launch. | --rsuite=my-suite-name          |
+| No       | rprotocol  | An optional ability to override the protocol of the API protocol. {protocol}://{domain}/.                       | --rprotocol=http                |
 
 ## Author
 Dani Tseitlin (https://github.com/danitseitlin)
