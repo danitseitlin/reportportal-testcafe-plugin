@@ -15,7 +15,7 @@
   "scripts": {
     "build": "gulp build",
     "deploy": "npm-deploy testcafe-reporter-reportportal-plugin",
-    "test": "gulp test",
+    "test": "testcafe chrome:headless test/test.ts --rdomain=localhost:1234 --reporter=reportportal-plugin --rlaunch=my-launch --rtoken=fff --rproject=tmp",
     "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin"
   },
   "keywords": [

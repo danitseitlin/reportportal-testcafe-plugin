@@ -1,8 +1,5 @@
-//import { create } from 'axios';
-//import { readFileSync } from 'fs';
 const axios = require('axios');
 const fs = require('fs')
-
 
 class API {
     constructor (options) {
