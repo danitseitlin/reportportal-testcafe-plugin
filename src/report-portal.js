@@ -15,7 +15,7 @@ class ReportPortal {
             throw new Error('Missing argument --rproject');
         
         this.client = new RPClient({
-            protocol: 'https',
+            protocol: (Arguments.rprotocol) ? Arguments.rprotocol: 'https',
             domain:   Arguments.rdomain,
             apiPath:  '/api/v1',
             token:    Arguments.rtoken,
@@ -143,7 +143,6 @@ class ReportPortal {
      */
     async sendTestLogs (testId, level, message, time = this.client.now(), attachment) {
         try {
-            console.log(JSON.stringify(message))
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,
                 launchUuid: this.launch.id,
