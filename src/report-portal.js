@@ -143,6 +143,7 @@ class ReportPortal {
      */
     async sendTestLogs (testId, level, message, time = this.client.now(), attachment) {
         try {
+            console.log(JSON.stringify(message))
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,
                 launchUuid: this.launch.id,
