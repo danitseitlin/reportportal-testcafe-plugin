@@ -1,7 +1,7 @@
+/* eslint-disable no-console */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undefined */
 const RP = require('./report-portal');
-//const fs = require('fs');
 
 exports['default'] = () => {
     return {
@@ -15,8 +15,7 @@ exports['default'] = () => {
                 .newline();
 
             userAgents.forEach(ua => {
-                this
-                    .write(`- ${this.chalk.blue(ua)}`)
+                this.write(`- ${this.chalk.blue(ua)}`)
                     .newline();
             });
             
@@ -38,7 +37,7 @@ exports['default'] = () => {
                 .newline()
                 .newline();
         },
-        async reportTestStart ( name /*, meta */) {
+        async reportTestStart (name /*, meta */) {
             process.logs = [];
             console.log = function (d) {
                 process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
@@ -52,20 +51,21 @@ exports['default'] = () => {
                 process.logs.push({ type: 'warning', log: d, time: new Date().valueOf() });
                 process.stdout.write(d + '\n');
             };
+            console.debug = function (d) {
+                process.logs.push({ type: 'debug', log: d, time: new Date().valueOf() });
+                process.stdout.write(d + '\n');
+            };
             process.logs.push({ type: 'debug', log: `Starting test ${name}...`, time: new Date().valueOf() });
             await this.client.startTest(name);
         },
-        async reportTestDone (name, testRunInfo, /*meta*/) {
+        async reportTestDone (name, testRunInfo) {
             const errors      = testRunInfo.errs;
             const hasErrors   = errors !== undefined ? !!errors.length : false;
-
             let symbol    = null;
-
             let nameStyle = null;
 
             if (testRunInfo.skipped) {
                 this.skipped++;
-
                 symbol    = this.chalk.cyan('-');
                 nameStyle = this.chalk.cyan;
             }

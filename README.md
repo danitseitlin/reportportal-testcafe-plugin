@@ -3,10 +3,6 @@
 
 This is the **reportportal-plugin** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
-<p align="center">
-    <img src="https://raw.github.com/danitseitlin/reportportal-testcafe-plugin/master/media/preview.png" alt="preview" />
-</p>
-
 ## Install
 
 ```
@@ -35,6 +31,15 @@ testCafe
     .reporter('reportportal-plugin') // <-
     .run();
 ```
+
+| Required | Argument   | Description                                                                                                     | example | 
+| -------- | ---------- | --------------------------------------------------------------------------------------------------------------- | ------- |
+| Yes      | rdomain    | The domain of the report portal. https://{domain}/                                                              | --rdomain=reports.pl.portal.com
+| Yes      | rtoken     | The token to auth report portal with. Taken from the 'Profile' of your user.                                    | --rtoken=gfkbv5994350mg
+| Yes      | rlaunch    | The name of your launch. Required (Unless replaced by rlaunch-id argument).                                     | --rlaunch=my-launch
+| Yes      | rproject   | The name of your project.                                                                                       | --rproject=my-project
+| No       | rlaunch-id | The ID of an existing launch, can replace the rlaunch parameter.                                                | --rlaunch-id=fjvkdnvjgnf
+| No       | rsuite     | An optional suite name, adding a suite will put all tests under the suite instead of directly under the launch. | --rsuite=my-suite-name
 
 ## Author
 Dani Tseitlin (https://github.com/danitseitlin)

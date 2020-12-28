@@ -1,7 +1,7 @@
+/* eslint-disable no-console */
 /* eslint-disable no-undefined */
 const RPClient = require('./api');
 const Arguments = require('cli-argument-parser').cliArguments;
-//const fs = require('fs');
 
 class ReportPortal { 
     constructor () {
