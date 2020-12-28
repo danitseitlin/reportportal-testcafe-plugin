@@ -16,6 +16,6 @@ jobs:
     - name: Setup
       run: npm install
     - name: Build
-      run: npm run build
+      run: npm run setup
     - name: Deploying version
       run: npm run deploy
