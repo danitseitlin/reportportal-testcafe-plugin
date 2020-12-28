@@ -1,14 +1,12 @@
-/* eslint-disable no-undefined */
-
-const axios = require('axios');
-const fs = require('fs');
+import { create } from 'axios';
+import { readFileSync } from 'fs';
 
 class API {
     constructor (options) {
         this.baseURL = `${options.protocol}://${options.domain}${options.apiPath}`;
         this.token = options.token;
         this.headers = { 'Content-type': 'application/json', 'Authorization': `Bearer ${options.token}` };
-        this.client = axios.create({
+        this.client = create({
             baseURL: this.baseURL,
             headers: this.headers
         });
@@ -151,7 +149,7 @@ class API {
             if (options.file) {
                 const MULTIPART_BOUNDARY = Math.floor(Math.random() * 10000000000).toString();
                 const fullPath = options.file.path;
-                const instance = axios.create({
+                const instance = create({
                     baseURL: this.baseURL,
                     headers: { 'Content-type': `multipart/form-data; boundary=${MULTIPART_BOUNDARY}`, 'Authorization': `Bearer ${this.token}` }
                 });
@@ -159,7 +157,7 @@ class API {
                 await instance.post(`${this.baseURL}/${projectName}/log`, this.buildMultiPartStream([options], {
                     name:    options.file.name,
                     type:    'image/png',
-                    content: fs.readFileSync(fullPath)
+                    content: readFileSync(fullPath)
                 }, MULTIPART_BOUNDARY));
             }
             else this.handleResponse(await this.client.post(`/${projectName}/log`, options));
@@ -214,4 +212,4 @@ class API {
     }
 }
 
-module.exports = API;
+export default API;

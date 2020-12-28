@@ -16,9 +16,7 @@
     "build": "gulp build",
     "deploy": "npm-deploy testcafe-reporter-reportportal-plugin",
     "test": "gulp test",
-    "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
-    "publish-please": "publish-please",
-    "prepublishOnly": "publish-please guard"
+    "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin"
   },
   "keywords": [
     "testcafe",

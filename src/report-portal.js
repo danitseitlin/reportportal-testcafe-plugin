@@ -159,4 +159,4 @@ class ReportPortal {
     }
 }
 
-module.exports = ReportPortal;
+export default ReportPortal;
