@@ -174,4 +174,4 @@ exports['default'] = () => {
     };
 };
 
-export default exports['default'];
+module.exports = exports['default'];
