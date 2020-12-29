@@ -39,24 +39,65 @@ exports['default'] = () => {
         },
         async reportTestStart (name /*, meta */) {
             process.logs = [];
-            console.log = function (d) {
-                process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
-                process.stdout.write(d + '\n');
+            //const logger = (d) => {
+            //    process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
+            //    let log = d;
+            //    const isJSON = this.client.client.isJSON(log);
+            //    if(isJSON && JSON.parse(log).errMsg !== undefined) log = JSON.parse(log).errMsg;
+            //    if(log !== undefined) log = this.client.client.isJSON(log) ? JSON.stringify(log) : log;
+            //    async() => {
+            //        console.log('Reporting to report portal=>')
+            //        await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+            //    }
+            //    process.stdout.write(d + '\n');
+            //}
+            console.log = function(d) {
+                async() => {
+                    process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
+                    //console.log('Reporting to report portal=>')
+                    await this.logItem({ type: 'info', log: d, time: new Date().valueOf() }, this.client)
+                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+                    process.stdout.write(d + '\n');
+                }
+                
             };
-            console.error = function (d) {
+            console.error = (d) => {
                 process.logs.push({ type: 'error', log: d, time: new Date().valueOf() });
+                async() => {
+                    console.log('Reporting to report portal=>')
+                    await this.logItem({ type: 'error', log: d, time: new Date().valueOf() }, this.client)
+                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+                }
                 process.stdout.write(d + '\n');
             };
-            console.warning = function (d) {
+            console.warning = (d) => {
                 process.logs.push({ type: 'warning', log: d, time: new Date().valueOf() });
+                async() => {
+                    console.log('Reporting to report portal=>')
+                    await this.logItem({ type: 'warning', log: d, time: new Date().valueOf() }, this.client)
+                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+                }
                 process.stdout.write(d + '\n');
             };
-            console.debug = function (d) {
+            console.debug = (d) => {
                 process.logs.push({ type: 'debug', log: d, time: new Date().valueOf() });
+                async() => {
+                    console.log('Reporting to report portal=>')
+                    await this.logItem({ type: 'debug', log: d, time: new Date().valueOf() }, this.client)
+                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+                }
                 process.stdout.write(d + '\n');
             };
             process.logs.push({ type: 'debug', log: `Starting test ${name}...`, time: new Date().valueOf() });
             await this.client.startTest(name);
+        },
+        async logItem(item, client){
+            let log = item.log;
+            const isJSON = client.client.isJSON(log);
+            if(isJSON && JSON.parse(log).errMsg !== undefined) log = JSON.parse(log).errMsg;
+            if(log !== undefined) log = client.client.isJSON(log) ? JSON.stringify(log) : log;
+            console.log('Reporting to report portal=>')
+            await client.sendTestLogs(client.test.id, item.type, item.log, item.time, item.file);
         },
         async reportTestDone (name, testRunInfo) {
             const errors      = testRunInfo.errs;
