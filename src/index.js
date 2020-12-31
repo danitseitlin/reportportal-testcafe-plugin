@@ -114,7 +114,7 @@ exports['default'] = () => {
                     await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
                 } 
                 catch (error) {
-                    this.client.handleError(error);
+                    this.client.client.handleError(error);
                 }
             });
             await this.client.finishTest(this.client.test.id, result);
