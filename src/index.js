@@ -51,53 +51,68 @@ exports['default'] = () => {
             //    }
             //    process.stdout.write(d + '\n');
             //}
-            console.log = function(d) {
-                async() => {
-                    process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
-                    //console.log('Reporting to report portal=>')
-                    await this.logItem({ type: 'info', log: d, time: new Date().valueOf() }, this.client)
-                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
-                    process.stdout.write(d + '\n');
-                }
-                
-            };
-            console.error = (d) => {
-                process.logs.push({ type: 'error', log: d, time: new Date().valueOf() });
-                async() => {
-                    console.log('Reporting to report portal=>')
-                    await this.logItem({ type: 'error', log: d, time: new Date().valueOf() }, this.client)
-                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
-                }
+            console.log = (d) => {
                 process.stdout.write(d + '\n');
-            };
-            console.warning = (d) => {
-                process.logs.push({ type: 'warning', log: d, time: new Date().valueOf() });
-                async() => {
-                    console.log('Reporting to report portal=>')
-                    await this.logItem({ type: 'warning', log: d, time: new Date().valueOf() }, this.client)
-                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
-                }
-                process.stdout.write(d + '\n');
+                this.logMessage({ type: 'info', log: d, time: new Date().valueOf() }, this.client).then((d) => {
+                    process.stdout.write('reporting: '+ d + '\n');
+                    
+                });
             };
             console.debug = (d) => {
-                process.logs.push({ type: 'debug', log: d, time: new Date().valueOf() });
-                async() => {
-                    console.log('Reporting to report portal=>')
-                    await this.logItem({ type: 'debug', log: d, time: new Date().valueOf() }, this.client)
-                    //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
-                }
-                process.stdout.write(d + '\n');
+                this.logMessage({ type: 'debug', log: d, time: new Date().valueOf() }, this.client).then((d) => {
+                    process.stdout.write('reporting: '+ d + '\n');
+                    process.stdout.write(d + '\n');
+                });
             };
+            console.error = (d) => {
+                this.logMessage({ type: 'error', log: d, time: new Date().valueOf() }, this.client).then((d) => {
+                    process.stdout.write('reporting: '+ d + '\n');
+                    process.stdout.write(d + '\n');
+                });
+            };
+            console.warn = (d) => {
+                this.logMessage({ type: 'warning', log: d, time: new Date().valueOf() }, this.client).then((d) => {
+                    process.stdout.write('reporting: '+ d + '\n');
+                    process.stdout.write(d + '\n');
+                });
+            };
+            //console.error = (d) => {
+            //    process.logs.push({ type: 'error', log: d, time: new Date().valueOf() });
+            //    async() => {
+            //        console.log('Reporting to report portal=>')
+            //        await this.logMessage({ type: 'error', log: d, time: new Date().valueOf() }, this.client)
+            //        //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+            //    }
+            //    process.stdout.write(d + '\n');
+            //};
+            //console.warning = (d) => {
+            //    process.logs.push({ type: 'warning', log: d, time: new Date().valueOf() });
+            //    async() => {
+            //        console.log('Reporting to report portal=>')
+            //        await this.logMessage({ type: 'warning', log: d, time: new Date().valueOf() }, this.client)
+            //        //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+            //    }
+            //    process.stdout.write(d + '\n');
+            //};
+            //console.debug = (d) => {
+            //    process.logs.push({ type: 'debug', log: d, time: new Date().valueOf() });
+            //    async() => {
+            //        console.log('Reporting to report portal=>')
+            //        await this.logMessage({ type: 'debug', log: d, time: new Date().valueOf() }, this.client)
+            //        //await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+            //    }
+            //    process.stdout.write(d + '\n');
+            //};
             process.logs.push({ type: 'debug', log: `Starting test ${name}...`, time: new Date().valueOf() });
             await this.client.startTest(name);
         },
-        async logItem(item, client){
+        async logMessage(item, client){
             let log = item.log;
             const isJSON = client.client.isJSON(log);
             if(isJSON && JSON.parse(log).errMsg !== undefined) log = JSON.parse(log).errMsg;
             if(log !== undefined) log = client.client.isJSON(log) ? JSON.stringify(log) : log;
-            console.log('Reporting to report portal=>')
-            await client.sendTestLogs(client.test.id, item.type, item.log, item.time, item.file);
+            await client.sendTestLogs(client.test.id, item.type, log, item.time, item.file);
+            return log;
         },
         async reportTestDone (name, testRunInfo) {
             const errors      = testRunInfo.errs;
@@ -146,18 +161,18 @@ exports['default'] = () => {
                 });
             }
             process.logs.push({ type: 'debug', log: `Test ${name} has ended...`, time: new Date().valueOf() });
-            process.logs.forEach(async (item) => {
-                try {
-                    const isJSON = this.client.client.isJSON(item.log);
-                    if(isJSON && JSON.parse(item.log).errMsg !== undefined) item.log = JSON.parse(item.log).errMsg;
-                    if (item.log !== undefined)
-                        item.log = this.client.client.isJSON(item.log) ? JSON.stringify(item.log) : item.log;
-                    await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
-                } 
-                catch (error) {
-                    this.client.handleError(error);
-                }
-            });
+            //process.logs.forEach(async (item) => {
+            //    try {
+            //        const isJSON = this.client.client.isJSON(item.log);
+            //        if(isJSON && JSON.parse(item.log).errMsg !== undefined) item.log = JSON.parse(item.log).errMsg;
+            //        if (  !== undefined)
+            //            item.log = this.client.client.isJSON(item.log) ? JSON.stringify(item.log) : item.log;
+            //        await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+            //    } 
+            //    catch (error) {
+            //        this.client.handleError(error);
+            //    }
+            //});
             await this.client.finishTest(this.client.test.id, result);
         },
 
