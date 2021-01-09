@@ -1,5 +1,23 @@
-# testcafe-reporter-reportportal-plugin
-[![Build Status](https://travis-ci.org/danitseitlin/testcafe-reporter-reportportal-plugin.svg)](https://travis-ci.org/danitseitlin/testcafe-reporter-reportportal-plugin)
+<p align='center'>
+  <a href='https://www.npmjs.com/package/testcafe-reporter-reportportal-plugin'>
+    <img src='https://img.shields.io/npm/v/testcafe-reporter-reportportal-plugin/latest?style=plastic' target='_blank' />
+  </a>
+  <a href='https://npmjs.org/package/testcafe-reporter-reportportal-plugin' style='width:25px;height:20px;'>
+    <img src='https://img.shields.io/npm/dm/testcafe-reporter-reportportal-plugin.svg?color=blue&style=plastic' target='_blank' />
+  </a>
+  <a href='https://github.com/danitseitlin/reportportal-testcafe-plugin/issues' style='width:25px;height:20px;'>
+    <img src='https://img.shields.io/github/issues/danitseitlin/reportportal-testcafe-plugin?style=plastic' target='_blank' />
+  </a>
+  <a href='https://npmjs.org/package/testcafe-reporter-reportportal-plugin' style='width:25px;height:20px;'>
+    <img src='https://img.shields.io/bundlephobia/min/testcafe-reporter-reportportal-plugin/latest?style=plastic' target='_blank' />
+  </a>
+  <a href='https://github.com/danitseitlin/reportportal-testcafe-plugin/commits/master'>
+    <img src='https://img.shields.io/github/last-commit/danitseitlin/reportportal-testcafe-plugin?style=plastic' />
+  </a>
+  <a href='https://github.com/danitseitlin/reportportal-testcafe-plugin/blob/master/LICENSE'>
+    <img src='https://img.shields.io/badge/license-BSD%203%20Clause-blue.svg?style=plastic' target='_blank' />
+  </a>
+</p></p>
 
 This is the **reportportal-plugin** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
@@ -31,6 +49,8 @@ testCafe
     .reporter('reportportal-plugin') // <-
     .run();
 ```
+
+## CLI Arguments:
 
 | Required | Argument   | Description                                                                                                     | Example                         | 
 | -------- | ---------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------- |
