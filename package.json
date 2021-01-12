@@ -41,7 +41,7 @@
     "testcafe": "^1.0.1"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "cli-argument-parser": "^0.3.4",
     "fs": "0.0.1-security"
   }
