@@ -28,7 +28,7 @@ describe('Performing E2E testing', async function() {
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
         .src(['tests/test.testcafe.ts'])
-        .browsers(['firefox'])
+        .browsers(['firefox:headless'])
         .run();
 
         console.log('Tests failed: ' + failedCount);
