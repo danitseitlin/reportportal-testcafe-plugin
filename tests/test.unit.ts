@@ -1,7 +1,8 @@
 
 import { MockServer } from 'dmock-server';
 import { mock } from './mock';
-import createTestCafe  from 'testcafe'
+//import createTestCafe  from 'testcafe'
+import * as createTestCafe from 'testcafe';
 let reportPortalServer: MockServer;
 let testcafeServer: TestCafe;
 
