@@ -9,4 +9,4 @@ jobs:
     - name: Setup
       run: sudo chown -R runner /usr/local/lib/node_modules && npm install && npm run setup
     - name: Tests
-      run: npm run test
+      run: npm run tests
