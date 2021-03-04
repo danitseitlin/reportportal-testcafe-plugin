@@ -5,7 +5,7 @@ import createTestCafe  from 'testcafe'
 let reportPortalServer: MockServer;
 let testcafeServer: TestCafe;
 
-describe('Mock server testing', async function() {
+describe('Performing E2E testing', async function() {
     this.timeout(10 * 60 * 60);
     before(async () => {
         reportPortalServer = new MockServer({
