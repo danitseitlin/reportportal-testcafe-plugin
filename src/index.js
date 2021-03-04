@@ -53,9 +53,11 @@ exports['default'] = () => {
             //}
             console.log = (d) => {
                 process.stdout.write(d + '\n');
-                this.logMessage({ type: 'info', log: d, time: new Date().valueOf() }, this.client).then((d) => {
-                    process.stdout.write('reporting: '+ d + '\n');
-                });
+                async () => {
+                    this.logMessage({ type: 'info', log: d, time: new Date().valueOf() }, this.client).then((d) => {
+                        process.stdout.write('reporting: '+ d + '\n');
+                    });
+                }
             };
             console.debug = (d) => {
                 this.logMessage({ type: 'debug', log: d, time: new Date().valueOf() }, this.client).then((d) => {
