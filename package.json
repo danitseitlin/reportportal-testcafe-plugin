@@ -14,7 +14,8 @@
   "scripts": {
     "build": "gulp build",
     "deploy": "npm-deploy testcafe-reporter-reportportal-plugin",
-    "test": "testcafe firefox:headless test/test.ts --reporter=reportportal-plugin --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
+    "test": "mocha -r ts-node/register",
+    "tests": "npm run test ./tests/test.unit.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
     "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
     "pre-deploy": "npm run build && npm run test"
   },
@@ -42,8 +43,13 @@
     "testcafe": "^1.0.1"
   },
   "dependencies": {
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.1",
     "axios": "^0.21.0",
+    "chai": "^4.3.3",
     "cli-argument-parser": "^0.3.4",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "mocha": "^8.3.0",
+    "ts-node": "^9.1.1"
   }
 }
