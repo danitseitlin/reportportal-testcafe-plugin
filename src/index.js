@@ -55,7 +55,6 @@ exports['default'] = () => {
                 process.stdout.write(d + '\n');
                 this.logMessage({ type: 'info', log: d, time: new Date().valueOf() }, this.client).then((d) => {
                     process.stdout.write('reporting: '+ d + '\n');
-                    
                 });
             };
             console.debug = (d) => {

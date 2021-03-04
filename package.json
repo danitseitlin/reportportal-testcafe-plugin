@@ -17,7 +17,7 @@
     "test": "mocha -r ts-node/register",
     "tests": "npm run test ./tests/test.unit.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
     "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
-    "pre-deploy": "npm run build && npm run test"
+    "pre-deploy": "npm run build && npm run tests"
   },
   "keywords": [
     "testcafe",
