@@ -51,14 +51,19 @@ exports['default'] = () => {
             //    }
             //    process.stdout.write(d + '\n');
             //}
-            console.log = (d) => {
+            console.log = function(d) {
                 process.stdout.write(d + '\n');
-                async () => {
-                    this.logMessage({ type: 'info', log: d, time: new Date().valueOf() }, this.client).then((d) => {
-                        process.stdout.write('reporting: '+ d + '\n');
-                    });
-                }
-            };
+                process.stdout.write('reporting: '+ d + '\n');
+            }
+            //console.log = (d) => {
+            //    process.stdout.write(d + '\n');
+            //    process.stdout.write('reporting: '+ d + '\n');
+            //    async () => {
+            //        this.logMessage({ type: 'info', log: d, time: new Date().valueOf() }, this.client).then((d) => {
+            //            process.stdout.write('reporting: '+ d + '\n');
+            //        });
+            //    }
+            //};
             console.debug = (d) => {
                 this.logMessage({ type: 'debug', log: d, time: new Date().valueOf() }, this.client).then((d) => {
                     process.stdout.write('reporting: '+ d + '\n');
@@ -109,6 +114,7 @@ exports['default'] = () => {
         },
         async logMessage(item, client){
             let log = item.log;
+            console.log(`reporting log: ${item.log}`)
             const isJSON = client.client.isJSON(log);
             if(isJSON && JSON.parse(log).errMsg !== undefined) log = JSON.parse(log).errMsg;
             if(log !== undefined) log = client.client.isJSON(log) ? JSON.stringify(log) : log;

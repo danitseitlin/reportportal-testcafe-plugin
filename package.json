@@ -15,11 +15,7 @@
     "build": "gulp build",
     "deploy": "npm-deploy testcafe-reporter-reportportal-plugin",
     "test": "mocha -r ts-node/register",
-<<<<<<< HEAD
-    "tests": "npm run test ./tests/test.unit.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
-=======
     "tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
->>>>>>> f6c0fc3f38a9404c228210cadb96390ab07ec11b
     "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
     "local-test": "npm run setup && npm run tests",
     "pre-deploy": "npm run build && npm run tests"
