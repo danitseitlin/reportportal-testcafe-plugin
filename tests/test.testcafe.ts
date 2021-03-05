@@ -19,4 +19,8 @@ test.skip('fff5', async () => {
 })
 test('fff32', async () => {
     console.log('xxx');
+<<<<<<< HEAD
 })
+=======
+})
+>>>>>>> f6c0fc3f38a9404c228210cadb96390ab07ec11b
