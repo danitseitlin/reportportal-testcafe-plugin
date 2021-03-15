@@ -64,7 +64,7 @@ exports['default'] = () => {
         async captureLogs(testId, level, message, time = this.client.now(), attachment) {
             try {
                 process.stdout.write('Reporting:' + message + '\n');
-                if(item.log !== undefined) {
+                if(message !== undefined) {
                     const isJSON = this.client.client.isJSON(message) || Array.isArray(message);
                     if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
                     else if(isJSON) message = JSON.parse(message)
