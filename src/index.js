@@ -38,35 +38,27 @@ exports['default'] = () => {
                 .newline();
         },
         async reportTestStart (name /*, meta */) {
-            process.logs = [];
-            console.log = function (d) {
-                process.stdout.write('Caught log:' + message + '\n');
-                process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
+            console.log = d => {
                 process.stdout.write(d + '\n');
-                process.stdout.write('Before Reporting:' + message + '\n');
-                (async() => {
-                    process.stdout.write('Starting Reporting:' + message + '\n');
-                    await this.captureLogs({ type: 'info', log: d, time: new Date().valueOf() });
-                })();
+                (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))()
             };
             console.error = function (d) {
-                process.logs.push({ type: 'error', log: d, time: new Date().valueOf() });
                 process.stdout.write(d + '\n');
+                (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))()
             };
             console.warning = function (d) {
-                process.logs.push({ type: 'warning', log: d, time: new Date().valueOf() });
                 process.stdout.write(d + '\n');
+                (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))()
             };
             console.debug = function (d) {
-                process.logs.push({ type: 'debug', log: d, time: new Date().valueOf() });
                 process.stdout.write(d + '\n');
+                (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))()
             };
-            process.logs.push({ type: 'debug', log: `Starting test ${name}...`, time: new Date().valueOf() });
             await this.client.startTest(name);
+            (async() => this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf()))()
         },
-        async captureLogs(testId, level, message, time = this.client.now(), attachment) {
+        async captureLogs(testId, level, message, time, attachment) {
             try {
-                process.stdout.write('Reporting:' + message + '\n');
                 if(message !== undefined) {
                     const isJSON = this.client.client.isJSON(message) || Array.isArray(message);
                     if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
@@ -122,24 +114,10 @@ exports['default'] = () => {
             this.newline();
             if (testRunInfo.screenshots) {
                 testRunInfo.screenshots.forEach((screenshot, idx) => {
-                    process.logs.push({ type: 'debug', log: `Taking screenshot (${name}-${idx}.png)`, file: { name: `${name}-${idx}.png`, path: screenshot.screenshotPath }, time: new Date().valueOf() });
+                    (async() => this.captureLogs(this.client.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath }))()
                 });
             }
-            process.logs.push({ type: 'debug', log: `Test ${name} has ended...`, time: new Date().valueOf() });
-            process.logs.forEach(async (item) => {
-                try {
-                    if(item.log !== undefined) {
-                        const isJSON = this.client.client.isJSON(item.log) || Array.isArray(item.log);
-                        if(isJSON && JSON.parse(item.log).errMsg !== undefined) item.log = JSON.parse(item.log).errMsg;
-                        else if(isJSON) item.log = JSON.parse(item.log)
-                        item.log = this.client.client.isJSON(item.log) ? JSON.stringify(item.log): item.log
-                    }
-                    await this.client.sendTestLogs(this.client.test.id, item.type, item.log, item.time, item.file);
-                } 
-                catch (error) {
-                    this.client.client.handleError(error);
-                }
-            });
+            (async() => this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf()))()
             await this.client.finishTest(this.client.test.id, result);
         },
 
@@ -172,7 +150,7 @@ exports['default'] = () => {
                 .newline();
 
             errs.forEach((err, idx) => {
-                process.logs.push({ type: 'error', log: JSON.stringify(err), time: new Date().valueOf() });
+                (async() => this.captureLogs(this.client.test.id, 'error', JSON.stringify(err), new Date().valueOf()))()
                 var prefix = this.chalk.red(`${idx + 1}) `);
 
                 this.newline()
