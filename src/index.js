@@ -39,22 +39,22 @@ exports['default'] = () => {
         },
         async reportTestStart (name /*, meta */) {
             console.log = d => {
-                (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))().then( d => {
+                (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.error = function (d) {
-                (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))().then( d => {
+                (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.warning = function (d) {
-                (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))().then( d => {
+                (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.debug = function (d) {
-                (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))().then( d => {
+                (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
