@@ -65,10 +65,10 @@ exports['default'] = () => {
             try {
                 process.stdout.write('Reporting:' + message + '\n');
                 if(item.log !== undefined) {
-                    const isJSON = this.client.client.isJSON(item.log) || Array.isArray(item.log);
-                    if(isJSON && JSON.parse(item.log).errMsg !== undefined) item.log = JSON.parse(item.log).errMsg;
-                    else if(isJSON) item.log = JSON.parse(item.log)
-                    item.log = this.client.client.isJSON(item.log) ? JSON.stringify(item.log): item.log
+                    const isJSON = this.client.client.isJSON(message) || Array.isArray(message);
+                    if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
+                    else if(isJSON) message = JSON.parse(message)
+                    message = this.client.client.isJSON(message) ? JSON.stringify(message): message
                 }
                 await this.client.sendTestLogs(testId, level, message, time, attachment);
             } 
