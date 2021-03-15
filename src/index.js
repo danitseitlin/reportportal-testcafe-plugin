@@ -42,6 +42,9 @@ exports['default'] = () => {
             console.log = function (d) {
                 process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
                 process.stdout.write(d + '\n');
+                (async() => {
+                    await this.captureLogs({ type: 'info', log: d, time: new Date().valueOf() });
+                })();
             };
             console.error = function (d) {
                 process.logs.push({ type: 'error', log: d, time: new Date().valueOf() });
@@ -57,6 +60,21 @@ exports['default'] = () => {
             };
             process.logs.push({ type: 'debug', log: `Starting test ${name}...`, time: new Date().valueOf() });
             await this.client.startTest(name);
+        },
+        async captureLogs(testId, level, message, time = this.client.now(), attachment) {
+            try {
+                process.stdout.write('Reporting:' + message + '\n');
+                if(item.log !== undefined) {
+                    const isJSON = this.client.client.isJSON(item.log) || Array.isArray(item.log);
+                    if(isJSON && JSON.parse(item.log).errMsg !== undefined) item.log = JSON.parse(item.log).errMsg;
+                    else if(isJSON) item.log = JSON.parse(item.log)
+                    item.log = this.client.client.isJSON(item.log) ? JSON.stringify(item.log): item.log
+                }
+                await this.client.sendTestLogs(testId, level, message, time, attachment);
+            } 
+            catch (error) {
+                this.client.client.handleError(error);
+            }
         },
         async reportTestDone (name, testRunInfo) {
             const errors      = testRunInfo.errs;
