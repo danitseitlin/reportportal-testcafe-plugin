@@ -39,20 +39,27 @@ exports['default'] = () => {
         },
         async reportTestStart (name /*, meta */) {
             console.log = d => {
-                process.stdout.write(d + '\n');
-                (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))()
+                (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))().then( d => {
+                    process.stdout.write(d + '\n');
+                })
             };
             console.error = function (d) {
-                process.stdout.write(d + '\n');
-                (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))()
+                //process.stdout.write(d + '\n');
+                (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))().then( d => {
+                    process.stdout.write(d + '\n');
+                })
             };
             console.warning = function (d) {
-                process.stdout.write(d + '\n');
-                (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))()
+                //process.stdout.write(d + '\n');
+                (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))().then( d => {
+                    process.stdout.write(d + '\n');
+                })
             };
             console.debug = function (d) {
-                process.stdout.write(d + '\n');
-                (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))()
+                //process.stdout.write(d + '\n');
+                (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))().then( d => {
+                    process.stdout.write(d + '\n');
+                })
             };
             await this.client.startTest(name);
             (async() => this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf()))()
@@ -66,6 +73,7 @@ exports['default'] = () => {
                     message = this.client.client.isJSON(message) ? JSON.stringify(message): message
                 }
                 await this.client.sendTestLogs(testId, level, message, time, attachment);
+                return message
             } 
             catch (error) {
                 this.client.client.handleError(error);
