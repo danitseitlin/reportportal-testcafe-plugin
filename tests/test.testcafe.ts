@@ -1,22 +1,23 @@
 import { t } from 'testcafe';
 
-fixture `sss`
+fixture `First fixture`
 .page('https://google.com')
 
-test('fff', async () => {
-    console.log('xxx');
+test('Taking screenshot', async () => {
+    console.log('About to take a screenshot');
     await t.takeScreenshot()
+    console.log('The screenshot was succesfully taken!');
 })
-test('fff2', async () => {
-    console.log('xxx');
+test('Negative testing, verifying Error display', async () => {
+    console.log('About to fail..');
     await t.expect('X').eql('Y', 'OMG')
 })
 
-fixture `sss2`
+fixture `Second fixture`
 
-test.skip('fff5', async () => {
-    console.log('xxx');
+test.skip('Skipping the test', async () => {
+    console.log('The test is skipped. This log shoud not be appearing.');
 })
-test('fff32', async () => {
-    console.log('xxx');
+test('Basic print', async () => {
+    console.log('Printing the test contents');
 })
