@@ -44,25 +44,22 @@ exports['default'] = () => {
                 })
             };
             console.error = function (d) {
-                //process.stdout.write(d + '\n');
                 (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))().then( d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.warning = function (d) {
-                //process.stdout.write(d + '\n');
                 (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))().then( d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.debug = function (d) {
-                //process.stdout.write(d + '\n');
                 (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))().then( d => {
                     process.stdout.write(d + '\n');
                 })
             };
             await this.client.startTest(name);
-            (async() => this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf()))()
+            await this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
@@ -113,7 +110,7 @@ exports['default'] = () => {
             this.newline().write(title);
 
             if (hasErrors)
-                this._renderErrors(testRunInfo.errs);
+                await this._renderErrors(testRunInfo.errs);
 
             const result = testRunInfo.skipped ? 'skipped' : hasErrors ? 'failed' : 'passed';
 
@@ -121,11 +118,11 @@ exports['default'] = () => {
 
             this.newline();
             if (testRunInfo.screenshots) {
-                testRunInfo.screenshots.forEach((screenshot, idx) => {
-                    (async() => this.captureLogs(this.client.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath }))()
+                testRunInfo.screenshots.forEach(async (screenshot, idx) => {
+                    await this.captureLogs(this.client.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath })
                 });
             }
-            (async() => this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf()))()
+            await this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
             await this.client.finishTest(this.client.test.id, result);
         },
 
@@ -153,12 +150,12 @@ exports['default'] = () => {
                 this._renderWarnings(warnings);
             await this.client.finishLaunch();
         },
-        _renderErrors (errs) {
+        async _renderErrors (errs) {
             this.setIndent(3)
                 .newline();
 
-            errs.forEach((err, idx) => {
-                (async() => this.captureLogs(this.client.test.id, 'error', JSON.stringify(err), new Date().valueOf()))()
+            await errs.forEach(async (err, idx) => {
+                await this.captureLogs(this.client.test.id, 'error', JSON.stringify(err), new Date().valueOf())
                 var prefix = this.chalk.red(`${idx + 1}) `);
 
                 this.newline()
