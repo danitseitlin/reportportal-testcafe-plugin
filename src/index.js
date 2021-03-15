@@ -40,9 +40,12 @@ exports['default'] = () => {
         async reportTestStart (name /*, meta */) {
             process.logs = [];
             console.log = function (d) {
+                process.stdout.write('Caught log:' + message + '\n');
                 process.logs.push({ type: 'info', log: d, time: new Date().valueOf() });
                 process.stdout.write(d + '\n');
+                process.stdout.write('Before Reporting:' + message + '\n');
                 (async() => {
+                    process.stdout.write('Starting Reporting:' + message + '\n');
                     await this.captureLogs({ type: 'info', log: d, time: new Date().valueOf() });
                 })();
             };
