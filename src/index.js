@@ -43,17 +43,17 @@ exports['default'] = () => {
                     process.stdout.write(d + '\n');
                 })
             };
-            console.error = function (d) {
+            console.error = d => {
                 (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
-            console.warning = function (d) {
+            console.warning = d => {
                 (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
-            console.debug = function (d) {
+            console.debug = d => {
                 (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
