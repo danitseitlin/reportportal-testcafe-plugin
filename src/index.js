@@ -66,7 +66,7 @@ exports['default'] = () => {
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                if(Arguments['disable-live-reporting']) {
+                if(Arguments['disable-live-reporting'] !== undefined) {
                     if(!process.logs) process.logs = [];
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 }
@@ -134,7 +134,7 @@ exports['default'] = () => {
                 });
             }
             await this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
-            if(Arguments['disable-live-reporting']) {
+            if(Arguments['disable-live-reporting'] !== undefined) {
                 process.logs.forEach(async (item) => {
                     await this.reportLogs(this.client.test.id, item.type, item.log, item.time, item.file);
                 })
