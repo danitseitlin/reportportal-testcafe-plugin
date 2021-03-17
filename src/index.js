@@ -7,7 +7,6 @@ const liveReporting = process.argv.find(arg => arg === 'disable-live-reporting')
 exports['default'] = () => {
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
-            process.stdout.write('\n' + JSON.stringify(Arguments) + '\n');
             this.startTime = startTime;
             this.testCount = testCount;
             
