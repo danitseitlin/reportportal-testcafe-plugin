@@ -3,7 +3,7 @@
 /* eslint-disable no-undefined */
 const RP = require('./report-portal');
 const { filterArguments } = require('cli-argument-parser')
-const arguments = filterArguments('--', '')
+const Arguments = filterArguments('--', '')
 exports['default'] = () => {
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
@@ -64,12 +64,12 @@ exports['default'] = () => {
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                if(arguments['disable-live-reporting']) {
+                if(Arguments['disable-live-reporting']) {
                     if(!process.logs)
                         process.logs = [];
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 }
-                if(!arguments['disable-live-reporting'])
+                if(!Arguments['disable-live-reporting'])
                     await this.reportLogs(testId, level, message, time, attachment);
                 return message
             } 
@@ -133,7 +133,7 @@ exports['default'] = () => {
                 });
             }
             await this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
-            if(!arguments['disable-live-reporting']) {
+            if(!Arguments['disable-live-reporting']) {
                 process.logs.forEach(async (item) => {
                     await this.reportLogs(this.client.test.id, item.type, item.log, item.time, item.file);
                 })
