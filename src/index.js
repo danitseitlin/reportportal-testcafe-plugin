@@ -2,7 +2,8 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undefined */
 const RP = require('./report-portal');
-
+const { filterArguments } = require('cli-argument-parser')
+const arguments = filterArguments('--', '')
 exports['default'] = () => {
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
@@ -63,18 +64,27 @@ exports['default'] = () => {
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                if(message !== undefined) {
-                    const isJSON = this.client.client.isJSON(message) || Array.isArray(message);
-                    if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
-                    else if(isJSON) message = JSON.parse(message)
-                    message = this.client.client.isJSON(message) ? JSON.stringify(message): message
+                if(arguments['disable-live-reporting']) {
+                    if(!process.logs)
+                        process.logs = [];
+                    process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 }
-                await this.client.sendTestLogs(testId, level, message, time, attachment);
+                if(!arguments['disable-live-reporting'])
+                    await this.reportLogs(testId, level, message, time, attachment);
                 return message
             } 
             catch (error) {
                 this.client.client.handleError(error);
             }
+        },
+        async reportLogs(testId, level, message, time, attachment) {
+            if(message !== undefined) {
+                const isJSON = this.client.client.isJSON(message) || Array.isArray(message);
+                if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
+                else if(isJSON) message = JSON.parse(message)
+                message = this.client.client.isJSON(message) ? JSON.stringify(message): message
+            }
+            await this.client.sendTestLogs(testId, level, message, time, attachment);
         },
         async reportTestDone (name, testRunInfo) {
             const errors      = testRunInfo.errs;
@@ -123,6 +133,11 @@ exports['default'] = () => {
                 });
             }
             await this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
+            if(!arguments['disable-live-reporting']) {
+                process.logs.forEach(async (item) => {
+                    await this.reportLogs(this.client.test.id, item.type, item.log, item.time, item.file);
+                })
+            }
             await this.client.finishTest(this.client.test.id, result);
         },
 
