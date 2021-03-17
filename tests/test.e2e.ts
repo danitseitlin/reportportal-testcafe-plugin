@@ -5,7 +5,7 @@ let reportPortalServer: MockServer;
 let testcafeServer: TestCafe;
 
 describe('Performing E2E testing', async function() {
-    this.timeout(10 * 60 * 60);
+    this.timeout(10 * 60 * 60 * 60);
     before(async () => {
         reportPortalServer = new MockServer({
             hostname: 'localhost',
