@@ -4,9 +4,11 @@
 const RP = require('./report-portal');
 const { filterArguments } = require('cli-argument-parser')
 const Arguments = filterArguments('--', '')
+
 exports['default'] = () => {
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
+            process.stdout.write(JSON.stringify(Arguments) + '\n');
             this.startTime = startTime;
             this.testCount = testCount;
             
@@ -65,11 +67,10 @@ exports['default'] = () => {
         async captureLogs(testId, level, message, time, attachment) {
             try {
                 if(Arguments['disable-live-reporting']) {
-                    if(!process.logs)
-                        process.logs = [];
+                    if(!process.logs) process.logs = [];
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 }
-                if(!Arguments['disable-live-reporting'])
+                else
                     await this.reportLogs(testId, level, message, time, attachment);
                 return message
             } 
@@ -133,7 +134,7 @@ exports['default'] = () => {
                 });
             }
             await this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
-            if(!Arguments['disable-live-reporting']) {
+            if(Arguments['disable-live-reporting']) {
                 process.logs.forEach(async (item) => {
                     await this.reportLogs(this.client.test.id, item.type, item.log, item.time, item.file);
                 })
