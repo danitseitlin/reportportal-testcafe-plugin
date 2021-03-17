@@ -8,7 +8,7 @@ const Arguments = filterArguments('--', '')
 exports['default'] = () => {
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
-            process.stdout.write(JSON.stringify(Arguments) + '\n');
+            process.stdout.write('\n' + JSON.stringify(Arguments) + '\n');
             this.startTime = startTime;
             this.testCount = testCount;
             
