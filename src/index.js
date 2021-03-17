@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undefined */
 const RP = require('./report-portal');
-const liveReporting = process.argv.find(arg => arg === 'disable-live-reporting') === undefined;
+const liveReporting = process.argv.find(arg => arg === '--disable-live-reporting') === undefined;
 
 exports['default'] = () => {
     return {
