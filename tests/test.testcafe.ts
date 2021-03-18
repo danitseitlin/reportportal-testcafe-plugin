@@ -10,7 +10,8 @@ test('Taking screenshot', async () => {
 })
 test('Negative testing, verifying Error display', async () => {
     console.log('About to fail..');
-    await t.expect('X').eql('Y', 'OMG')
+    await t.expect('X').eql('Y', 'OMG');
+    console.log('The test failed!');
 })
 
 fixture `Second fixture`

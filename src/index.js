@@ -2,9 +2,9 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undefined */
 const RP = require('./report-portal');
-const liveReporting = process.argv.find(arg => arg === '--disable-live-reporting') === undefined;
 
 exports['default'] = () => {
+    const liveReporting = process.argv.find(arg => arg.startsWith('--disable-live-reporting')) === undefined;
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
             this.startTime = startTime;
@@ -39,7 +39,7 @@ exports['default'] = () => {
                 .newline();
         },
         async reportTestStart (name /*, meta */) {
-            process.stdout.write(process.argv + '\n')
+            process.logs = [];
             console.log = d => {
                 (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
@@ -65,10 +65,8 @@ exports['default'] = () => {
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                if(!liveReporting) {
-                    if(!process.logs) process.logs = [];
+                if(!liveReporting)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
-                }
                 else
                     await this.reportLogs(testId, level, message, time, attachment);
                 return message
