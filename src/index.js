@@ -4,7 +4,7 @@
 const RP = require('./report-portal');
 
 exports['default'] = () => {
-    const liveReporting = process.argv.find(arg => arg.startsWith('--disable-live-reporting')) === undefined;
+    const liveReporting = process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined;
     return {
         async reportTaskStart (startTime, userAgents, testCount) {
             this.startTime = startTime;
