@@ -39,6 +39,7 @@ exports['default'] = () => {
                 .newline();
         },
         async reportTestStart (name /*, meta */) {
+            process.stdout.write(process.argv + '\n')
             console.log = d => {
                 (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
