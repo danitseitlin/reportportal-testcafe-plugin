@@ -65,9 +65,6 @@ exports['default'] = () => {
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                process.stdout.write('\n ------ THIS IS A PRINT FOR DAMN DEBUGING! ------ \n')
-                process.stdout.write('\nargv:' + process.argv+', live reporting:'+ this.client.liveReporting)
-                process.stdout.write('\n ------------------------------------------------ \n')
                 if(!this.client.liveReporting)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else

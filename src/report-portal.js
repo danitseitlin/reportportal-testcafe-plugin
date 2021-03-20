@@ -1,31 +1,33 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undefined */
 const RPClient = require('./api');
-const Arguments = require('cli-argument-parser').cliArguments;
+const cliArguments = require('cli-argument-parser').cliArguments;
+const filterArguments = require('cli-argument-parser').filterArguments;
 
 class ReportPortal { 
     constructor () {
-        if (!Arguments.rdomain)
+        if (!cliArguments.rdomain)
             throw new Error('Missing argument --rdomain');
-        if (!Arguments.rtoken)
+        if (!cliArguments.rtoken)
             throw new Error('Missing argument --rtoken');
-        if (!Arguments.rlaunch && !Arguments['rlaunch-id'])
+        if (!cliArguments.rlaunch && !cliArguments['rlaunch-id'])
             throw new Error('Missing argument --rlaunch/--rlaunch-id');
-        if (!Arguments.rproject)
+        if (!cliArguments.rproject)
             throw new Error('Missing argument --rproject');
-            
-        this.liveReporting = process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined;
+        console.log(cliArguments)
+        this.liveReporting = filterArguments('--', '')['disable-live-reporting'] === undefined; //process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined;
+        console.log(`Live reporting: ${this.liveReporting}`)
         this.client = new RPClient({
-            protocol: (Arguments.rprotocol) ? Arguments.rprotocol: 'https',
-            domain:   Arguments.rdomain,
+            protocol: (cliArguments.rprotocol) ? cliArguments.rprotocol: 'https',
+            domain:   cliArguments.rdomain,
             apiPath:  '/api/v1',
-            token:    Arguments.rtoken,
+            token:    cliArguments.rtoken,
         });
         this.connected = true;
-        this.launchName = Arguments.rlaunch;
-        this.projectName = Arguments.rproject;
-        if (Arguments.rsuite) {
-            this.suiteName = Arguments.rsuite;
+        this.launchName = cliArguments.rlaunch;
+        this.projectName = cliArguments.rproject;
+        if (cliArguments.rsuite) {
+            this.suiteName = cliArguments.rsuite;
             this.suiteStatus = 'passed';
         }
     }
@@ -59,7 +61,7 @@ class ReportPortal {
             });
         }
         else
-            this.launch = { id: Arguments['rlaunch-id'] };
+            this.launch = { id: cliArguments['rlaunch-id'] };
         if (this.suiteName)
             await this.startSuite(this.suiteName);
     }
