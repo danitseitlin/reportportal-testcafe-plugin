@@ -61,7 +61,6 @@ exports['default'] = () => {
             };
             await this.client.startTest(name);
             await this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
-            
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {

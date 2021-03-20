@@ -16,8 +16,7 @@
     "test": "mocha -r ts-node/register",
     "e2e-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
     "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
-    "test-locally": "npm run setup && npm run e2e-tests",
-    "pre-deploy": "npm run build && npm run tests"
+    "test-locally": "npm run setup && npm run e2e-tests"
   },
   "keywords": [
     "testcafe",
