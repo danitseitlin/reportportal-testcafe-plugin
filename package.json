@@ -14,7 +14,7 @@
   "scripts": {
     "build": "gulp build",
     "test": "mocha -r ts-node/register",
-    "tests-live-reporting": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
+    "live-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
     "tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --disable-live-reporting",
     "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
     "local-test": "npm run setup && npm run tests",

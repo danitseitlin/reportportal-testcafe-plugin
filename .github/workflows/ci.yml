@@ -10,8 +10,8 @@ jobs:
       with:
         node-version: '10'
     - name: Setup
-      run: sudo chown -R runner /usr/local/lib/node_modules && npm install && npm run setup
+      run: sudo chown -R runner /usr/local/lib/node_modules && npm install
     - name: Live Reporting Tests
-      run: npm run tests-live-reporting
+      run: npm run setup && npm run live-tests
     - name: Tests
-      run: npm run tests
+      run: npm run setup && npm run tests
