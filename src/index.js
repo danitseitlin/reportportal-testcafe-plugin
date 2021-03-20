@@ -4,8 +4,9 @@
 const RP = require('./report-portal');
 
 exports['default'] = () => {
-    const liveReporting = process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined;
+    //const liveReporting = process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined;
     return {
+        liveReporting: process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined,
         async reportTaskStart (startTime, userAgents, testCount) {
             this.startTime = startTime;
             this.testCount = testCount;
@@ -62,11 +63,11 @@ exports['default'] = () => {
             };
             await this.client.startTest(name);
             await this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
-            console.log('\nargv:' + process.argv+', live reporting:'+ liveReporting)
+            console.log('\nargv:' + process.argv+', live reporting:'+ this.liveReporting)
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                if(!liveReporting)
+                if(!this.liveReporting)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else
                     await this.reportLogs(testId, level, message, time, attachment);
@@ -132,7 +133,7 @@ exports['default'] = () => {
                 });
             }
             await this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
-            if(!liveReporting) {
+            if(!this.liveReporting) {
                 process.logs.forEach(async (item) => {
                     await this.reportLogs(this.client.test.id, item.type, item.log, item.time, item.file);
                 })
