@@ -6,14 +6,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '10'
+    #- uses: actions/setup-node@v2
+    #  with:
+    #    node-version: '10'
     - name: Checking setup
       run: node -v && npm -v
     - name: Setup
       run: sudo chown -R runner /usr/local/lib/node_modules && npm install
     - name: Live Reporting Tests
-      run: npm run setup && npm run live-tests
+      run: npm run setup && cat lib\index.js && npm run live-tests
     - name: Tests
       run: npm run setup && npm run tests
