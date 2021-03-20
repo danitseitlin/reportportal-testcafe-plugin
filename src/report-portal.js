@@ -142,8 +142,9 @@ class ReportPortal {
      * @param {*} level The level of the log (error/info/waiting, etc.)
      * @param {*} message The contents of the log message
      * @param {*} time The time it was sent/written. Default: current time.
+     * @param {*} retry The retry attempts count. Default: 3
      */
-    async sendTestLogs (testId, level, message, time = this.client.now(), attachment) {
+    async sendTestLogs (testId, level, message, time = this.client.now(), attachment, retry = 3) {
         try {
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,
@@ -155,7 +156,10 @@ class ReportPortal {
             });
         } 
         catch (error) {
-            this.client.handleError(error);
+            if(retry - 1 > 0)
+                this.sendTestLogs(testId, level, message, time, attachment, retry - 1)
+            else
+                this.client.handleError(error);
         }
     }
 }

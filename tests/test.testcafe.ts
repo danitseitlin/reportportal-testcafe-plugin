@@ -22,3 +22,6 @@ test.skip('Skipping the test', async () => {
 test('Basic print', async () => {
     console.log('Printing the test contents');
 })
+test('Retry mechnism', async() => {
+    console.log('Triggering retry mechanism...')
+})

@@ -44,4 +44,26 @@ export const mock: Route[] = [{
             id: 134
         }
     }
+},{
+    path: '/api/v1/retry/log',
+    method: 'post',
+    statusCode: 500,
+    response: (req: Request) => {
+        const isRetry = Math.floor(Math.random() * 10) % 2 === 0;
+        //process.stdout.write(`[Server]${JSON.stringify(req.body)} \n`)
+        //process.stdout.write(`[Server][${(req.body as any).level}] log sent: ${(req.body as any).message} \n`)
+        if(isRetry) 
+            return {
+                status: 500,
+                data: {
+                    message: 'Error, performing retry mechnism........'
+                }
+            }
+        
+        process.stdout.write(`[Server]${JSON.stringify(req.body)} \n`)
+        process.stdout.write(`[Server][${(req.body as any).level}] log sent: ${(req.body as any).message} \n`)
+        return {
+            id: 134
+        }
+    }
 }]
