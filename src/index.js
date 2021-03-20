@@ -63,12 +63,13 @@ exports['default'] = () => {
             };
             await this.client.startTest(name);
             await this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
-            process.stdout.write('\n ------ THIS IS A PRINT FOR DAMN DEBUGING! ------ \n')
-            process.stdout.write('\nargv:' + process.argv+', live reporting:'+ this.liveReporting)
-            process.stdout.write('\n ------------------------------------------------ \n')
+            
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
+                process.stdout.write('\n ------ THIS IS A PRINT FOR DAMN DEBUGING! ------ \n')
+                process.stdout.write('\nargv:' + process.argv+', live reporting:'+ this.liveReporting)
+                process.stdout.write('\n ------------------------------------------------ \n')
                 if(!this.liveReporting)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else
