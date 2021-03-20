@@ -157,7 +157,7 @@ class ReportPortal {
         } 
         catch (error) {
             if(retry - 1 > 0)
-                this.sendTestLogs(testId, level, message, time, attachment, retry - 1)
+                await this.sendTestLogs(testId, level, message, time, attachment, retry - 1)
             else
                 this.client.handleError(error);
         }

@@ -32,4 +32,14 @@ describe('Performing E2E testing', async function() {
 
         console.log('Tests failed: ' + failedCount);
     });
+    it('Retry mechanism Tests', async () => {
+        const runner = testcafeServer.createRunner();
+        const failedCount = await runner
+        .src(['tests/test.retry.testcafe.ts'])
+        .browsers(['firefox:headless'])
+        .reporter('reportportal-plugin')
+        .run();
+
+        console.log('Tests failed: ' + failedCount);
+    });
 });
