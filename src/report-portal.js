@@ -13,7 +13,8 @@ class ReportPortal {
             throw new Error('Missing argument --rlaunch/--rlaunch-id');
         if (!Arguments.rproject)
             throw new Error('Missing argument --rproject');
-        
+            
+        this.liveReporting = process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined;
         this.client = new RPClient({
             protocol: (Arguments.rprotocol) ? Arguments.rprotocol: 'https',
             domain:   Arguments.rdomain,
