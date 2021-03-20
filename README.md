@@ -61,6 +61,7 @@ testCafe
 | No       | rlaunch-id | The ID of an existing launch, can replace the rlaunch parameter.                                                | --rlaunch-id=fjvkdnvjgnf        |
 | No       | rsuite     | An optional suite name, adding a suite will put all tests under the suite instead of directly under the launch. | --rsuite=my-suite-name          |
 | No       | rprotocol  | An optional ability to override the protocol of the API protocol. {protocol}://{domain}/.                       | --rprotocol=http                |
+| No       | disable-live-reporting | An optional ability to disable the live reporting                                                   | --disable-live-reporting        |
 
 ## Author
 Dani Tseitlin (https://github.com/danitseitlin)

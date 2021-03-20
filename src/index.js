@@ -19,8 +19,8 @@ exports['default'] = () => {
                     .newline();
             });
             
-            this.client = new RP();
-            await this.client.startLaunch();
+            this.reporter = new RP();
+            await this.reporter.startLaunch();
         },
 
         async reportFixtureStart (name, /*path, meta*/) {
@@ -38,43 +38,50 @@ exports['default'] = () => {
                 .newline();
         },
         async reportTestStart (name /*, meta */) {
+            process.logs = [];
             console.log = d => {
-                (async() => this.captureLogs(this.client.test.id, 'info', d, new Date().valueOf()))().then(d => {
+                (async() => this.captureLogs(this.reporter.test.id, 'info', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.error = d => {
-                (async() => this.captureLogs(this.client.test.id, 'error', d, new Date().valueOf()))().then(d => {
+                (async() => this.captureLogs(this.reporter.test.id, 'error', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.warning = d => {
-                (async() => this.captureLogs(this.client.test.id, 'warning', d, new Date().valueOf()))().then(d => {
+                (async() => this.captureLogs(this.reporter.test.id, 'warning', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
             console.debug = d => {
-                (async() => this.captureLogs(this.client.test.id, 'debug', d, new Date().valueOf()))().then(d => {
+                (async() => this.captureLogs(this.reporter.test.id, 'debug', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
                 })
             };
-            await this.client.startTest(name);
-            await this.captureLogs(this.client.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
+            await this.reporter.startTest(name);
+            await this.captureLogs(this.reporter.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                if(message !== undefined) {
-                    const isJSON = this.client.client.isJSON(message) || Array.isArray(message);
-                    if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
-                    else if(isJSON) message = JSON.parse(message)
-                    message = this.client.client.isJSON(message) ? JSON.stringify(message): message
-                }
-                await this.client.sendTestLogs(testId, level, message, time, attachment);
+                if(!this.reporter.liveReporting)
+                    process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
+                else
+                    await this.reportLogs(testId, level, message, time, attachment);
                 return message
             } 
             catch (error) {
-                this.client.client.handleError(error);
+                this.reporter.client.handleError(error);
             }
+        },
+        async reportLogs(testId, level, message, time, attachment) {
+            if(message !== undefined) {
+                const isJSON = this.reporter.client.isJSON(message) || Array.isArray(message);
+                if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
+                else if(isJSON) message = JSON.parse(message)
+                message = this.reporter.client.isJSON(message) ? JSON.stringify(message): message
+            }
+            await this.reporter.sendTestLogs(testId, level, message, time, attachment);
         },
         async reportTestDone (name, testRunInfo) {
             const errors      = testRunInfo.errs;
@@ -119,11 +126,16 @@ exports['default'] = () => {
             this.newline();
             if (testRunInfo.screenshots) {
                 testRunInfo.screenshots.forEach(async (screenshot, idx) => {
-                    await this.captureLogs(this.client.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath })
+                    await this.captureLogs(this.reporter.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath })
                 });
             }
-            await this.captureLogs(this.client.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
-            await this.client.finishTest(this.client.test.id, result);
+            await this.captureLogs(this.reporter.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
+            if(!this.reporter.liveReporting) {
+                process.logs.forEach(async (item) => {
+                    await this.reportLogs(this.reporter.test.id, item.type, item.log, item.time, item.file);
+                })
+            }
+            await this.reporter.finishTest(this.reporter.test.id, result);
         },
 
         async reportTaskDone (endTime, passed, warnings) {
@@ -148,14 +160,14 @@ exports['default'] = () => {
 
             if (warnings.length)
                 this._renderWarnings(warnings);
-            await this.client.finishLaunch();
+            await this.reporter.finishLaunch();
         },
         async _renderErrors (errs) {
             this.setIndent(3)
                 .newline();
 
             await errs.forEach(async (err, idx) => {
-                await this.captureLogs(this.client.test.id, 'error', JSON.stringify(err), new Date().valueOf())
+                await this.captureLogs(this.reporter.test.id, 'error', JSON.stringify(err), new Date().valueOf())
                 var prefix = this.chalk.red(`${idx + 1}) `);
 
                 this.newline()

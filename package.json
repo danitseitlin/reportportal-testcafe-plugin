@@ -13,12 +13,10 @@
   ],
   "scripts": {
     "build": "gulp build",
-    "deploy": "npm-deploy testcafe-reporter-reportportal-plugin",
     "test": "mocha -r ts-node/register",
-    "tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
+    "e2e-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp",
     "setup": "npm run build && npm link testcafe-reporter-reportportal-plugin",
-    "local-test": "npm run setup && npm run tests",
-    "pre-deploy": "npm run build && npm run tests"
+    "test-locally": "npm run setup && npm run e2e-tests"
   },
   "keywords": [
     "testcafe",
@@ -43,7 +41,6 @@
     "gulp-mocha": "^6.0.0",
     "mocha": "^8.3.0",
     "normalize-newline": "^1.0.2",
-    "npm-package-deployer": "^0.3.3",
     "read-file-relative": "^1.2.0",
     "testcafe": "^1.0.1",
     "ts-node": "^9.1.1"
