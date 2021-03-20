@@ -15,7 +15,7 @@ class ReportPortal {
         if (!cliArguments.rproject)
             throw new Error('Missing argument --rproject');
 
-        this.liveReporting = filterArguments('--', '')['disable-live-reporting'] === undefined; //process.argv.find(arg => arg.includes('--disable-live-reporting')) === undefined;
+        this.liveReporting = filterArguments('--', '')['disable-live-reporting'] === undefined;
         this.client = new RPClient({
             protocol: (cliArguments.rprotocol) ? cliArguments.rprotocol: 'https',
             domain:   cliArguments.rdomain,
