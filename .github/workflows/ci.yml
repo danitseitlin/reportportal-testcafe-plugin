@@ -9,6 +9,8 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '10'
+    - name: Checking setup
+        run: node -v && npm -v
     - name: Setup
       run: sudo chown -R runner /usr/local/lib/node_modules && npm install
     - name: Live Reporting Tests
