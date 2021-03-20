@@ -14,6 +14,6 @@ jobs:
     - name: Setup
       run: sudo chown -R runner /usr/local/lib/node_modules && npm install
     - name: Live Reporting Tests
-      run: npm run setup && cat lib\index.js && npm run live-tests
+      run: npm run setup && cd lib && cat index.js && npm run live-tests
     - name: Tests
       run: npm run setup && npm run tests
