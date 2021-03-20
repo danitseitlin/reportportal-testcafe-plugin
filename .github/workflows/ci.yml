@@ -12,8 +12,8 @@ jobs:
     - name: Checking setup
       run: node -v && npm -v
     - name: Setup
-      run: sudo chown -R runner /usr/local/lib/node_modules && npm install
+      run: sudo chown -R runner /usr/local/lib/node_modules && npm install && npm run setup
     - name: Live Reporting Tests
-      run: npm run setup && cd lib && cat index.js && npm run live-tests
+      run: npm run e2e-tests
     - name: Tests
-      run: npm run setup && npm run tests
+      run: npm run e2e-tests -- --disable-live-reporting
