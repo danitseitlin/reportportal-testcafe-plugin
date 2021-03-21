@@ -37,6 +37,7 @@ export const mock: Route[] = [{
 },{
     path: '/api/v1/tmp/log',
     method: 'post',
+    statusCode: (Math.floor(Math.random() * 10) === 4) ? 500: 200,
     response: (req: Request) => {
         process.stdout.write(`[Server]${JSON.stringify(req.body)} \n`)
         process.stdout.write(`[Server][${(req.body as any).level}] log sent: ${(req.body as any).message} \n`)
@@ -77,21 +78,12 @@ export const mock: Route[] = [{
 },{
     path: '/api/v1/retry/log',
     method: 'post',
-    statusCode: 500,
-    response: (req: Request, res: Response) => {
-        const isRetry = Math.floor(Math.random() * 10) % 2 === 0;
-        if(isRetry) {
-            process.stdout.write(`[Server][retry] log sent: ${(req.body as any).message} \n`)
-            return {
-                status: 500,
-                data: {
-                    message: 'Error, performing retry mechnism........'
-                }
-            }
-        }
+    statusCode: (Math.floor(Math.random() * 10) === 4) ? 500: 200,
+    response: (req: Request) => {
         process.stdout.write(`[Server][${(req.body as any).level}] log sent: ${(req.body as any).message} \n`)
         return {
-            id: 134
+            id: 134,
+            message: (req.body as any).message
         }
     }
 }]
