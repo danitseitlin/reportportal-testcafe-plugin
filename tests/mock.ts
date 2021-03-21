@@ -37,7 +37,6 @@ export const mock: Route[] = [{
 },{
     path: '/api/v1/tmp/log',
     method: 'post',
-    statusCode: (Math.floor(Math.random() * 10) === 5) ? 500: 200,
     response: (req: Request) => {
         process.stdout.write(`[Server]${JSON.stringify(req.body)} \n`)
         process.stdout.write(`[Server][${(req.body as any).level}] log sent: ${(req.body as any).message} \n`)
