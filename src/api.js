@@ -147,7 +147,7 @@ class API {
     async sendLog (projectName, options) {
         try {
             if(typeof options.message !== 'string')
-                throw new Error(`Cannot send non-string log to report portal!\n${options.message}`)
+                options.message = `${options.message}`;
             if (options.file) {
                 const MULTIPART_BOUNDARY = Math.floor(Math.random() * 10000000000).toString();
                 const fullPath = options.file.path;
