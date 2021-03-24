@@ -10,7 +10,8 @@ test('Taking screenshot', async () => {
 })
 test('Negative testing, verifying Error display', async () => {
     console.log('About to fail..');
-    console.log(`${{obj: 'X'}}`)
+    console.log(`${{obj: 'X', obj2: { x: 'Y'}}}`)
+    console.log({obj: 'X', obj2: { x: 'Y'}})
     await t.expect('X').eql('Y', 'OMG');
     console.log('The test failed!');
 })
