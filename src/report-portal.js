@@ -16,6 +16,7 @@ class ReportPortal {
             throw new Error('Missing argument --rproject');
 
         this.liveReporting = filterArguments('--', '')['disable-live-reporting'] === undefined;
+        this.debugLogs = filterArguments('--', '')['--display-debug-logs'] !== undefined;
         this.client = new RPClient({
             protocol: (cliArguments.rprotocol) ? cliArguments.rprotocol: 'https',
             domain:   cliArguments.rdomain,
@@ -146,6 +147,7 @@ class ReportPortal {
      */
     async sendTestLogs (testId, level, message, time = this.client.now(), attachment, retry = 3) {
         try {
+            process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n`)
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,
                 launchUuid: this.launch.id,
