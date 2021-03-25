@@ -147,7 +147,7 @@ class ReportPortal {
      */
     async sendTestLogs (testId, level, message, time = this.client.now(), attachment, retry = 3) {
         try {
-            if(this.client.displayDebugLogs)
+            if(this.displayDebugLogs)
                 process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n`)
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,
