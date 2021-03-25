@@ -72,8 +72,8 @@ exports['default'] = () => {
                 return message
             }
             catch (error) {
-                if(debugLogs === true)
-                    process.stdout.write('\n [Test ' + testId + '] Capturing log: ' + message + ' \n caused error: ' + error + ' \n')
+                //if(debugLogs === true)
+                //    process.stdout.write('\n [Test ' + testId + '] Capturing log: ' + message + ' \n caused error: ' + error + ' \n')
                 this.rp.client.handleError(error);
             }
         },
