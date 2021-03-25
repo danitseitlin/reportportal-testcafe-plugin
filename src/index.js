@@ -64,8 +64,8 @@ exports['default'] = () => {
         async captureLogs(testId, level, message, time, attachment) {
             try {
                 //if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n [Test ${testId}] Capturing log: ${message} \n`)
-                if(this.reporter.liveReporting === false)
+                    //process.stdout.write(`\n [Test ${testId}] Capturing log: ${message} \n`)
+                if(!this.reporter.liveReporting)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else
                     await this.reportLogs(testId, level, message, time, attachment);
@@ -73,7 +73,7 @@ exports['default'] = () => {
             }
             catch (error) {
                 //if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
+                   //process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
                 this.reporter.client.handleError(error);
             }
         },
@@ -135,7 +135,7 @@ exports['default'] = () => {
                 });
             }
             await this.captureLogs(this.reporter.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
-            if(this.reporter.liveReporting === false) {
+            if(!this.reporter.liveReporting) {
                 process.logs.forEach(async (item) => {
                     await this.reportLogs(this.reporter.test.id, item.type, item.log, item.time, item.file);
                 })
