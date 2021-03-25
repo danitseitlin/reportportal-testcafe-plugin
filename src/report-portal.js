@@ -2,7 +2,7 @@
 /* eslint-disable no-undefined */
 const RPClient = require('./api');
 const cliArguments = require('cli-argument-parser').cliArguments;
-const filterArguments = require('cli-argument-parser').filterArguments;
+//const filterArguments = require('cli-argument-parser').filterArguments;
 
 class ReportPortal { 
     constructor () {
@@ -24,10 +24,10 @@ class ReportPortal {
         this.connected = true;
         this.launchName = cliArguments.rlaunch;
         this.projectName = cliArguments.rproject;
-        console.log(filterArguments('--', ''))
-        this.liveReporting = filterArguments('--', '')['disable-live-reporting'] === undefined;
-        this.displayDebugLogs = filterArguments('--', '')['display-debug-logs'] !== undefined;
-        console.log(this.displayDebugLogs)
+        //console.log(filterArguments('--', ''))
+        this.liveReporting = false//filterArguments('--', '')['disable-live-reporting'] === undefined;
+        this.displayDebugLogs = false//filterArguments('--', '')['display-debug-logs'] !== undefined;
+        //console.log(this.displayDebugLogs)
         if (cliArguments.rsuite) {
             this.suiteName = cliArguments.rsuite;
             this.suiteStatus = 'passed';
@@ -149,7 +149,7 @@ class ReportPortal {
      */
     async sendTestLogs (testId, level, message, time = this.client.now(), attachment, retry = 3) {
         try {
-            if(this.displayDebugLogs)
+            //if(this.displayDebugLogs)
                 process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n`)
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,

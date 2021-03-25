@@ -22,7 +22,6 @@ exports['default'] = () => {
             this.reporter = new RP();
             await this.reporter.startLaunch();
         },
-
         async reportFixtureStart (name, /*path, meta*/) {
             this.currentFixtureName = name;
             this.setIndent(1)
@@ -64,7 +63,7 @@ exports['default'] = () => {
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
-                if(this.reporter.displayDebugLogs)
+                //if(this.reporter.displayDebugLogs)
                     process.stdout.write(`\n [Test ${testId}] Capturing log: ${message} \n`)
                 if(this.reporter.liveReporting === false)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
@@ -73,7 +72,7 @@ exports['default'] = () => {
                 return message
             }
             catch (error) {
-                if(this.reporter.displayDebugLogs)
+                //if(this.reporter.displayDebugLogs)
                     process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
                 this.reporter.client.handleError(error);
             }
