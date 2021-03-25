@@ -71,7 +71,7 @@ exports['default'] = () => {
                 else
                     await this.reportLogs(testId, level, message, time, attachment);
                 return message
-            } 
+            }
             catch (error) {
                 if(this.reporter.displayDebugLogs)
                     process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
