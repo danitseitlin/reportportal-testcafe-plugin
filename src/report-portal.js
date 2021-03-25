@@ -24,8 +24,10 @@ class ReportPortal {
         this.connected = true;
         this.launchName = cliArguments.rlaunch;
         this.projectName = cliArguments.rproject;
+        console.log(filterArguments('--', ''))
         this.liveReporting = filterArguments('--', '')['disable-live-reporting'] === undefined;
         this.displayDebugLogs = filterArguments('--', '')['display-debug-logs'] !== undefined;
+        console.log(this.displayDebugLogs)
         if (cliArguments.rsuite) {
             this.suiteName = cliArguments.rsuite;
             this.suiteStatus = 'passed';

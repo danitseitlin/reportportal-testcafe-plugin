@@ -66,7 +66,7 @@ exports['default'] = () => {
             try {
                 if(this.reporter.displayDebugLogs)
                     process.stdout.write(`\n [Test ${testId}] Capturing log: ${message} \n`)
-                if(!this.reporter.liveReporting)
+                if(this.reporter.liveReporting === false)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else
                     await this.reportLogs(testId, level, message, time, attachment);
@@ -136,7 +136,7 @@ exports['default'] = () => {
                 });
             }
             await this.captureLogs(this.reporter.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
-            if(!this.reporter.liveReporting) {
+            if(this.reporter.liveReporting === false) {
                 process.logs.forEach(async (item) => {
                     await this.reportLogs(this.reporter.test.id, item.type, item.log, item.time, item.file);
                 })
