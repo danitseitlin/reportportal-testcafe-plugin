@@ -61,19 +61,19 @@ exports['default'] = () => {
             await this.reporter.startTest(name);
             await this.captureLogs(this.reporter.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
         },
-        async captureLogs(testId, level, message, time, attachment) {
+        async captureLogs(testId, level, message, time, attachment, debugLogs = false, liveReporting = true) {
             try {
-                //if(this.reporter.displayDebugLogs)
-                    //process.stdout.write(`\n [Test ${testId}] Capturing log: ${message} \n`)
-                if(!this.reporter.liveReporting)
+                if(debugLogs === true)
+                    process.stdout.write('\n [Test ' + testId + '] Capturing log: ' + message + ' \n')
+                if(liveReporting === false)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else
                     await this.reportLogs(testId, level, message, time, attachment);
                 return message
             }
             catch (error) {
-                //if(this.reporter.displayDebugLogs)
-                   //process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
+                if(this.reporter.displayDebugLogs)
+                    process.stdout.write('\n [Test ' + testId + '] Capturing log: ' + message + ' \n caused error: ' + error + ' \n')
                 this.reporter.client.handleError(error);
             }
         },
@@ -88,7 +88,7 @@ exports['default'] = () => {
             }
             await this.reporter.sendTestLogs(testId, level, message, time, attachment);
         },
-        async reportTestDone (name, testRunInfo) {
+        async reportTestDone (name, testRunInfo){
             const errors      = testRunInfo.errs;
             const hasErrors   = errors !== undefined ? !!errors.length : false;
             let symbol    = null;
