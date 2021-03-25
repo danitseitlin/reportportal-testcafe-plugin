@@ -72,7 +72,7 @@ exports['default'] = () => {
                 return message
             }
             catch (error) {
-                if(this.rp.displayDebugLogs)
+                if(debugLogs === true)
                     process.stdout.write('\n [Test ' + testId + '] Capturing log: ' + message + ' \n caused error: ' + error + ' \n')
                 this.rp.client.handleError(error);
             }
