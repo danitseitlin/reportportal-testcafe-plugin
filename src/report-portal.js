@@ -2,7 +2,6 @@
 /* eslint-disable no-undefined */
 const RPClient = require('./api');
 const cliArguments = require('cli-argument-parser').cliArguments;
-//const filterArguments = require('cli-argument-parser').filterArguments;
 
 class ReportPortal { 
     constructor () {
@@ -16,9 +15,7 @@ class ReportPortal {
             throw new Error('Missing argument --rproject');
 
         this.liveReporting = process.argv.find(arg => arg === '--disable-live-reporting') === undefined;
-        //filterArguments('--', '')['disable-live-reporting'] === undefined;
         this.displayDebugLogs = process.argv.find(arg => arg === '--display-debug-logs') !== undefined;
-        //filterArguments('--', '')['--display-debug-logs'] !== undefined;
         this.client = new RPClient({
             protocol: (cliArguments.rprotocol) ? cliArguments.rprotocol: 'https',
             domain:   cliArguments.rdomain,
