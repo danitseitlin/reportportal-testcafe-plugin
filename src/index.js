@@ -65,7 +65,7 @@ exports['default'] = () => {
         async captureLogs(testId, level, message, time, attachment) {
             try {
                 if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n [Test ${testId}] Capturing log: ${message} \n`)
+                    process.stdout.write(`\n[Test ${testId}] Capturing log: ${message} \n`)
                 if(!this.reporter.liveReporting)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else
@@ -74,7 +74,7 @@ exports['default'] = () => {
             } 
             catch (error) {
                 if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
+                    process.stdout.write(`\n[Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
                 this.reporter.client.handleError(error);
             }
         },
