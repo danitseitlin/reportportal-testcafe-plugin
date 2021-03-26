@@ -2,7 +2,6 @@
 /* eslint-disable no-undefined */
 const RPClient = require('./api');
 const cliArguments = require('cli-argument-parser').cliArguments;
-const filterArguments = require('cli-argument-parser').filterArguments;
 
 class ReportPortal { 
     constructor () {
@@ -15,8 +14,8 @@ class ReportPortal {
         if (!cliArguments.rproject)
             throw new Error('Missing argument --rproject');
 
-        this.liveReporting = filterArguments('--', '')['disable-live-reporting'] === undefined;
-        this.displayDebugLogs = filterArguments('--', '')['display-debug-logs'] !== undefined;
+        this.liveReporting = process.argv.find(arg => arg === '--disable-live-reporting') === undefined;
+        this.displayDebugLogs = process.argv.find(arg => arg === '--display-debug-logs') !== undefined;
         this.client = new RPClient({
             protocol: (cliArguments.rprotocol) ? cliArguments.rprotocol: 'https',
             domain:   cliArguments.rdomain,
@@ -147,8 +146,8 @@ class ReportPortal {
      */
     async sendTestLogs (testId, level, message, time = this.client.now(), attachment, retry = 3) {
         try {
-            if(this.client.displayDebugLogs)
-                process.stdout.write(`\n [Test ${testId}] Sending log: ${message} \n`)
+            if(this.displayDebugLogs === true)
+                process.stdout.write(`\n[Test ${testId}] Sending log: ${message} \n`)
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,
                 launchUuid: this.launch.id,
