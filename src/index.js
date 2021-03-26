@@ -60,7 +60,7 @@ exports['default'] = () => {
                 })
             };
             await this.reporter.startTest(name);
-            //await this.captureLogs(this.reporter.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
+            await this.captureLogs(this.reporter.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
