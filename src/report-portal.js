@@ -2,7 +2,7 @@
 /* eslint-disable no-undefined */
 const RPClient = require('./api');
 const cliArguments = require('cli-argument-parser').cliArguments;
-const filterArguments = require('cli-argument-parser').filterArguments;
+//const filterArguments = require('cli-argument-parser').filterArguments;
 
 class ReportPortal { 
     constructor () {
