@@ -14,6 +14,6 @@ jobs:
     - name: Deploying version
       uses: danitseitlin/npm-package-deployer@master
       with:
-        pkg_name: testcafe-reporter-reportportal-plugin
+        pkg_name: rp-reporter-test
         npm_access_token: ${{secrets.NPM_AUTH_TOKEN}}
         github_access_token: ${{secrets.G_AUTH_TOKEN}}
