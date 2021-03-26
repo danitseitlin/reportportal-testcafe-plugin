@@ -7,9 +7,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup
-      run: sudo chown -R runner /usr/local/lib/node_modules && npm install && npm run setup
+      run: sudo chown -R runner /usr/local/lib/node_modules && npm install && npm run setup && cat /usr/local/lib/node_modules/testcafe-reporter-reportportal-plugin/lib/index.js
     - name: Live reporting
-      run: npm run e2e-tests
+      run: cat /usr/local/lib/node_modules/testcafe-reporter-reportportal-plugin/lib/index.js && npm run e2e-tests
     - name: No live reporting
       run: npom run e2e-no-live-reporting-tests
     - name: Retry mechanism
