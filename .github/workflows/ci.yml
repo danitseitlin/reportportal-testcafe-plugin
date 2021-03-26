@@ -14,3 +14,5 @@ jobs:
       run: npom run e2e-no-live-reporting-tests
     - name: Retry mechanism
       run: npm run e2e-retry-tests
+    - name: Display debug logs
+      run: npm run e2e-display-debug-logs-tests
