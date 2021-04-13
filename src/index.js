@@ -85,6 +85,7 @@ exports['default'] = () => {
                 if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
                 //If the log is a JS Object
                 else if(isJSON) message = JSON.parse(message)
+                else if(typeof message === 'object') message = `${message}`
                 message = this.reporter.client.isJSON(message) ? JSON.stringify(message): message
             }
             await this.reporter.sendTestLogs(testId, level, message, time, attachment);
