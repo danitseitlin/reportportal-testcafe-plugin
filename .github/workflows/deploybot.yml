@@ -12,7 +12,7 @@ jobs:
     - name: Build
       run: npm run setup
     - name: Deploying version
-      uses: danitseitlin/npm-package-deployer@master
+      uses: danitseitlin/package-deployer@master
       with:
         pkg_name: testcafe-reporter-reportportal-plugin
         npm_access_token: ${{secrets.NPM_AUTH_TOKEN}}
