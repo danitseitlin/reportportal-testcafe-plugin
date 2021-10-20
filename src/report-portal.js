@@ -5,29 +5,45 @@ const cliArguments = require('cli-argument-parser').cliArguments;
 
 class ReportPortal { 
     constructor () {
-        if (!cliArguments.rdomain)
-            throw new Error('Missing argument --rdomain');
-        if (!cliArguments.rtoken)
-            throw new Error('Missing argument --rtoken');
-        if (!cliArguments.rlaunch && !cliArguments['rlaunch-id'])
-            throw new Error('Missing argument --rlaunch/--rlaunch-id');
-        if (!cliArguments.rproject)
-            throw new Error('Missing argument --rproject');
-
+        this.verifyRequireArguments();
+        this.rpProtocol = cliArguments.rprotocol ?? 'https';
+        this.rpDomain = cliArguments.rdomain;
+        this.rpApiPath = '/api/v1';
+        this.rpToken = cliArguments.rtoken;
         this.liveReporting = process.argv.find(arg => arg === '--disable-live-reporting') === undefined;
         this.displayDebugLogs = process.argv.find(arg => arg === '--display-debug-logs') !== undefined;
         this.client = new RPClient({
-            protocol: (cliArguments.rprotocol) ? cliArguments.rprotocol: 'https',
-            domain:   cliArguments.rdomain,
-            apiPath:  '/api/v1',
-            token:    cliArguments.rtoken,
+            protocol: this.rpProtocol,
+            domain:   this.rpDomain,
+            apiPath:  this.rpApiPath,
+            token:    this.rpToken,
         });
-        this.connected = true;
+        this.connected = null;
         this.launchName = cliArguments.rlaunch;
         this.projectName = cliArguments.rproject;
+
+        //If suite name is passed we will define it's name and default "Starting" status.
         if (cliArguments.rsuite) {
             this.suiteName = cliArguments.rsuite;
             this.suiteStatus = 'passed';
+        }
+    }
+
+    /**
+     * Verifying the required report portal arguments.
+     */
+    verifyRequireArguments () {
+        if (!cliArguments.rdomain){
+            throw new Error('Missing argument --rdomain. The domain of the report portal. https://{domain}/. Usage: --rdomain=reports.pl.portal.com');
+        }
+        if (!cliArguments.rtoken){
+            throw new Error('Missing argument --rtoken. The token to auth report portal with. Taken from the \'Profile\' of your user. --rtoken=my-token');
+        }
+        if (!cliArguments.rlaunch && !cliArguments['rlaunch-id']){
+            throw new Error('Missing argument --rlaunch/--rlaunch-id');
+        }
+        if (!cliArguments.rproject){
+            throw new Error('Missing argument --rproject. The name of your project.');
         }
     }
 
@@ -43,6 +59,7 @@ class ReportPortal {
             console.log('Error connection to the Report Portal server');
             console.dir(error);
             this.connected = false;
+            throw Error(`The Report Portal server ${this.rpProtocol}://${this.rpDomain} is out of reach. Seems like a connection error. Please follow the printed logs of the errors.`);
         }
     }
 
@@ -51,7 +68,6 @@ class ReportPortal {
      */
     async startLaunch () {
         await this.verifyConnection();
-        if (!this.connected) throw Error('Report portal is not connected!');
         if (this.launchName) {
             this.launch = await this.client.createLaunch(this.projectName, {
                 name:        this.launchName,
@@ -59,10 +75,12 @@ class ReportPortal {
                 description: `Running ${this.launchName} tests`,
             });
         }
-        else
+        else {
             this.launch = { id: cliArguments['rlaunch-id'] };
-        if (this.suiteName)
+        }
+        if (this.suiteName) {
             await this.startSuite(this.suiteName);
+        }
     }
 
     /**
@@ -113,14 +131,22 @@ class ReportPortal {
      * @param {*} status The final status of the test
      */
     async finishTest (testId, status) {
-        if (this.suiteName && status === 'failed')
-            this.suiteStatus = 'failed';
-
-        await this.client.finishTestItem(this.projectName, testId, {
+        const options = {
             launchUuid: this.launch.id,
             status:     status,
             endTime:    this.client.now()
-        });
+        };
+        
+        //When the test fails and is under a Suite, we want to make sure the Suite also fails.
+        if (this.suiteName && status === 'failed')
+            this.suiteStatus = 'failed';
+
+        //When status is skipped, we want to flag the test as "Not an issue" to prevent from adding the "To investigate" label
+        if (status === 'skipped') {
+            options.issueType = 'NOT_ISSUE';
+        }
+
+        await this.client.finishTestItem(this.projectName, testId, options);
     }
 
     /**

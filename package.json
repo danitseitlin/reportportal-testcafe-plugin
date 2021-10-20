@@ -12,14 +12,19 @@
     "lib"
   ],
   "scripts": {
-    "build": "gulp build",
+    "build": "./node_modules/.bin/gulp build",
     "test": "mocha -r ts-node/register",
     "e2e-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp -g \"Running TestCafe Tests\"",
     "e2e-retry-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=retry -g \"Retry mechanism\"",
     "e2e-no-live-reporting-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --disable-live-reporting -g \"Running TestCafe Tests\"",
     "e2e-display-debug-logs-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --display-debug-logs -g \"Running TestCafe Tests\"",
-    "setup": "npm run build && npm link && npm link testcafe-reporter-reportportal-plugin",
-    "test-locally": "npm run setup && npm run e2e-tests && npm run e2e-retry-tests && npm run e2e-no-live-reporting-tests && npm run e2e-display-debug-logs-tests"
+    
+    "build-local-reporter": "npm run build && npm link && npm link testcafe-reporter-reportportal-plugin",
+    "run-e2e-tests": "npm run build-local-reporter && npm run e2e-tests",
+    "run-e2e-retry-tests": "npm run build-local-reporter && npm run e2e-retry-tests",
+    "run-e2e-no-live-reporting-tests": "npm run build-local-reporter && npm run e2e-no-live-reporting-tests",
+    "run-e2e-display-debug-logs-tests": "npm run build-local-reporter && npm run e2e-display-debug-logs-tests",
+    "run-full-e2e-tests": "npm run build-local-reporter && npm run e2e-tests && npm run e2e-retry-tests && npm run e2e-no-live-reporting-tests && npm run e2e-display-debug-logs-tests"
   },
   "keywords": [
     "testcafe",
@@ -33,6 +38,7 @@
     "@babel/preset-env": "^7.3.4",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
+    "@types/yargs": "^17.0.4",
     "babel-eslint": "^10.0.1",
     "callsite-record": "^3.2.0",
     "chai": "^4.3.3",
