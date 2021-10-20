@@ -19,7 +19,7 @@ test('Negative testing, verifying Error display', async () => {
 fixture `Second fixture`
 
 test.skip('Skipping the test', async () => {
-    console.log('The test is skipped. This log shoud not be appearing.');
+    console.log('The test is skipped. This log should not be appearing.');
 })
 test('Basic print', async () => {
     console.log('Printing the test contents');

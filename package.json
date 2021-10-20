@@ -14,11 +14,13 @@
   "scripts": {
     "build": "./node_modules/.bin/gulp build",
     "test": "mocha -r ts-node/register",
+    "clean-npm-install": "rm -f ./node_modules && npm i",
+    "get-report-portal-docker-compose": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
+    "start-report-portal-server": "docker-compose -p reportportal up",
     "e2e-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp -g \"Running TestCafe Tests\"",
     "e2e-retry-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=retry -g \"Retry mechanism\"",
     "e2e-no-live-reporting-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --disable-live-reporting -g \"Running TestCafe Tests\"",
     "e2e-display-debug-logs-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --display-debug-logs -g \"Running TestCafe Tests\"",
-    
     "build-local-reporter": "npm run build && npm link && npm link testcafe-reporter-reportportal-plugin",
     "run-e2e-tests": "npm run build-local-reporter && npm run e2e-tests",
     "run-e2e-retry-tests": "npm run build-local-reporter && npm run e2e-retry-tests",
@@ -38,7 +40,6 @@
     "@babel/preset-env": "^7.3.4",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
-    "@types/yargs": "^17.0.4",
     "babel-eslint": "^10.0.1",
     "callsite-record": "^3.2.0",
     "chai": "^4.3.3",
@@ -52,7 +53,8 @@
     "normalize-newline": "^1.0.2",
     "read-file-relative": "^1.2.0",
     "testcafe": "^1.0.1",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "axios": "^0.21.0",

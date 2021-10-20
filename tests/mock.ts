@@ -1,4 +1,4 @@
-import { Route } from 'dmock-server';
+import { Route, Request } from 'dmock-server';
 
 export const mock: Route[] = [{
     path: '/api/v1/user',
@@ -39,10 +39,10 @@ export const mock: Route[] = [{
     method: 'post',
     response: (req: Request) => {
         process.stdout.write(`[Server]${JSON.stringify(req.body)} \n`)
-        process.stdout.write(`[Server][${(req.body as any).level}] log sent: ${(req.body as any).message} \n`)
+        process.stdout.write(`[Server][${req.body.level}] log sent: ${req.body.message} \n`)
         return {
             id: 134,
-            message: (req.body as any).message
+            message: req.body.message
         }
     }
 },{
@@ -80,10 +80,10 @@ export const mock: Route[] = [{
     method: 'post',
     statusCode: (Math.floor(Math.random() * 10) === 4) ? 500: 200,
     response: (req: Request) => {
-        process.stdout.write(`[Server][${(req.body as any).level}] log sent: ${(req.body as any).message} \n`)
+        process.stdout.write(`[Server][${req.body.level}] log sent: ${req.body.message} \n`)
         return {
             id: 134,
-            message: (req.body as any).message
+            message: req.body.message
         }
     }
 }]

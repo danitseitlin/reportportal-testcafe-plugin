@@ -1,4 +1,3 @@
-import { t } from 'testcafe';
 
 fixture `Testing the retry mechanism`
 .page('https://google.com')
