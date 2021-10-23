@@ -14,12 +14,14 @@
   "scripts": {
     "build": "babel src -d lib",
     "test": "mocha -r ts-node/register",
-    "e2e-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp -g \"Running TestCafe Tests\"",
-    "e2e-retry-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=retry -g \"Retry mechanism\"",
-    "e2e-no-live-reporting-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --disable-live-reporting -g \"Running TestCafe Tests\"",
-    "e2e-display-debug-logs-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --display-debug-logs -g \"Running TestCafe Tests\"",
-    "setup": "npm run build && npm link && npm link testcafe-reporter-reportportal-plugin",
-    "test-locally": "npm run setup && npm run e2e-tests && npm run e2e-retry-tests && npm run e2e-no-live-reporting-tests && npm run e2e-display-debug-logs-tests"
+    "get-report-portal-docker-compose": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
+    "start-report-portal-server": "docker-compose -p reportportal up",
+    "build-local-reporter": "npm run build && npm link && npm link testcafe-reporter-reportportal-plugin",
+    "run-e2e-tests": "npm run build-local-reporter && npm run e2e-tests",
+    "run-e2e-retry-tests": "npm run build-local-reporter && npm run e2e-retry-tests",
+    "run-e2e-no-live-reporting-tests": "npm run build-local-reporter && npm run e2e-no-live-reporting-tests",
+    "run-e2e-display-debug-logs-tests": "npm run build-local-reporter && npm run e2e-display-debug-logs-tests",
+    "run-full-e2e-tests": "npm run build-local-reporter && npm run e2e-tests && npm run e2e-retry-tests && npm run e2e-no-live-reporting-tests && npm run e2e-display-debug-logs-tests"
   },
   "keywords": [
     "testcafe",
@@ -43,7 +45,8 @@
     "normalize-newline": "^1.0.2",
     "read-file-relative": "^1.2.0",
     "testcafe": "^1.0.1",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "axios": "^0.21.0",
