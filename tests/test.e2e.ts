@@ -1,6 +1,6 @@
 import { MockServer } from 'dmock-server';
 import { mock } from './mock';
-import * as createTestCafe from 'testcafe';
+import createTestCafe from 'testcafe';
 let reportPortalServer: MockServer;
 let testcafeServer: TestCafe;
 
@@ -13,7 +13,7 @@ describe('Performing E2E testing', async function() {
             routes: mock
         });
         reportPortalServer.start()
-        testcafeServer = await (createTestCafe as any)('localhost', 1337, 1338);
+        testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });
 
     after(async () => {

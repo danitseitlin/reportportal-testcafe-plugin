@@ -3,5 +3,12 @@
   "extends": "eslint:recommended",
   "env": {
     "node": true
-  }
+  },
+  "overrides": [{
+    "files": ["tests/*.ts"],
+    "rules": {
+      "no-console": "off",
+      "no-undef": "off"
+    }
+  }]
 }
