@@ -9,10 +9,10 @@ jobs:
     - name: Setting up new build of the reporter
       run: sudo chown -R runner /usr/local/lib/node_modules && npm install && npm run build-local-reporter
     - name: Running the "Live reporting" tests
-      run: npm run e2e-tests
+      run: npm run run-e2e-tests
     - name: Running the "No live reporting" tests
-      run: npm run e2e-no-live-reporting-tests
+      run: npm run run-e2e-no-live-reporting-tests
     - name: Running the "Retry mechanism" tests
-      run: npm run e2e-retry-tests
+      run: npm run run-e2e-retry-tests
     - name: Running the "Display debug logs" tests
-      run: npm run e2e-display-debug-logs-tests
+      run: npm run run-e2e-display-debug-logs-tests
