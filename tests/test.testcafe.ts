@@ -1,8 +1,11 @@
 import { t } from 'testcafe';
+import { loadArguments } from './utils/cli-loader';
 
 fixture `First fixture`
     .page('https://google.com')
-
+    .before(async () => {
+        loadArguments();
+    });
 test('Taking screenshot', async () => {
     console.log('About to take a screenshot');
     await t.takeScreenshot()

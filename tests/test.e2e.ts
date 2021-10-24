@@ -1,5 +1,6 @@
 import { MockServer } from 'dmock-server';
 import { mock } from './mock';
+import { loadArguments } from './utils/cli-loader';
 import createTestCafe from 'testcafe';
 let reportPortalServer: MockServer;
 let testcafeServer: TestCafe;
@@ -7,6 +8,7 @@ let testcafeServer: TestCafe;
 describe('Performing E2E testing', async function() {
     this.timeout(10 * 60 * 60 * 60);
     before(async () => {
+        loadArguments();
         reportPortalServer = new MockServer({
             hostname: 'localhost',
             port: 1234,

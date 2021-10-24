@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "axios": "^0.21.0",
-    "cli-argument-parser": "^0.3.4",
+    "cli-argument-parser": "^0.5.4",
     "fs": "0.0.1-security"
   }
 }
