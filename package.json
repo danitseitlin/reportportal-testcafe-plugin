@@ -41,7 +41,6 @@
     "@babel/types": "^7.6.1",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
-    "@types/node": "^16.11.6",
     "babel-eslint": "^10.0.1",
     "callsite-record": "^3.2.0",
     "chai": "^4.3.3",
@@ -56,6 +55,8 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.74",
+    "@types/node": "12.20.20",
     "axios": "0.21.0",
     "cli-argument-parser": "0.5.4",
     "fs": "0.0.1-security"
