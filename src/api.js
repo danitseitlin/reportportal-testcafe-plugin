@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const axios = require('axios');
 const fs = require('fs')
 
@@ -214,4 +213,4 @@ class API {
     }
 }
 
-module.exports =  API;
+module.exports = API;

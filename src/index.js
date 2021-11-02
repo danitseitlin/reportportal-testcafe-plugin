@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable no-undefined */
 const RP = require('./report-portal');
 
 exports['default'] = () => {
@@ -8,7 +5,7 @@ exports['default'] = () => {
         async reportTaskStart (startTime, userAgents, testCount) {
             this.startTime = startTime;
             this.testCount = testCount;
-            
+              
             this.setIndent(1)
                 .useWordWrap(true)
                 .write(this.chalk.bold('Running tests in:'))

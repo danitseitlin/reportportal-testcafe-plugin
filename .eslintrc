@@ -1,11 +1,15 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "extends": "eslint:recommended",
   "env": {
     "node": true
   },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "requireConfigFile": false
+  },
   "overrides": [{
-    "files": ["tests/*.ts"],
+    "files": ["src/**.js"],
     "rules": {
       "no-console": "off",
       "no-undef": "off"

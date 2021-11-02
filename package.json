@@ -14,9 +14,13 @@
   "scripts": {
     "build": "babel src -d lib",
     "test": "mocha -r ts-node/register",
+    "lint": "eslint .",
     "get-report-portal-docker-compose": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
     "start-report-portal-server": "docker-compose -p reportportal up",
-    "build-local-reporter": "npm run build && npm link && npm link testcafe-reporter-reportportal-plugin",
+    "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin",
+    "link-pkg": "npm link && npm link testcafe-reporter-reportportal-plugin",
+    "build-local-reporter": "npm run unlink-pkg && npm run build && npm run link-pkg",
+    "testcafe-test": "testcafe chrome:headless ./tests/test.testcafe.ts --reporter reportportal-plugin",
     "e2e-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp -g \"Running TestCafe Tests\"",
     "e2e-retry-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=retry -g \"Retry mechanism\"",
     "e2e-no-live-reporting-tests": "npm run test ./tests/test.e2e.ts -- --rprotocol=http --rdomain=localhost:1234 --rlaunch-id=113 --rtoken=fff --rproject=tmp --disable-live-reporting -g \"Running TestCafe Tests\"",
@@ -34,17 +38,18 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@babel/eslint-parser": "^7.16.0",
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.8",
     "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
-    "babel-eslint": "^10.0.1",
     "callsite-record": "^3.2.0",
     "chai": "^4.3.3",
     "del": "^1.2.0",
     "dmock-server": "^1.5.5",
+    "eslint": "^8.1.0",
     "mocha": "^8.3.0",
     "normalize-newline": "^1.0.2",
     "read-file-relative": "^1.2.0",
@@ -54,7 +59,7 @@
   },
   "dependencies": {
     "axios": "^0.21.0",
-    "cli-argument-parser": "^0.5.4",
+    "cli-argument-parser": "^0.5.9",
     "fs": "0.0.1-security"
   }
 }

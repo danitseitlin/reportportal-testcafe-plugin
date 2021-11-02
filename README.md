@@ -21,16 +21,15 @@
 
 This is the **reportportal-plugin** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
-## Install
+# Integrate with Reporter in your project
 
+## Install the reporter via NPM
 ```
-npm install testcafe-reporter-reportportal-plugin
+npm i testcafe-reporter-reportportal-plugin --save-dev
 ```
 
-## Usage
-
+## Use the reporter in your TestCafe test run
 When you run tests from the command line, specify the reporter name by using the `--reporter` option:
-
 ```
 testcafe chrome 'path/to/test/file.js' --reporter reportportal-plugin
 ```
@@ -50,7 +49,7 @@ testCafe
     .run();
 ```
 
-## CLI Arguments:
+## Map of existing CLI Arguments:
 
 | Required | Argument   | Description                                                                                                     | Example                         | 
 | -------- | ---------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------- |
@@ -62,6 +61,9 @@ testCafe
 | No       | rsuite     | An optional suite name, adding a suite will put all tests under the suite instead of directly under the launch. | --rsuite=my-suite-name          |
 | No       | rprotocol  | An optional ability to override the protocol of the API protocol. {protocol}://{domain}/.                       | --rprotocol=http                |
 | No       | disable-live-reporting | An optional ability to disable the live reporting                                                   | --disable-live-reporting        |
+
+# Interested in contributing?
+Please read our contributing guidelines [here](https://github.com/danitseitlin/reportportal-testcafe-plugin/blob/master/CONTRIBUTING.md)
 
 ## Author
 Dani Tseitlin (https://github.com/danitseitlin)
