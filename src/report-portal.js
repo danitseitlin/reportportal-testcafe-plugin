@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undefined */
 const RPClient = require('./api');
 const cliArguments = require('cli-argument-parser').cliArguments;
 

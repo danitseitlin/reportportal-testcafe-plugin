@@ -14,6 +14,7 @@
   "scripts": {
     "build": "babel src -d lib",
     "test": "mocha -r ts-node/register",
+    "lint": "eslint .",
     "get-report-portal-docker-compose": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
     "start-report-portal-server": "docker-compose -p reportportal up",
     "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin",
@@ -42,11 +43,11 @@
     "@babel/preset-env": "^7.3.4",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
-    "babel-eslint": "^10.0.1",
     "callsite-record": "^3.2.0",
     "chai": "^4.3.3",
     "del": "^1.2.0",
     "dmock-server": "^1.5.5",
+    "eslint": "^8.1.0",
     "mocha": "^8.3.0",
     "normalize-newline": "^1.0.2",
     "read-file-relative": "^1.2.0",
@@ -55,6 +56,7 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.16.0",
     "axios": "^0.21.0",
     "cli-argument-parser": "^0.5.4",
     "fs": "0.0.1-security"
