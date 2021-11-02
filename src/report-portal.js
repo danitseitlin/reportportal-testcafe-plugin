@@ -3,6 +3,7 @@ const cliArguments = require('cli-argument-parser').cliArguments;
 
 class ReportPortal { 
     constructor () {
+        console.log(cliArguments)
         if (!cliArguments.rdomain)
             throw new Error('Missing argument --rdomain');
         if (!cliArguments.rtoken)

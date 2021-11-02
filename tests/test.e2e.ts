@@ -3,6 +3,7 @@ import { mock } from './mock';
 import { loadArguments } from './utils/cli-loader';
 import createTestCafe from 'testcafe';
 import { cliArguments } from 'cli-argument-parser';
+import { expect } from 'chai';
 let reportPortalServer: MockServer;
 let testcafeServer: TestCafe;
 
@@ -32,7 +33,7 @@ describe('Performing E2E testing', async function() {
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();
-
+        expect(failedCount).to.eql(1, 'The count of failed testcafe tests')
         console.log('Tests failed: ' + failedCount);
     });
     it('Retry mechanism Tests', async () => {
@@ -42,7 +43,8 @@ describe('Performing E2E testing', async function() {
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();
-
+        
+        expect(failedCount).to.eql(0, 'The count of failed testcafe tests')
         console.log('Tests failed: ' + failedCount);
     });
 });
