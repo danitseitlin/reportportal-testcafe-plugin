@@ -142,10 +142,10 @@ class ReportPortal {
      * @param {*} time The time it was sent/written. Default: current time.
      * @param {*} retry The retry attempts count. Default: 3
      */
-    async sendTestLogs (testId, level, message, time = this.client.now(), attachment, retry = 3) {
+    async sendTestLogs (testId, level, message, time = this.client.now(), attachment = undefined, retry = 3) {
         try {
             if(this.displayDebugLogs === true)
-                process.stdout.write(`\n[Test ${testId}] Sending log: ${message} \n`)
+                process.stdout.write(`\n[Test ${testId}] Sending log: ${message} \n`);
             await this.client.sendLog(this.projectName, {
                 itemUuid:   testId,
                 launchUuid: this.launch.id,
@@ -157,7 +157,7 @@ class ReportPortal {
         } 
         catch (error) {
             if(retry - 1 > 0)
-                await this.sendTestLogs(testId, level, message, time, attachment, retry - 1)
+                await this.sendTestLogs(testId, level, message, time, attachment, retry - 1);
             else
                 this.client.handleError(error);
         }

@@ -39,39 +39,39 @@ exports['default'] = () => {
             console.log = d => {
                 (async() => this.captureLogs(this.reporter.test.id, 'info', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
-                })
+                });
             };
             console.error = d => {
                 (async() => this.captureLogs(this.reporter.test.id, 'error', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
-                })
+                });
             };
             console.warning = d => {
                 (async() => this.captureLogs(this.reporter.test.id, 'warning', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
-                })
+                });
             };
             console.debug = d => {
                 (async() => this.captureLogs(this.reporter.test.id, 'debug', d, new Date().valueOf()))().then(d => {
                     process.stdout.write(d + '\n');
-                })
+                });
             };
             await this.reporter.startTest(name);
-            await this.captureLogs(this.reporter.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf())
+            await this.captureLogs(this.reporter.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf());
         },
         async captureLogs(testId, level, message, time, attachment) {
             try {
                 if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n[Test ${testId}] Capturing log: ${message} \n`)
+                    process.stdout.write(`\n[Test ${testId}] Capturing log: ${message} \n`);
                 if(!this.reporter.liveReporting)
                     process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
                 else
                     await this.reportLogs(testId, level, message, time, attachment);
-                return message
+                return message;
             } 
             catch (error) {
                 if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n[Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`)
+                    process.stdout.write(`\n[Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`);
                 this.reporter.client.handleError(error);
             }
         },
@@ -81,9 +81,9 @@ exports['default'] = () => {
                 //If the log is a stacktrace, and we want to focus on printing the error message itself.
                 if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
                 //If the log is a JS Object
-                else if(isJSON) message = JSON.parse(message)
-                else if(typeof message === 'object') message = `"${message}"`
-                message = this.reporter.client.isJSON(message) ? JSON.stringify(message): message
+                else if(isJSON) message = JSON.parse(message);
+                else if(typeof message === 'object') message = `"${message}"`;
+                message = this.reporter.client.isJSON(message) ? JSON.stringify(message): message;
             }
             await this.reporter.sendTestLogs(testId, level, message, time, attachment);
         },
@@ -130,14 +130,14 @@ exports['default'] = () => {
             this.newline();
             if (testRunInfo.screenshots) {
                 testRunInfo.screenshots.forEach(async (screenshot, idx) => {
-                    await this.captureLogs(this.reporter.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath })
+                    await this.captureLogs(this.reporter.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath });
                 });
             }
-            await this.captureLogs(this.reporter.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf())
+            await this.captureLogs(this.reporter.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf());
             if(!this.reporter.liveReporting) {
                 process.logs.forEach(async (item) => {
                     await this.reportLogs(this.reporter.test.id, item.type, item.log, item.time, item.file);
-                })
+                });
             }
             await this.reporter.finishTest(this.reporter.test.id, result);
         },
@@ -171,7 +171,7 @@ exports['default'] = () => {
                 .newline();
 
             await errs.forEach(async (err, idx) => {
-                await this.captureLogs(this.reporter.test.id, 'error', JSON.stringify(err), new Date().valueOf())
+                await this.captureLogs(this.reporter.test.id, 'error', JSON.stringify(err), new Date().valueOf());
                 var prefix = this.chalk.red(`${idx + 1}) `);
 
                 this.newline()

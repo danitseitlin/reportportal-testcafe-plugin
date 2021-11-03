@@ -1,5 +1,5 @@
 const axios = require('axios');
-const fs = require('fs')
+const fs = require('fs');
 
 class API {
     constructor (options) {
@@ -123,13 +123,13 @@ class API {
         const bx = `--${boundary}`;
         const buffers = [
             Buffer.from(
-                bx + eol + 'Content-Disposition: form-data; name="json_request_part"'
-                + eol + 'Content-Type: application/json' + eol
-                + eol + eol + JSON.stringify(jsonPart) + eol,
+                bx + eol + 'Content-Disposition: form-data; name="json_request_part"' +
+                eol + 'Content-Type: application/json' + eol +
+                eol + eol + JSON.stringify(jsonPart) + eol
             ),
             Buffer.from(
-                bx + eol + 'Content-Disposition: form-data; name="file"; filename="' + filePart.name + '"' + eol
-                + 'Content-Type: ' + filePart.type + eol + eol,
+                bx + eol + 'Content-Disposition: form-data; name="file"; filename="' + filePart.name + '"' + eol +
+                'Content-Type: ' + filePart.type + eol + eol
             ),
             Buffer.from(filePart.content, 'base64'),
             Buffer.from(`${eol + bx}--${eol}`),
@@ -206,10 +206,7 @@ class API {
         const responseData = error.response && error.response.data;
 
         throw new Error(`${errorMessage}${
-            responseData
-                && typeof responseData === 'object'
-                ? `: ${JSON.stringify(responseData)}`
-                : ''}`);
+            responseData && typeof responseData === 'object' ? `: ${JSON.stringify(responseData)}` : ''}`);
     }
 }
 
