@@ -11,6 +11,7 @@ test('Taking screenshot', async () => {
     await t.takeScreenshot()
     console.log('The screenshot was succesfully taken!');
 })
+
 test('Negative testing, verifying Error display', async () => {
     console.log('About to fail..');
     console.log(`${{obj: 'X', obj2: { x: 'Y'}}}`)

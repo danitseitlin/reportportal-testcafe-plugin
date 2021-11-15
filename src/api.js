@@ -1,25 +1,32 @@
-const axios = require('axios');
-const fs = require('fs');
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+const filename = path.basename(__filename);
 
 class API {
-    constructor (options) {
+    constructor(options) {
         this.baseURL = `${options.protocol}://${options.domain}${options.apiPath}`;
         this.token = options.token;
-        this.headers = { 'Content-type': 'application/json', 'Authorization': `Bearer ${options.token}` };
+        this.headers = {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${options.token}`,
+        };
         this.client = axios.create({
             baseURL: this.baseURL,
-            headers: this.headers
+            headers: this.headers,
         });
+        this._debug = false;
     }
 
     /**
      * Checking the connection to the report portal server
      */
-    async checkConnect () {
+    async checkConnect() {
+        if (this._debug == true)
+            process.stdout.write("[" + filename + "] check connect: /user\n");
         try {
-            return this.handleResponse(await this.client.get('/user'));
-        }
-        catch (error) {
+            return this.handleResponse(await this.client.get("/user"));
+        } catch (error) {
             return this.handleError(error);
         }
     }
@@ -29,11 +36,14 @@ class API {
      * @param {*} projectName The name of the project
      * @param {*} options The options of the launch
      */
-    async createLaunch (projectName, options) {
+    async createLaunch(projectName, options) {
+        if (this._debug == true)
+            process.stdout.write(`[${filename}] createLaunch: /${projectName}/launch\n`);
         try {
-            return this.handleResponse(await this.client.post(`/${projectName}/launch`, options));
-        }
-        catch (error) {
+            return this.handleResponse(
+                await this.client.post(`/${projectName}/launch`, options)
+            );
+        } catch (error) {
             return this.handleError(error);
         }
     }
@@ -44,40 +54,61 @@ class API {
      * @param {*} launchId The id of the launch
      * @param {*} options The options of the launch
      */
-    async finishLaunch (projectName, launchId, options) {
+    async finishLaunch(projectName, launchId, options) {
+        if (this._debug == true)
+            process.stdout.write(
+                `[${filename}] finishLaunch: ${projectName}/launch/${launchId}/finish\n`
+            );
         try {
-            return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/finish`, options));
-        }
-        catch (error) {
+            return this.handleResponse(
+                await this.client.put(
+                    `/${projectName}/launch/${launchId}/finish`,
+                    options
+                )
+            );
+        } catch (error) {
             return this.handleError(error);
         }
     }
 
     /**
      * Force stoping a launch
-     * @param {*} projectName The name of the project 
+     * @param {*} projectName The name of the project
      * @param {*} launchId The id of the launch
      * @param {*} options The options of the launch
      */
-    async forceStopLaunch (projectName, launchId, options) {
+    async forceStopLaunch(projectName, launchId, options) {
+        if (this._debug == true)
+            process.stdout.write(
+                `[${filename}]forceStopLaunch: /launch/${launchId}/stop\n`
+            );
         try {
-            return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/stop`, options));
-        }
-        catch (error) {
+            return this.handleResponse(
+                await this.client.put(
+                    `/${projectName}/launch/${launchId}/stop`,
+                    options
+                )
+            );
+        } catch (error) {
             return this.handleError(error);
         }
     }
 
     /**
      * Creating a test item
-     * @param {*} projectName The name of the project 
+     * @param {*} projectName The name of the project
      * @param {*} options The options of the launch
      */
-    async createTestItem (projectName, options) {
+    async createTestItem(projectName, options) {
+        if (this._debug == true)
+            process.stdout.write(
+                `[${filename}]launch:${options.launchUuid} createTestItem: /${projectName}/item\n`
+            );
         try {
-            return this.handleResponse(await this.client.post(`/${projectName}/item`, options));
-        }
-        catch (error) {
+            return this.handleResponse(
+                await this.client.post(`/${projectName}/item`, options)
+            );
+        } catch (error) {
             return this.handleError(error);
         }
     }
@@ -88,26 +119,42 @@ class API {
      * @param {*} parentItem The parent item of the test item
      * @param {*} options The options of the child test item
      */
-    async createChildTestItem (projectName, parentItem, options) {
+    async createChildTestItem(projectName, parentItem, options) {
+        if (this._debug == true)
+            process.stdout.write(
+                `[${filename}]launch:${options.launchUuid} createChildTestItem parent:${parentItem}\n`
+            );
         try {
-            return this.handleResponse(await this.client.post(`/${projectName}/item/${parentItem}`, options));
-        }
-        catch (error) {
+            return this.handleResponse(
+                await this.client.post(
+                    `/${projectName}/item/${parentItem}`,
+                    options
+                )
+            );
+        } catch (error) {
             return this.handleError(error);
         }
     }
 
     /**
      * Finishing a test item
-     * @param {*} projectName The name of the project 
+     * @param {*} projectName The name of the project
      * @param {*} testItemId The id of the test item
      * @param {*} options The options of the test item
      */
-    async finishTestItem (projectName, testItemId, options) {
+    async finishTestItem(projectName, testItemId, options) {
+        if (this._debug == true)
+            process.stdout.write(
+                `[${filename}]launch:${options.launchUuid} finishTestItem: /item/${testItemId} status:${options.status}\n`
+            );
         try {
-            return this.handleResponse(await this.client.put(`/${projectName}/item/${testItemId}`, options));
-        }
-        catch (error) {
+            return this.handleResponse(
+                await this.client.put(
+                    `/${projectName}/item/${testItemId}`,
+                    options
+                )
+            );
+        } catch (error) {
             return this.handleError(error);
         }
     }
@@ -118,23 +165,42 @@ class API {
      * @param {*} filePart The file of the stream
      * @param {*} boundary The boundary of the stream
      */
-    buildMultiPartStream (jsonPart, filePart, boundary) {
-        const eol = '\r\n';
+    buildMultiPartStream(jsonPart, filePart, boundary) {
+        if (this._debug == true)
+            process.stdout.write(`[${filename}]enter buildMultiPartStream \n`);
+
+        const eol = "\r\n";
         const bx = `--${boundary}`;
+
         const buffers = [
             Buffer.from(
-                bx + eol + 'Content-Disposition: form-data; name="json_request_part"' +
-                eol + 'Content-Type: application/json' + eol +
-                eol + eol + JSON.stringify(jsonPart) + eol
+                /* eslint-disable */
+                bx +
+                    eol +
+                    'Content-Disposition: form-data; name="json_request_part"' +
+                    eol +
+                    "Content-Type: application/json" +
+                    eol +
+                    eol +
+                    eol +
+                    JSON.stringify(jsonPart) +
+                    eol
             ),
             Buffer.from(
-                bx + eol + 'Content-Disposition: form-data; name="file"; filename="' + filePart.name + '"' + eol +
-                'Content-Type: ' + filePart.type + eol + eol
-            ),
-            Buffer.from(filePart.content, 'base64'),
+                bx +
+                    eol +
+                    'Content-Disposition: form-data; name="file"; filename="' +
+                    filePart.name +
+                    '"' +
+                    eol +
+                    "Content-Type: " +
+                    filePart.type +
+                    eol +
+                    eol
+            ) /* eslint-disable */,
+            Buffer.from(filePart.content, "base64"),
             Buffer.from(`${eol + bx}--${eol}`),
         ];
-
         return Buffer.concat(buffers);
     }
 
@@ -142,50 +208,64 @@ class API {
      * Sending logs to a test item
      * @param {*} projectName The name of the project
      * @param {*} options The options of the log item
+     * request body should contain 2 params:
+     * 1. json file with specific format:file,itemId,level,message,time
+     * 2. all files to upload(file names should match file names from part 1)
      */
-    async sendLog (projectName, options) {
-        try {
-            if(typeof options.message !== 'string')
-                options.message = `${options.message}`;
-            if (options.file) {
-                const MULTIPART_BOUNDARY = Math.floor(Math.random() * 10000000000).toString();
-                const fullPath = options.file.path;
-                const instance = axios.create({
-                    baseURL: this.baseURL,
-                    headers: { 'Content-type': `multipart/form-data; boundary=${MULTIPART_BOUNDARY}`, 'Authorization': `Bearer ${this.token}` }
-                });
-                
-                await instance.post(`${this.baseURL}/${projectName}/log`, this.buildMultiPartStream([options], {
-                    name:    options.file.name,
-                    type:    'image/png',
-                    content: fs.readFileSync(fullPath)
-                }, MULTIPART_BOUNDARY));
+    async sendLog(projectName, options) {
+        if (options !== undefined) {
+            try {
+                if (this._debug == true)
+                    process.stdout.write(`[${filename}]enter sendLog under: ${options.itemUuid}\n`);
+                if (typeof options.message !== "string")
+                    options.message = `${options.message}`;
+                if (
+                    options.file !== undefined &&
+                    options.file.path !== undefined
+                ) {
+                    const MULTIPART_BOUNDARY = Math.floor(
+                        Math.random() * 10000000000
+                    ).toString();
+                    const fullPath = options.file.path;
+                    const instance = await axios.create({
+                        baseURL: this.baseURL,
+                        headers: {
+                            "Content-type": `multipart/form-data; boundary=${MULTIPART_BOUNDARY}`,
+                            Authorization: `Bearer ${this.token}`,
+                        },
+                    });
+
+                    //request body
+                    await instance.post(
+                        `${this.baseURL}/${projectName}/log`,
+                        this.buildMultiPartStream(
+                            [options],
+                            {
+                                name: options.file.name,
+                                type: "image/png",
+                                content: fs.readFileSync(fullPath),
+                            },
+                            MULTIPART_BOUNDARY
+                        )
+                    );
+                } else {
+                    this.handleResponse(
+                        await this.client.post(`/${projectName}/log`, options)
+                    );
+                }
+            } catch (error) {
+                process.stdout.write(
+                    `[api.js]sendLog error: ${error.message}\n`
+                );
+                this.handleError(error);
             }
-            else this.handleResponse(await this.client.post(`/${projectName}/log`, options));
-        }
-        catch (error) {
-            this.handleError(error);
-        }
-    }
-    
-    /**
-     * Checking if item is a valid JSON
-     * @param {*} json The string of the JSON
-     */
-    isJSON (json) {
-        try {
-            JSON.parse(json);
-            return true;
-        }
-        catch (e) {
-            return false;
         }
     }
 
     /**
      * Retrieving the timestamp right now
      */
-    now () {
+    now() {
         return new Date().valueOf();
     }
 
@@ -193,20 +273,28 @@ class API {
      * Handling an Axios response
      * @param {*} response The object of the response
      */
-    handleResponse (response) {
+    handleResponse(response) {
+        if (this._debug == true){
+            process.stdout.write(`[${filename}] handle reponse\n`);
+        }
         return response.data;
     }
-    
+
     /**
      * Handling an Axios error
      * @param {*} error The error response
      */
-    handleError (error) {
+    handleError(error) {
+        if (this._debug == true)
+            process.stdout.write(`[${filename}] handleERROR: ${error}\n`);
         const errorMessage = error.message;
         const responseData = error.response && error.response.data;
 
-        throw new Error(`${errorMessage}${
-            responseData && typeof responseData === 'object' ? `: ${JSON.stringify(responseData)}` : ''}`);
+        throw new Error(
+            `${errorMessage}${
+                responseData && typeof responseData === "object" ? `: ${JSON.stringify(responseData)}` : ""
+            }`
+        );
     }
 }
 

@@ -1,201 +1,182 @@
-const RP = require('./report-portal');
+const LogManager = require("./log-manager");
+const LogActions = require("./log-appender").LogActions;
+const ConsoleLogAppender = require("./console-log-appender");
+const ReportPortalAppender = require("./reportportal-appender");
+const path = require("path");
+const filename = path.basename(__filename);
 
-exports['default'] = () => {
+exports["default"] = () => {
     return {
-        async reportTaskStart (startTime, userAgents, testCount) {
+        // testcafe reportTaskStart
+        async reportTaskStart(startTime, userAgents, testCount) {
             this.startTime = startTime;
             this.testCount = testCount;
-              
+
             this.setIndent(1)
                 .useWordWrap(true)
-                .write(this.chalk.bold('Running tests in:'))
+                .write(
+                    this.chalk.cyan(
+                        `[${filename}]reportTaskStart.  Running tests in:`
+                    )
+                )
                 .newline();
 
-            userAgents.forEach(ua => {
-                this.write(`- ${this.chalk.blue(ua)}`)
-                    .newline();
+            userAgents.forEach((ua) => {
+                this.write(`- ${this.chalk.blue(ua)}`).newline();
             });
-            
-            this.reporter = new RP();
-            await this.reporter.startLaunch();
+
+            this.logManager = new LogManager();
+            await this.logManager.addAppenders(
+                { type: ConsoleLogAppender },
+                { type: ReportPortalAppender }
+            );
+            await this.logManager.appendMsg(LogActions.START_LAUNCH);
         },
+        // testcafe reportFixtureStart
+        async reportFixtureStart(name = "", path = "", meta="") {
+            this.setIndent(1).useWordWrap(true);
 
-        async reportFixtureStart (name, /*path, meta*/) {
-            this.currentFixtureName = name;
-            this.setIndent(1)
-                .useWordWrap(true);
+            if (this.afterErrorList) this.afterErrorList = false;
+            else this.newline();
 
-            if (this.afterErrorList)
-                this.afterErrorList = false;
-            else
-                this.newline();
-
-            this.write(name)
+            this.write(this.chalk.cyan(`start Fixture: ${name}`))
                 .newline()
                 .newline();
+            
+            await this.logManager.appendMsg(
+                LogActions.START_FIXTURE,
+                `${name}  \nmeta: ${JSON.stringify(meta)}  \npath:${path}`
+            );
         },
-        async reportTestStart (name /*, meta */) {
-            process.logs = [];
-            console.log = d => {
-                (async() => this.captureLogs(this.reporter.test.id, 'info', d, new Date().valueOf()))().then(d => {
-                    process.stdout.write(d + '\n');
-                });
-            };
-            console.error = d => {
-                (async() => this.captureLogs(this.reporter.test.id, 'error', d, new Date().valueOf()))().then(d => {
-                    process.stdout.write(d + '\n');
-                });
-            };
-            console.warning = d => {
-                (async() => this.captureLogs(this.reporter.test.id, 'warning', d, new Date().valueOf()))().then(d => {
-                    process.stdout.write(d + '\n');
-                });
-            };
-            console.debug = d => {
-                (async() => this.captureLogs(this.reporter.test.id, 'debug', d, new Date().valueOf()))().then(d => {
-                    process.stdout.write(d + '\n');
-                });
-            };
-            await this.reporter.startTest(name);
-            await this.captureLogs(this.reporter.test.id, 'debug', `Starting test ${name}...`, new Date().valueOf());
+        // testcafe reportTestStart
+        async reportTestStart(name /*, meta */) {
+            if (name === undefined) name = "undefined name";
+            this.write(
+                this.chalk.cyan("[" + filename + "] reportTestStart: " + name)
+            ).newline();
+            await this.logManager.appendMsg(LogActions.START_TEST, name);
         },
-        async captureLogs(testId, level, message, time, attachment) {
-            try {
-                if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n[Test ${testId}] Capturing log: ${message} \n`);
-                if(!this.reporter.liveReporting)
-                    process.logs.push({ type: level, log: message, file: attachment, time: new Date().valueOf() });
-                else
-                    await this.reportLogs(testId, level, message, time, attachment);
-                return message;
-            } 
-            catch (error) {
-                if(this.reporter.displayDebugLogs)
-                    process.stdout.write(`\n[Test ${testId}] Sending log: ${message} \n caused error: ${error} \n`);
-                this.reporter.client.handleError(error);
-            }
-        },
-        async reportLogs(testId, level, message, time, attachment) {
-            if(message !== undefined) {
-                const isJSON = this.reporter.client.isJSON(message) || Array.isArray(message);
-                //If the log is a stacktrace, and we want to focus on printing the error message itself.
-                if(isJSON && JSON.parse(message).errMsg !== undefined) message = JSON.parse(message).errMsg;
-                //If the log is a JS Object
-                else if(isJSON) message = JSON.parse(message);
-                else if(typeof message === 'object') message = `"${message}"`;
-                message = this.reporter.client.isJSON(message) ? JSON.stringify(message): message;
-            }
-            await this.reporter.sendTestLogs(testId, level, message, time, attachment);
-        },
-        async reportTestDone (name, testRunInfo) {
-            const errors      = testRunInfo.errs;
-            const hasErrors   = errors !== undefined ? !!errors.length : false;
-            let symbol    = null;
+        // testcafe reportTestDone
+        async reportTestDone(name, testRunInfo) {
+            this.write(
+                this.chalk.cyan("[" + filename + "] reportTestDone")
+            ).newline();
+            const errors = testRunInfo.errs;
+            const hasErrors = errors !== undefined ? !!errors.length : false;
+            let symbol = null;
             let nameStyle = null;
 
             if (testRunInfo.skipped) {
                 this.skipped++;
-                symbol    = this.chalk.cyan('-');
+                symbol = this.chalk.cyan("-");
                 nameStyle = this.chalk.cyan;
-            }
-            else if (hasErrors) {
-                symbol    = this.chalk.red.bold(this.symbols.err);
+            } else if (hasErrors) {
+                symbol = this.chalk.red.bold(this.symbols.err);
                 nameStyle = this.chalk.red.bold;
-            }
-            else {
-                symbol    = this.chalk.green(this.symbols.ok);
+            } else {
+                symbol = this.chalk.green(this.symbols.ok);
                 nameStyle = this.chalk.grey;
             }
 
             let title = `${symbol} ${nameStyle(name)}`;
 
-            this.setIndent(1)
-                .useWordWrap(true);
+            this.setIndent(1).useWordWrap(true);
 
-            if (testRunInfo.unstable)
-                title += this.chalk.yellow(' (unstable)');
+            if (testRunInfo.unstable) title += this.chalk.yellow(" (unstable)");
 
             if (testRunInfo.screenshotPath)
-                title += ` (screenshots: ${this.chalk.underline.grey(testRunInfo.screenshotPath)})`;
+                title += ` (screenshots: ${this.chalk.underline.grey(
+                    testRunInfo.screenshotPath
+                )})`;
 
-            this.newline().write(title);
+            this.newline().write(title).newline();
 
-            if (hasErrors)
-                await this._renderErrors(testRunInfo.errs);
+            if (hasErrors) await this._renderErrors(testRunInfo.errs);
 
-            const result = testRunInfo.skipped ? 'skipped' : hasErrors ? 'failed' : 'passed';
+            const result = testRunInfo.skipped ? "skipped": hasErrors ? "failed": "passed";
 
             this.afterErrorList = hasErrors;
 
             this.newline();
             if (testRunInfo.screenshots) {
                 testRunInfo.screenshots.forEach(async (screenshot, idx) => {
-                    await this.captureLogs(this.reporter.test.id, 'debug', `Taking screenshot (${name}-${idx}.png)`, new Date().valueOf(), { name: `${name}-${idx}.png`, path: screenshot.screenshotPath });
+                    await this.logManager.appendMsg(
+                        LogActions.ADD_SCREENSHOT,
+                        `Taking screenshot (${name}-${idx}.png)`,
+                        {
+                            name: `${name}-${idx}.png`,
+                            path: screenshot.screenshotPath,
+                        }
+                    );
                 });
             }
-            await this.captureLogs(this.reporter.test.id, 'debug', `Test ${name} has ended...`, new Date().valueOf());
-            if(!this.reporter.liveReporting) {
-                process.logs.forEach(async (item) => {
-                    await this.reportLogs(this.reporter.test.id, item.type, item.log, item.time, item.file);
-                });
-            }
-            await this.reporter.finishTest(this.reporter.test.id, result);
+            process.stdout.write(
+                `Test ${name} has ended...result:[${result}]\n`
+            );
+
+            await this.logManager.appendMsg(LogActions.FINISH_TEST, result);
         },
+        //testcafe reportTaskDone
+        async reportTaskDone(endTime, passed, warnings) {
+            this.write(
+                this.chalk.cyan("[" + filename + "] reportTaskDone")
+            ).newline();
+            const durationMs = endTime - this.startTime;
+            const durationStr = this.moment
+                .duration(durationMs)
+                .format("h[h] mm[m] ss[s]");
 
-        async reportTaskDone (endTime, passed, warnings) {
-            const durationMs  = endTime - this.startTime;
-            const durationStr = this.moment.duration(durationMs).format('h[h] mm[m] ss[s]');
-
-            var footer = passed === this.testCount ?
-                this.chalk.bold.green(`${this.testCount} passed`) :
-                this.chalk.bold.red(`${this.testCount - passed}/${this.testCount} failed`);
+            const failed = this.testCount - passed;
+            var footer =
+                passed === this.testCount ? this.chalk.bold.green(`${this.testCount} passed`): this.chalk.bold.red(`${failed}/${this.testCount} failed`);
 
             footer += this.chalk.grey(` (${durationStr})`);
 
-            this.newline()
-                .setIndent(0)
-                .write(footer)
-                .newline();
+            this.newline().setIndent(0).write(footer).newline();
 
             if (this.skipped > 0) {
-                this.write(this.chalk.cyan(`${this.skipped} skipped`))
-                    .newline();
+                this.write(
+                    this.chalk.cyan(`${this.skipped} skipped`)
+                ).newline();
             }
 
-            if (warnings.length)
-                this._renderWarnings(warnings);
-            await this.reporter.finishLaunch();
+            if (warnings.length) this._renderWarnings(warnings);
+            const result = failed == 0 ? "passed" : "failed";
+            await this.logManager.appendMsg(LogActions.FINISH_LAUNCH, result);
+            await this.logManager.waitForLastMessageResponse();
         },
-        async _renderErrors (errs) {
-            this.setIndent(3)
-                .newline();
+        //testcafe _renderErrors  (stack trace)
+        async _renderErrors(errs) {
+            process.stdout.write(
+                this.chalk.cyan("[" + filename + "] renderErrors")
+            );
+            this.setIndent(3).newline();
 
             await errs.forEach(async (err, idx) => {
-                await this.captureLogs(this.reporter.test.id, 'error', JSON.stringify(err), new Date().valueOf());
-                var prefix = this.chalk.red(`${idx + 1}) `);
-
-                this.newline()
-                    .write(this.formatError(err, prefix))
-                    .newline()
-                    .newline();
+                this.chalk.red(`${idx + 1}) `);
+                await console.error(this.formatError(err));
             });
         },
-        _renderWarnings (warnings) {
+        //testcafe _renderWarnings
+        async _renderWarnings(warnings) {
+            this.write(
+                this.chalk.cyan("[" + filename + "] enter renderWarnings")
+            );
             this.newline()
                 .setIndent(1)
                 .write(this.chalk.bold.yellow(`Warnings (${warnings.length}):`))
                 .newline();
 
-            warnings.forEach(msg => {
+            warnings.forEach((msg) => {
                 this.setIndent(1)
-                    .write(this.chalk.bold.yellow('--'))
+                    .write(this.chalk.bold.yellow("--"))
                     .newline()
                     .setIndent(2)
                     .write(msg)
                     .newline();
             });
-        }
+        },
     };
 };
 
-module.exports = exports['default'];
+module.exports = exports["default"];
