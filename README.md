@@ -5,17 +5,17 @@
   <a href='https://npmjs.org/package/testcafe-reporter-reportportal-plugin' style='width:25px;height:20px;'>
     <img src='https://img.shields.io/npm/dm/testcafe-reporter-reportportal-plugin.svg?color=blue&style=plastic' target='_blank' />
   </a>
-  <a href='https://github.com/danitseitlin/reportportal-testcafe-plugin/issues' style='width:25px;height:20px;'>
-    <img src='https://img.shields.io/github/issues/danitseitlin/reportportal-testcafe-plugin?style=plastic' target='_blank' />
+  <a href='https://github.com/RedisLabs/reportportal-testcafe-plugin/issues' style='width:25px;height:20px;'>
+    <img src='https://img.shields.io/github/issues/RedisLabs/reportportal-testcafe-plugin?style=plastic' target='_blank' />
   </a>
   <a href='https://npmjs.org/package/testcafe-reporter-reportportal-plugin' style='width:25px;height:20px;'>
     <img src='https://img.shields.io/bundlephobia/min/testcafe-reporter-reportportal-plugin/latest?style=plastic' target='_blank' />
   </a>
-  <a href='https://github.com/danitseitlin/reportportal-testcafe-plugin/commits/master'>
-    <img src='https://img.shields.io/github/last-commit/danitseitlin/reportportal-testcafe-plugin?style=plastic' />
+  <a href='https://github.com/RedisLabs/reportportal-testcafe-plugin/commits/master'>
+    <img src='https://img.shields.io/github/last-commit/RedisLabs/reportportal-testcafe-plugin?style=plastic' />
   </a>
-  <a href='https://github.com/danitseitlin/reportportal-testcafe-plugin/blob/master/LICENSE'>
-    <img src='https://img.shields.io/badge/license-BSD%203%20Clause-blue.svg?style=plastic' target='_blank' />
+ <a href='https://github.com/RedisLabs/reportportal-testcafe-plugin/blob/master/LICENSE'>
+    <img src='https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=plastic' target='_blank' />
   </a>
 </p></p>
 
@@ -62,8 +62,20 @@ testCafe
 | No       | rprotocol  | An optional ability to override the protocol of the API protocol. {protocol}://{domain}/.                       | --rprotocol=http                |
 | No       | disable-live-reporting | An optional ability to disable the live reporting                                                   | --disable-live-reporting        |
 
+# Testing the plugin? 
+in order to run tests in this plugin environment , in your cli run:
+(your reportportal parameters are listed under your reportportal profile)
+```
+npm run test ./tests/test.e2e.ts -- --rprotocol=https --rlaunch=launchName --rsuite=suitName --rdomain=YourReportportalDomain --rtoken=yourReportportalToken --rproject=YourReportportalProject
+```
+or 
+```
+ testcafe chrome:headless tests/test.e2e.ts --rprotocol=https --rsuite=suitName --rdomain=YourReportportalDomain --rtoken=yourReportportalToken --rproject=YourReportportalProject --rlaunch=launchName --reporter reportportal-plugin
+```
+
 # Interested in contributing?
-Please read our contributing guidelines [here](https://github.com/danitseitlin/reportportal-testcafe-plugin/blob/master/CONTRIBUTING.md)
+Please read our contributing guidelines [here](https://github.com/RedisLabs/reportportal-testcafe-plugin/blob/master/CONTRIBUTING.md)
 
 ## Author
-Dani Tseitlin (https://github.com/danitseitlin)
+Redis https://github.com/RedisLabs/reportportal-testcafe-plugin/
+forked from Dani Tseitlin (https://github.com/danitseitlin)
