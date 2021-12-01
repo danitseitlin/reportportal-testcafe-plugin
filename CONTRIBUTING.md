@@ -5,7 +5,7 @@ Run `npm i` in the root of the project, in order to install all the NPM dependen
 
 ## Compile your code, and build your local reporter
 In order to be able to test your latest report changes, please run `npm run build-local-reporter` which will build the code via Babel and will relink the project to the reporter `testcafe-reporter-reportportal-plugin`.
-In your tests, make sure you use the report with one of the reporter options [here](https://github.com/danitseitlin/reportportal-testcafe-plugin#use-the-reporter-in-your-testcafe-test-run)
+In your tests, make sure you use the report with one of the reporter options [here](https://github.com/redislabs/reportportal-testcafe-plugin#use-the-reporter-in-your-testcafe-test-run)
 
 ## Running tests
 In order to run some tests, you can execute our tests running `npm run e2e-tests` to just run the tests or `npm run run-e2e-tests` that will firstly build the report and relink it before running the tests.

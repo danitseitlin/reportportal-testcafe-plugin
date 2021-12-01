@@ -1,11 +1,11 @@
 {
   "name": "testcafe-reporter-reportportal-plugin",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Report Portal TestCafe reporter",
-  "repository": "https://github.com/danitseitlin/reportportal-testcafe-plugin",
+  "repository": "https://github.com/redislabs/reportportal-testcafe-plugin",
   "author": {
-    "name": "Dani Tseitlin",
-    "url": "https://github.com/danitseitlin"
+    "name": "Redis",
+    "url": "https://github.com/redislabs"
   },
   "main": "lib/index",
   "files": [
