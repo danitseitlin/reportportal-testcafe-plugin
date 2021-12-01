@@ -62,7 +62,9 @@ testCafe
 | No       | rprotocol  | An optional ability to override the protocol of the API protocol. {protocol}://{domain}/.                       | --rprotocol=http                |
 | No       | disable-live-reporting | An optional ability to disable the live reporting                                                   | --disable-live-reporting        |
 
-# Testing the plugin? 
+
+# Devloping the plugin? 
+
 in order to run tests in this plugin environment , in your cli run:
 (your reportportal parameters are listed under your reportportal profile)
 ```
@@ -72,6 +74,15 @@ or
 ```
  testcafe chrome:headless tests/test.e2e.ts --rprotocol=https --rsuite=suitName --rdomain=YourReportportalDomain --rtoken=yourReportportalToken --rproject=YourReportportalProject --rlaunch=launchName --reporter reportportal-plugin
 ```
+
+# Adding a new appender
+1. extend LogAppender and implement its methods.
+2. in index.js: 
+    await this.logManager.addAppenders(
+      { type: ConsoleLogAppender },
+      { type: ReportPortalAppender }
+    );
+    
 
 # Interested in contributing?
 Please read our contributing guidelines [here](https://github.com/RedisLabs/reportportal-testcafe-plugin/blob/master/CONTRIBUTING.md)
