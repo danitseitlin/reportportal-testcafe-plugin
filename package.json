@@ -55,7 +55,7 @@
     "mocha": "^8.3.0",
     "normalize-newline": "^1.0.2",
     "read-file-relative": "^1.2.0",
-    "testcafe": "^1.0.1",
+    "testcafe": "1.9.4",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.4"
   },
