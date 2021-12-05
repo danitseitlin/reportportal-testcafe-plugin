@@ -75,6 +75,7 @@ or
  testcafe chrome:headless tests/test.e2e.ts --rprotocol=https --rsuite=suitName --rdomain=YourReportportalDomain --rtoken=yourReportportalToken --rproject=YourReportportalProject --rlaunch=launchName --reporter reportportal-plugin
 ```
 
+
 # Adding a new appender
 1. extend LogAppender and implement its methods.
 2. in index.js: 

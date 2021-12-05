@@ -15,6 +15,8 @@ jobs:
           node-version: 10
           registry-url: https://npm.pkg.github.com
           scope: redislabs
+      - name: Npm Registery
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
       - name: Install dependencies
         run: npm ci
       - name: Run build
