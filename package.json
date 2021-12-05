@@ -46,6 +46,7 @@
     "@babel/preset-env": "7.3.4",
     "@types/chai": "4.2.15",
     "@types/mocha": "8.2.1",
+    "@types/node": "^16.11.11",
     "callsite-record": "3.2.0",
     "chai": "4.3.3",
     "del": "1.2.0",
