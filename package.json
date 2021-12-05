@@ -1,8 +1,12 @@
 {
-  "name": "testcafe-reporter-reportportal-plugin",
+  "name": "@redislabs/testcafe-reporter-reportportal-plugin",
   "version": "0.0.10",
+  "private":false,
   "description": "Report Portal TestCafe reporter",
   "repository": "https://github.com/redislabs/reportportal-testcafe-plugin",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "author": {
     "name": "Redis",
     "url": "https://github.com/redislabs"
