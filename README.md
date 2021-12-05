@@ -65,6 +65,7 @@ testCafe
 
 # Devloping the plugin? 
 
+
 in order to run tests in this plugin environment , in your cli run:
 (your reportportal parameters are listed under your reportportal profile)
 ```
