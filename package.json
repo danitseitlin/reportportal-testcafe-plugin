@@ -18,7 +18,7 @@
     "jshint": "jshint src",
     "get-report-portal-docker-compose": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
     "start-report-portal-server": "docker-compose -p reportportal up",
-    "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin && npm unlink",
+    "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin",
     "link-pkg": "npm link && npm link testcafe-reporter-reportportal-plugin",
     "build-local-reporter": "npm run unlink-pkg && npm run build && npm run link-pkg",
     "testcafe-test": "testcafe chrome:headless ./tests/test.testcafe.ts --reporter reportportal-plugin",
