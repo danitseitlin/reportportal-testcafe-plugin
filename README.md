@@ -66,7 +66,6 @@ testCafe
 
 # Devloping the plugin? 
 
-
 in order to run tests in this plugin environment , in your cli run:
 (your reportportal parameters are listed under your reportportal profile)
 ```
@@ -76,7 +75,6 @@ or
 ```
  testcafe chrome:headless tests/test.e2e.ts --rprotocol=https --rsuite=suitName --rdomain=YourReportportalDomain --rtoken=yourReportportalToken --rproject=YourReportportalProject --rlaunch=launchName --reporter reportportal-plugin
 ```
-
 
 
 # Adding a new appender
