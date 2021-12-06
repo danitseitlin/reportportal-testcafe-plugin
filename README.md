@@ -63,6 +63,7 @@ testCafe
 | No       | disable-live-reporting | An optional ability to disable the live reporting                                                   | --disable-live-reporting        |
 
 
+
 # Devloping the plugin? 
 
 
@@ -77,6 +78,7 @@ or
 ```
 
 
+
 # Adding a new appender
 1. extend LogAppender and implement its methods.
 2. in index.js: 
@@ -85,6 +87,7 @@ or
       { type: ReportPortalAppender }
     );
     
+
 
 # Interested in contributing?
 Please read our contributing guidelines [here](https://github.com/RedisLabs/reportportal-testcafe-plugin/blob/master/CONTRIBUTING.md)
