@@ -1,5 +1,5 @@
 const ReportPortal = require("./report-portal");
-const { LogAppender, LogActions } = require("./log-appender");
+const { LogAppender, LogActions, revertAnsiToHtml } = require("./log-appender");
 
 // appender for reportportal
 class ReportPortalAppender extends LogAppender {
@@ -36,7 +36,7 @@ class ReportPortalAppender extends LogAppender {
     async error(arg) {
         await this.reporter.appendAction(
             LogActions.ERROR,
-            `[ERROR] ${arg}`
+            `[ERROR] ${revertAnsiToHtml(arg)}`
         );
     }
     async fatal(arg) {
@@ -57,7 +57,7 @@ class ReportPortalAppender extends LogAppender {
     async startFixture(arg) {
         await this.reporter.appendAction(
             LogActions.START_FIXTURE,
-            `[before Test] ${arg}`
+            `[before first Test] ${arg}`
         );
     }
 
@@ -70,7 +70,7 @@ class ReportPortalAppender extends LogAppender {
     async startTest(arg) {
         await this.reporter.appendAction(
             LogActions.START_TEST,
-            `[TEST]${arg}`
+            `[TEST] ${arg}`
         );
     }
     async finishTest(arg) {

@@ -122,7 +122,7 @@ class API {
     async createChildTestItem(projectName, parentItem, options) {
         if (this._debug == true)
             process.stdout.write(
-                `[${filename}]launch:${options.launchUuid} createChildTestItem parent:${parentItem}\n`
+                `[${filename}]launch:${options.launchUuid} createChildTestItem ${options.name} parent:${parentItem} time:${this.now()}\n`
             );
         try {
             return this.handleResponse(
@@ -216,7 +216,7 @@ class API {
         if (options !== undefined) {
             try {
                 if (this._debug == true)
-                    process.stdout.write(`[${filename}]enter sendLog under: ${options.itemUuid}\n`);
+                    process.stdout.write(`[${filename}]enter sendLog under: ${options.itemUuid} time:${this.now()}\n`);
                 if (typeof options.message !== "string")
                     options.message = `${options.message}`;
                 if (
