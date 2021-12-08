@@ -27,7 +27,7 @@ This is the **reportportal-plugin** reporter plugin for [TestCafe](http://devexp
 2.  Add the below to your external project:
     In package.json under "dependencies" add: 
     ```
-    "testcafe-reporter-reportportal-plugin": "npm:@redislabs/testcafe-reporter-reportportal-plugin@^0.1.0",
+    "testcafe-reporter-reportportal-plugin": "npm:@redislabs/testcafe-reporter-reportportal-plugin@^0.1.1",
     ```
 3.  In .npmrc add: 
     ```
@@ -35,7 +35,7 @@ This is the **reportportal-plugin** reporter plugin for [TestCafe](http://devexp
     ```
     ## Install the reporter via NPM
 ```
-npm install @redislabs/testcafe-reporter-reportportal-plugin@0.1.0
+npm install @redislabs/testcafe-reporter-reportportal-plugin@0.1.1
 ```
 
 ## Use the reporter in your TestCafe test run
@@ -73,7 +73,6 @@ testCafe
 | No       | disable-live-reporting | An optional ability to disable the live reporting                                                   | --disable-live-reporting        |
 
 
-
 # Devloping the plugin? 
 
 in order to run tests in this plugin environment , in your cli run:
@@ -86,7 +85,6 @@ or
  testcafe chrome:headless tests/test.e2e.ts --rprotocol=https --rsuite=suitName --rdomain=YourReportportalDomain --rtoken=yourReportportalToken --rproject=YourReportportalProject --rlaunch=launchName --reporter reportportal-plugin
 ```
 
-
 # Adding a new appender
 1. extend LogAppender and implement its methods.
 2. in index.js: 
@@ -95,8 +93,6 @@ or
       { type: ReportPortalAppender }
     );
     
-
-
 # Interested in contributing?
 Please read our contributing guidelines [here](https://github.com/RedisLabs/reportportal-testcafe-plugin/blob/master/CONTRIBUTING.md)
 

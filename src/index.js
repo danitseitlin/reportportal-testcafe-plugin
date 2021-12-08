@@ -151,11 +151,11 @@ exports["default"] = () => {
                 this.chalk.cyan("[" + filename + "] renderErrors")
             );
             this.setIndent(3).newline();
-
-            await errs.forEach(async (err, idx) => {
-                this.chalk.red(`${idx + 1}) `);
+            
+            await errs.forEach(async (err) => {
                 await console.error(this.formatError(err));
             });
+            
         },
         //testcafe _renderWarnings
         async _renderWarnings(warnings) {
