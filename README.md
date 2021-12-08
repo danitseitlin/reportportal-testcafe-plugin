@@ -22,10 +22,20 @@
 This is the **reportportal-plugin** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
 # Integrate with Reporter in your project
+1.  Needs npm version>=6.9.0  (sudo npm install -g npm@6.9.0)
 
-## Install the reporter via NPM
+2.  Add the below to your external project:
+    In package.json under "dependencies" add: 
+    ```
+    "testcafe-reporter-reportportal-plugin": "npm:@redislabs/testcafe-reporter-reportportal-plugin@^0.1.0",
+    ```
+3.  In .npmrc add: 
+    ```
+    @redislabs:registry=https://npm.pkg.github.com/redislabs
+    ```
+    ## Install the reporter via NPM
 ```
-npm i testcafe-reporter-reportportal-plugin --save-dev
+npm install @redislabs/testcafe-reporter-reportportal-plugin@0.1.0
 ```
 
 ## Use the reporter in your TestCafe test run
