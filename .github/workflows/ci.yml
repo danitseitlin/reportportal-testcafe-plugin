@@ -32,6 +32,10 @@ jobs:
         run: npm run build-local-reporter
       - name: Downloading docker compose file
         run: npm run download-report-portal-latest-docker-compose-file
+      - uses: docker-practice/actions-setup-docker@master
+        with:
+          docker_channel: nightly
+          docker_nightly_version: snapshot-20200915
       - name: Setting up a local Report Portal environment
         run: npm run up
       - name: Creating a .env file from existing example
