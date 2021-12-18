@@ -210,7 +210,7 @@ class API {
         const errorMessage = error.message;
         const responseData = error.response && error.response.data;
         return `${errorMessage}${
-            responseData && typeof responseData === 'object' ? `: ${JSON.stringify(responseData)}` : ''}`
+            responseData && typeof responseData === 'object' ? `: ${JSON.stringify(responseData)}` : ''}`;
     }
 
     /**
