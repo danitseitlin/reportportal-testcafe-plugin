@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Granting node_modules folder required permissions
-        run: sudo chown -R runner /usr/local/lib/node_modules && mkdir /usr/share/elasticsearch/ && mkdir /usr/share/elasticsearch/data/ && mkdir /usr/share/elasticsearch/data/nodes && chown -R 1000:1000 /usr/share/elasticsearch/data
+        run: sudo chown -R runner /usr/local/lib/node_modules && mkdir /usr/share/elasticsearch/ && mkdir /usr/share/elasticsearch/data/ && mkdir /usr/share/elasticsearch/data/nodes && sudo chown -R 1000:1000 /usr/share/elasticsearch/data
       - name: Installing dependencies
         run: npm install
       - name: Running linting
