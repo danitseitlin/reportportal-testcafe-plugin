@@ -22,7 +22,7 @@ class API {
         }
         catch (error) {
             if(this.displayDebugLogs === true){
-                process.stdout.write(`[Connection Error]: ${this.parseError(error)}`);
+                process.stdout.write(`\n[Connection Error]: ${this.parseError(error)}\n`);
             }
             return this.handleError(error);
         }

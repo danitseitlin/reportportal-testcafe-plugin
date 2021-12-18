@@ -36,7 +36,7 @@
     "start": "docker compose -p reportportal start",
     "stop": "docker compose -p reportportal stop",
     "down": "docker compose -p reportportal down",
-    "status": "docker compose ps -a"
+    "status": "docker compose -p reportportal ps -a"
   },
   "keywords": [
     "testcafe",
