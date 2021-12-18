@@ -19,10 +19,6 @@ jobs:
   Integration:
     runs-on: ubuntu-latest
     steps:
-      - uses: docker-practice/actions-setup-docker@master
-        with:
-          docker_channel: nightly
-          docker_nightly_version: snapshot-20200915
       - uses: actions/checkout@v2
       - name: Granting node_modules folder required permissions
         run: sudo chown -R runner /usr/local/lib/node_modules
@@ -36,6 +32,8 @@ jobs:
         run: npm run build-local-reporter
       - name: Downloading docker compose file
         run: npm run download-report-portal-latest-docker-compose-file
+      - name: Docker version
+        run: docker -v
       - name: Setting up a local Report Portal environment
         run: npm run up
       - name: Creating a .env file from existing example
