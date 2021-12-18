@@ -35,7 +35,7 @@ jobs:
       - name: Docker version
         run: docker -v
       - name: Setting up a local Report Portal environment
-        run: sudo npm run up
+        run: sudo docker compose -p reportportal up
       - name: Creating a .env file from existing example
         run: cp .env.integration-tests .env
       - name: Running integration tests
