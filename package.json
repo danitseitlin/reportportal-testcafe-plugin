@@ -16,8 +16,6 @@
     "test": "mocha -r ts-node/register",
     "lint": "eslint .",
     "jshint": "jshint src",
-    "get-report-portal-docker-compose": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
-    "start-report-portal-server": "docker-compose -p reportportal up",
     "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin && npm unlink",
     "link-pkg": "npm link && npm link testcafe-reporter-reportportal-plugin",
     "build-local-reporter": "npm run unlink-pkg && npm run build && npm run link-pkg",
@@ -30,7 +28,15 @@
     "run-e2e-retry-tests": "npm run build-local-reporter && npm run e2e-retry-tests",
     "run-e2e-no-live-reporting-tests": "npm run build-local-reporter && npm run e2e-no-live-reporting-tests",
     "run-e2e-display-debug-logs-tests": "npm run build-local-reporter && npm run e2e-display-debug-logs-tests",
-    "run-full-e2e-tests": "npm run build-local-reporter && npm run e2e-tests && npm run e2e-retry-tests && npm run e2e-no-live-reporting-tests && npm run e2e-display-debug-logs-tests"
+    "run-full-e2e-tests": "npm run build-local-reporter && npm run e2e-tests && npm run e2e-retry-tests && npm run e2e-no-live-reporting-tests && npm run e2e-display-debug-logs-tests",
+    "integration-tests": "npm run test ./tests/integration/integration.executor.ts",
+    "run-integration-tests": "npm run build-local-reporter && npm run integration-tests",
+    "download-report-portal-latest-docker-compose-file": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
+    "up": "docker compose -p reportportal up",
+    "start": "docker compose -p reportportal start",
+    "stop": "docker compose -p reportportal stop",
+    "down": "docker compose -p reportportal down",
+    "status": "docker compose ps -a"
   },
   "keywords": [
     "testcafe",
