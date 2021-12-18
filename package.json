@@ -16,7 +16,7 @@
     "test": "mocha -r ts-node/register",
     "lint": "eslint .",
     "jshint": "jshint src",
-    "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin && npm unlink",
+    "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin",
     "link-pkg": "npm link && npm link testcafe-reporter-reportportal-plugin",
     "build-local-reporter": "npm run unlink-pkg && npm run build && npm run link-pkg",
     "testcafe-test": "testcafe chrome:headless ./tests/test.testcafe.ts --reporter reportportal-plugin",
@@ -43,7 +43,7 @@
     "reporter",
     "plugin"
   ],
-  "license": "MIT",
+  "license": "Apache 2",
   "devDependencies": {
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.8",
@@ -61,12 +61,12 @@
     "mocha": "^8.3.0",
     "normalize-newline": "^1.0.2",
     "read-file-relative": "^1.2.0",
-    "testcafe": "^1.0.1",
+    "testcafe": "1.9.4",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.2",
     "cli-argument-parser": "^0.5.9",
     "fs": "0.0.1-security"
   }

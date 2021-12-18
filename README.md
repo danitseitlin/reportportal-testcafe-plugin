@@ -15,7 +15,7 @@
     <img src='https://img.shields.io/github/last-commit/danitseitlin/reportportal-testcafe-plugin?style=plastic' />
   </a>
   <a href='https://github.com/danitseitlin/reportportal-testcafe-plugin/blob/master/LICENSE'>
-    <img src='https://img.shields.io/badge/license-BSD%203%20Clause-blue.svg?style=plastic' target='_blank' />
+    <img src='https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=plastic' target='_blank' />
   </a>
 </p></p>
 
