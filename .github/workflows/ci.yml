@@ -30,6 +30,8 @@ jobs:
         run: npm run jshint
       - name: Setting a Report Portal local reporter
         run: npm run build-local-reporter
+      - name: Downloading docker compose file
+        run: npm run download-report-portal-latest-docker-compose-file
       - name: Setting up a local Report Portal environment
         run: npm run up
       - name: Creating a .env file from existing example
