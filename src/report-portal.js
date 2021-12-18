@@ -49,7 +49,7 @@ class ReportPortal {
      */
     async startLaunch () {
         await this.verifyConnection();
-        if (!this.connected) throw Error('Report portal is not connected!');
+        if (!this.connected) throw Error(`Cannot connect to report portal server on '${this.client.baseURL}'`);
         if (this.launchName) {
             this.launch = await this.client.createLaunch(this.projectName, {
                 name:        this.launchName,
