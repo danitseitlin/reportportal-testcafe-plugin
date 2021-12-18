@@ -2,7 +2,7 @@ name: CI
 on:
   pull_request:
 jobs:
-  E2E:
+  Unit:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -16,3 +16,26 @@ jobs:
       run: npm run e2e-retry-tests
     - name: Running the "Display debug logs" tests
       run: npm run e2e-display-debug-logs-tests
+  Integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Granting node_modules folder required permissions
+        run: sudo chown -R runner /usr/local/lib/node_modules
+      - name: Installing dependencies
+        run: npm install
+      - name: Running linting
+        run: npm run lint
+      - name: Running static code analysis
+        run: npm run jshint
+      - name: Setting a Report Portal local reporter
+        run: npm run build-local-reporter
+      - name: Setting up a local Report Portal environment
+        run: npm run up
+      - name: Creating a .env file from existing example
+        run: cp .env.integration-tests .env
+      - name: Running integration tests
+        run: npm run integration-tests
+      - name: Tearing down services
+        run: npm run down
+      
