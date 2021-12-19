@@ -58,9 +58,9 @@ class UAT {
                 'grant_type': 'password',
                 username: username,
                 password: password
-            })
+            });
             const token = Buffer.from('ui:uiman').toString('base64');
-            this.setUiToken(token)
+            this.setUiToken(token);
             const response = await this.client.post(`/sso/oauth/token?${encodedURI}`);
             return this.handleResponse(response);
         }
@@ -135,10 +135,15 @@ class UAT {
         throw new Error(parsedError);
     }
 
+    /**
+     * Encoding URI when posting request with Form Data
+     * @param {*} parameters A list of Form Data items
+     * @returns An encoded URI of given Form Data items
+     */
     encodeURI(parameters) {
         let convertedParameters = '';
         for(const parameter in parameters) {
-            const parameterValue = typeof parameters[parameter] === 'object' ? JSON.stringify(parameters[parameter]): parameters[parameter]
+            const parameterValue = typeof parameters[parameter] === 'object' ? JSON.stringify(parameters[parameter]): parameters[parameter];
             convertedParameters += `${parameter}=${encodeURIComponent(parameterValue)}&`;
         }
         return convertedParameters.substring(0, convertedParameters.length-1);
