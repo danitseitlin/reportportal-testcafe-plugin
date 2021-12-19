@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-declare -r HOST="localhost:8080"
+declare -r HOST="localhost"
 timeout() {
 
     time=$1
@@ -20,10 +20,21 @@ timeout() {
 wait-for-url() {
     echo "Testing $1"
     bash -c \
-    'while [[ "$(curl -s -o /dev/null -L -w ''%{http_code}'' ${0})" != "200" ]];\
-    do echo "Waiting for ${0}" && sleep 2;\
+    'echo "Waiting for ${0} $(curl -s -o /dev/null -L -w ''%{http_code}'' ${0})";\
+    while [[ "$(curl -s -o /dev/null -L -w ''%{http_code}'' ${0})" != "200" ]];\
+    do echo "Waiting for ${0} $(curl -s -o /dev/null -L -w ''%{http_code}'' ${0})" && sleep 2;\
     done' ${1}
+    
     echo "OK!"
     curl -I $1
 }
-wait-for-url http://${HOST}
+
+wait-for-status() {
+    echo "Waiting for services status"
+    echo ""
+    bash -c \
+    'while [[ "$(npm run status)" == *"(starting)"* ]];\
+    do echo "Waiting for services" && sleep 2;\
+    done'
+}
+wait-for-status
