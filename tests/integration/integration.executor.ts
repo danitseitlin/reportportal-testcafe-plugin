@@ -1,14 +1,22 @@
-import { MockServer } from 'dmock-server';
 import { loadArguments } from '../utils/cli-loader';
 import createTestCafe from 'testcafe';
 import { cliArguments } from 'cli-argument-parser';
 import { expect } from 'chai';
+import UAT from '../../src/uat.js'
 let testcafeServer: TestCafe;
 
 describe('Performing E2E testing', async function() {
     this.timeout(10 * 60 * 60 * 60);
     before(async () => {
         loadArguments();
+        const client = new UAT({
+            protocol: 'http',
+            domain:  'localhost:8080',
+            apiPath:  '/uat',
+        });
+        const token = await client.getApiToken('default', '1q2w3e');
+        const apiToken = await client.generateApiToken(token.access_token);
+        cliArguments.rtoken = apiToken.access_token;
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });
 
