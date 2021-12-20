@@ -29,7 +29,7 @@ describe('Performing E2E testing', async function() {
     it('Running TestCafe Tests', async () => {
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
-        .src(['tests/test.testcafe.ts'])
+        .src(['tests/integration/integration.testcafe.ts'])
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();
@@ -39,7 +39,7 @@ describe('Performing E2E testing', async function() {
     it('Retry mechanism Tests', async () => {
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
-        .src(['tests/test.retry.testcafe.ts'])
+        .src(['tests/integration/integration.retry.testcafe.ts'])
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();
