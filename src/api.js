@@ -179,7 +179,7 @@ class API {
      */
     async getLogs(projectName) {
         try {
-            const response = await this.client.get(`/${projectName}/log`)
+            const response = await this.client.get(`/${projectName}/log`);
             return this.handleResponse(response);
         }
         catch (error) {
