@@ -1,6 +1,6 @@
 import { MockServer } from 'dmock-server';
 import { mock } from './mock';
-import { loadArguments } from './utils/cli-loader';
+import { loadArguments } from '../utils/cli-loader';
 import createTestCafe from 'testcafe';
 import { cliArguments } from 'cli-argument-parser';
 import { expect } from 'chai';
@@ -29,7 +29,7 @@ describe('Performing E2E testing', async function() {
     it('Running TestCafe Tests', async () => {
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
-        .src(['tests/test.testcafe.ts'])
+        .src(['tests/unit.testcafe.ts'])
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();
@@ -39,7 +39,7 @@ describe('Performing E2E testing', async function() {
     it('Retry mechanism Tests', async () => {
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
-        .src(['tests/test.retry.testcafe.ts'])
+        .src(['tests/unit.retry.testcafe.ts'])
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();

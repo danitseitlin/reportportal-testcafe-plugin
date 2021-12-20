@@ -1,5 +1,5 @@
 import { t } from 'testcafe';
-import { loadArguments } from './utils/cli-loader';
+import { loadArguments } from '../utils/cli-loader';
 
 fixture `First fixture`
     .page('https://google.com')

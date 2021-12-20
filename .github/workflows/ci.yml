@@ -6,16 +6,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Setting up new build of the reporter
-      run: sudo chown -R runner /usr/local/lib/node_modules && npm install && npm run lint && npm run jshint && npm run build-local-reporter
+    - name: Granting node_modules folder required permissions
+      run: sudo chown -R runner /usr/local/lib/node_modules
+    - name: Installing dependencies
+      run: npm install
+    - name: Running linting
+      run: npm run lint
+    - name: Running static code analysis
+      run: npm run jshint
+    - name: Setting a Report Portal local reporter
+      run: npm run build-local-reporter
     - name: Running the "Live reporting" tests
-      run: npm run e2e-tests
+      run: npm run unit-tests
     - name: Running the "No live reporting" tests
-      run: npm run e2e-no-live-reporting-tests
+      run: npm run unit-no-live-reporting-tests
     - name: Running the "Retry mechanism" tests
-      run: npm run e2e-retry-tests
+      run: npm run unit-retry-tests
     - name: Running the "Display debug logs" tests
-      run: npm run e2e-display-debug-logs-tests
+      run: npm run unit-display-debug-logs-tests
   Integration:
     runs-on: ubuntu-latest
     steps:

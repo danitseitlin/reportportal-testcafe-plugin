@@ -1,4 +1,4 @@
-import { loadArguments } from './utils/cli-loader';
+import { loadArguments } from '../utils/cli-loader';
 
 fixture `Testing the retry mechanism`
     .page('https://google.com')
