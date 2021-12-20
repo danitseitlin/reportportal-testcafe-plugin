@@ -269,7 +269,6 @@ class ReportPortal {
 
         await this._finishNestedSteps(status);
         let item = this.getLastItem();
-        // if (item && item.type == "TEST") {
             if (this._debug == true)
                 process.stdout.write(
                     `[${filename}] finish test ${item.id}. status: ${this._testStatus}\n`
@@ -280,7 +279,6 @@ class ReportPortal {
                 endTime: time,
             });
             this._itemsIds.pop();
-        // }
     }
 
     async _finishNestedSteps(status) {
