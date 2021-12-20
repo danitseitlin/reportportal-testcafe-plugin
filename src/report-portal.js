@@ -135,7 +135,7 @@ class ReportPortal {
                 launchUuid: this.launch.id,
                 name: name,
                 startTime: time,
-                type: "TEST",
+                type: "STEP",
             };
 
             //Incase the test needs to be under a suite
@@ -150,7 +150,7 @@ class ReportPortal {
                     this.projectName,
                     options
                 );
-            this._itemsIds.push({ type: "TEST", id: this.test.id });
+            this._itemsIds.push({ type: "STEP", id: this.test.id });
             if (this._debug == true)
                 process.stdout.write(
                     `[${filename}] startTest ${this.test.id} \n`
@@ -269,7 +269,7 @@ class ReportPortal {
 
         await this._finishNestedSteps(status);
         let item = this.getLastItem();
-        if (item && item.type == "TEST") {
+        // if (item && item.type == "TEST") {
             if (this._debug == true)
                 process.stdout.write(
                     `[${filename}] finish test ${item.id}. status: ${this._testStatus}\n`
@@ -280,7 +280,7 @@ class ReportPortal {
                 endTime: time,
             });
             this._itemsIds.pop();
-        }
+        // }
     }
 
     async _finishNestedSteps(status) {
