@@ -171,6 +171,21 @@ class API {
             this.handleError(error);
         }
     }
+
+    /**
+     * Retrieving all logs in a project
+     * @param {*} projectName The name of the project
+     * @returns A list of logs
+     */
+    async getLogs(projectName) {
+        try {
+            const response = await this.client.get(`/${projectName}/log`)
+            return this.handleResponse(response);
+        }
+        catch (error) {
+            return this.handleError(error);
+        }
+    }
     
     /**
      * Checking if item is a valid JSON
