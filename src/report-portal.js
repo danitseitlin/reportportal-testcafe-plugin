@@ -56,7 +56,6 @@ class ReportPortal {
         await this.verifyConnection();
         if (!this.connected) throw Error("Report portal is not connected!");
         if (this.projectName !== undefined && this.launchName !== undefined) {
-
             this.launch = await this.client.createLaunch(this.projectName, {
                 name: this.launchName,
                 startTime: time,
@@ -64,10 +63,12 @@ class ReportPortal {
             });
             this._completedLaunch = false;
         } else this.launch = { id: cliArguments["rlaunch-id"] };
-        
+
         this._itemsIds.push({ type: "LAUNCH", id: this.launch.id });
         if (this._debug == true)
-            process.stdout.write(`[${filename}]startLaunch id:${this.launch.id}\n`);
+            process.stdout.write(
+                `[${filename}]startLaunch id:${this.launch.id}\n`
+            );
         if (this.suiteName) await this._startSuite(this.suiteName, time);
     }
 
@@ -135,7 +136,7 @@ class ReportPortal {
                 launchUuid: this.launch.id,
                 name: name,
                 startTime: time,
-                type: "TEST",
+                type: "STEP",
             };
 
             //Incase the test needs to be under a suite
@@ -150,7 +151,11 @@ class ReportPortal {
                     this.projectName,
                     options
                 );
-            this._itemsIds.push({ type: "TEST", id: this.test.id });
+            this._itemsIds.push({
+                type: "STEP",
+                id: this.test.id,
+                isTest: true,
+            });
             if (this._debug == true)
                 process.stdout.write(
                     `[${filename}] startTest ${this.test.id} \n`
@@ -221,11 +226,15 @@ class ReportPortal {
                     process.stdout.write(
                         `[${filename}] finish fixture ${lastItem.id} \n`
                     );
-                await this.client.finishTestItem(this.projectName, lastItem.id, {
-                    launchUuid: this.launch.id,
-                    status: "passed",
-                    endTime: time,
-                });
+                await this.client.finishTestItem(
+                    this.projectName,
+                    lastItem.id,
+                    {
+                        launchUuid: this.launch.id,
+                        status: "passed",
+                        endTime: time,
+                    }
+                );
                 this._itemsIds.pop();
                 this._fixture = undefined;
             }
@@ -235,14 +244,14 @@ class ReportPortal {
     //Finishing a launch
     async _finishLaunch(status, time) {
         await this._finishFixture(time);
-        
-        if (this.suiteName){
-            if(this._suiteStatus === "failed" || status === "failed")
+
+        if (this.suiteName) {
+            if (this._suiteStatus === "failed" || status === "failed")
                 status = "failed";
             if (this.suite !== undefined && this.suite.id !== undefined)
                 await this._finishSuite(this.suite.id, status, time);
         }
-        if(this.launchName){
+        if (this.launchName) {
             if (this._debug == true)
                 process.stdout.write(
                     `[${filename}] finishLaunch. status: ${status}\n`
@@ -253,7 +262,6 @@ class ReportPortal {
         }
         this._itemsIds = [];
         this._completedLaunch = true;
-        
     }
 
     /**
@@ -269,7 +277,7 @@ class ReportPortal {
 
         await this._finishNestedSteps(status);
         let item = this.getLastItem();
-        if (item && item.type == "TEST") {
+        if (item && item.isTest) {
             if (this._debug == true)
                 process.stdout.write(
                     `[${filename}] finish test ${item.id}. status: ${this._testStatus}\n`
@@ -286,7 +294,8 @@ class ReportPortal {
     async _finishNestedSteps(status) {
         while (
             this._itemsIds.length > 0 &&
-            this._itemsIds[this._itemsIds.length - 1].type == "STEP"
+            this._itemsIds[this._itemsIds.length - 1].type == "STEP" &&
+            !this._itemsIds[this._itemsIds.length - 1].isTest
         ) {
             // in case there was an exception inside a group and groupEnd wasnt called.
             await this._finishStep(this.client.now(), status);
@@ -337,7 +346,8 @@ class ReportPortal {
     ) {
         if (this.launch !== undefined && this.launch.id !== undefined) {
             const lastItem = this.getLastItem();
-            let lastItemId = (lastItem && lastItem.id)? lastItem.id: this.launch.id;
+            let lastItemId =
+                lastItem && lastItem.id ? lastItem.id : this.launch.id;
             try {
                 await this.client.sendLog(this.projectName, {
                     itemUuid: lastItemId,
