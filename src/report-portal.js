@@ -269,16 +269,16 @@ class ReportPortal {
 
         await this._finishNestedSteps(status);
         let item = this.getLastItem();
-            if (this._debug == true)
-                process.stdout.write(
-                    `[${filename}] finish test ${item.id}. status: ${this._testStatus}\n`
-                );
-            await this.client.finishTestItem(this.projectName, item.id, {
-                launchUuid: this.launch.id,
-                status: this._testStatus,
-                endTime: time,
-            });
-            this._itemsIds.pop();
+        if (this._debug == true)
+            process.stdout.write(
+                `[${filename}] finish test ${item.id}. status: ${this._testStatus}\n`
+            );
+        await this.client.finishTestItem(this.projectName, item.id, {
+            launchUuid: this.launch.id,
+            status: this._testStatus,
+            endTime: time,
+        });
+        this._itemsIds.pop();
     }
 
     async _finishNestedSteps(status) {
