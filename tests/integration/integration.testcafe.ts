@@ -40,8 +40,17 @@ test('Basic print', async () => {
  */
 async function logAndVerify(logMsg: any) {
     console.log(logMsg);
+    await sleepInSeconds(5 * 1000);
     let logs = await api.getLogs(cliArguments.rproject);
     let log = logs.content.filter(l => l.message === logMsg);
-    process.stdout.write(`\nFound ${log.length} occurances for message '${logMsg}'`);
-    await t.expect(log.length).gte(1, 'Log appearances')
+    process.stdout.write(`\n[Test logs]: Found ${log.length} occurances for message '${logMsg}'\n`);
+    await t.expect(log.length).gte(1, `Log appearances for '${logMsg}'`);
+}
+
+/**
+ * Stopping the code from continueing for a number of miliseconds
+ * @param seconds Miliseconds to stop the code
+ */
+async function sleepInSeconds(miliseconds: number): Promise<any> {
+    return new Promise(resolve => setTimeout(resolve, miliseconds))
 }
