@@ -17,7 +17,7 @@ Run the following commands to setup a local environment of Report Portal -->
 #### Running the tests
 * Use the template from `.env.integration-tests` and create a `.env` file with the same configuration.
 If you're intersted in running the tests on your own external server, please adjust the `.env` file configuration to point to it.
-* Run `npm run integration-tests` to run all E2E tests.
+* Run `npm run integration-tests` to run all Integration tests.
 
 #### Login into the UI
 * Navigate to http://localhost:8080
