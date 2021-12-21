@@ -49,7 +49,7 @@ async function logAndVerify(logMsg: any) {
 
 /**
  * Stopping the code from continueing for a number of miliseconds
- * @param seconds Miliseconds to stop the code
+ * @param miliseconds The number of miliseconds to stop to code for
  */
 async function sleepInSeconds(miliseconds: number): Promise<any> {
     return new Promise(resolve => setTimeout(resolve, miliseconds))
