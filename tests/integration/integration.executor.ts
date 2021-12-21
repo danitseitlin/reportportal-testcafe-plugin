@@ -1,35 +1,35 @@
-import { MockServer } from 'dmock-server';
-import { mock } from './mock';
-import { loadArguments } from './utils/cli-loader';
+import { loadArguments } from '../utils/cli-loader';
 import createTestCafe from 'testcafe';
 import { cliArguments } from 'cli-argument-parser';
 import { expect } from 'chai';
-let reportPortalServer: MockServer;
+import UAT from '../../src/uat.js'
 let testcafeServer: TestCafe;
 
-describe('Performing E2E testing', async function() {
+describe('Performing Integration testing', async function() {
     this.timeout(10 * 60 * 60 * 60);
     before(async () => {
         loadArguments();
-        reportPortalServer = new MockServer({
-            hostname: 'localhost',
-            port: 1234,
-            routes: mock
+        const client = new UAT({
+            protocol: 'http',
+            domain:  'localhost:8080',
+            apiPath:  '/uat',
         });
-        reportPortalServer.start()
+        const token = await client.getApiToken('default', '1q2w3e');
+        const apiToken = await client.generateApiToken(token.access_token);
+        cliArguments.rtoken = apiToken.access_token;
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });
 
     after(async () => {
-        if(testcafeServer)
+        if(testcafeServer){
             await testcafeServer.close();
-        reportPortalServer.stop()
+        }
     });
 
     it('Running TestCafe Tests', async () => {
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
-        .src(['tests/test.testcafe.ts'])
+        .src(['tests/integration/integration.testcafe.ts'])
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();
@@ -39,7 +39,7 @@ describe('Performing E2E testing', async function() {
     it('Retry mechanism Tests', async () => {
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
-        .src(['tests/test.retry.testcafe.ts'])
+        .src(['tests/integration/integration.retry.testcafe.ts'])
         .browsers([`${cliArguments.browser}`])
         .reporter('reportportal-plugin')
         .run();

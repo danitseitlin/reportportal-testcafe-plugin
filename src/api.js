@@ -6,6 +6,7 @@ class API {
         this.baseURL = `${options.protocol}://${options.domain}${options.apiPath}`;
         this.token = options.token;
         this.headers = { 'Content-type': 'application/json', 'Authorization': `Bearer ${options.token}` };
+        this.displayDebugLogs = process.argv.find(arg => arg === '--display-debug-logs') !== undefined;
         this.client = axios.create({
             baseURL: this.baseURL,
             headers: this.headers
@@ -20,6 +21,9 @@ class API {
             return this.handleResponse(await this.client.get('/user'));
         }
         catch (error) {
+            if(this.displayDebugLogs === true){
+                process.stdout.write(`\n[Connection Error]: ${this.parseError(error)}\n`);
+            }
             return this.handleError(error);
         }
     }
@@ -167,6 +171,21 @@ class API {
             this.handleError(error);
         }
     }
+
+    /**
+     * Retrieving all logs in a project
+     * @param {*} projectName The name of the project
+     * @returns A list of logs
+     */
+    async getLogs(projectName) {
+        try {
+            const response = await this.client.get(`/${projectName}/log`);
+            return this.handleResponse(response);
+        }
+        catch (error) {
+            return this.handleError(error);
+        }
+    }
     
     /**
      * Checking if item is a valid JSON
@@ -198,15 +217,24 @@ class API {
     }
     
     /**
+     * Parsing an Axios error message
+     * @param {*} error The error response
+     * @returns A parsed error message
+     */
+    parseError(error) {
+        const errorMessage = error.message;
+        const responseData = error.response && error.response.data;
+        return `${errorMessage}${
+            responseData && typeof responseData === 'object' ? `: ${JSON.stringify(responseData)}` : ''}`;
+    }
+
+    /**
      * Handling an Axios error
      * @param {*} error The error response
      */
     handleError (error) {
-        const errorMessage = error.message;
-        const responseData = error.response && error.response.data;
-
-        throw new Error(`${errorMessage}${
-            responseData && typeof responseData === 'object' ? `: ${JSON.stringify(responseData)}` : ''}`);
+        const parsedError = this.parseError(error);
+        throw new Error(parsedError);
     }
 }
 

@@ -1,5 +1,9 @@
+# For Testing and Deployment
 lib
 node_modules
 screenshots
-docker-compose.yml
 .env
+
+# For Docker Compose
+docker-compose.yml
+data 
