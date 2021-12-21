@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import UAT from '../../src/uat.js'
 let testcafeServer: TestCafe;
 
-describe('Performing E2E testing', async function() {
+describe('Performing Integration testing', async function() {
     this.timeout(10 * 60 * 60 * 60);
     before(async () => {
         loadArguments();

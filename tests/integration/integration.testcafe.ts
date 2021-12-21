@@ -1,14 +1,11 @@
 import { t } from 'testcafe';
 import { cliArguments } from 'cli-argument-parser';
-import { loadArguments } from '../utils/cli-loader';
 const API = require('../../src/api.js');
 let api: typeof API;
-let projectName: string;
 fixture `First fixture`
     .page('https://google.com')
     .before(async () => {
         //loadArguments();
-        projectName = cliArguments.rproject;
         api = new API({
             protocol: 'http',
             domain: 'localhost:8080',
