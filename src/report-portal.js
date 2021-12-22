@@ -111,14 +111,22 @@ class ReportPortal {
      * @param {*} status The final status of the test
      */
     async finishTest (testId, status) {
-        if (this.suiteName && status === 'failed')
-            this.suiteStatus = 'failed';
-
-        await this.client.finishTestItem(this.projectName, testId, {
+        const options = {
             launchUuid: this.launch.id,
-            status:     status,
-            endTime:    this.client.now()
-        });
+            status: status,
+            endTime: this.client.now()
+        };
+
+        //In case a test fails, we would always want to fail the suite.
+        if (this.suiteName && status === 'failed') {
+            this.suiteStatus = 'failed';
+        }
+
+        //When status is skipped, we want to flag the test as "Not an issue" to prevent from adding the "To investigate" label
+        if (status === 'skipped') {
+            options.issue = { issueType: 'NOT_ISSUE' };
+        }
+        await this.client.finishTestItem(this.projectName, testId, options);
     }
 
     /**
