@@ -5,7 +5,6 @@ let api: typeof API;
 fixture `First fixture`
     .page('https://google.com')
     .before(async () => {
-        //loadArguments();
         api = new API({
             protocol: 'http',
             domain: 'localhost:8080',

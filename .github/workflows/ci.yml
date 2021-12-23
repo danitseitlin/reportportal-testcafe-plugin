@@ -15,7 +15,7 @@ jobs:
     - name: Running static code analysis
       run: npm run jshint
     - name: Setting a Report Portal local reporter
-      run: npm run build-local-reporter
+      run: npm run build && npm run link-pkg
     - name: Running the "Live reporting" tests
       run: npm run unit-tests
     - name: Running the "No live reporting" tests
@@ -37,7 +37,7 @@ jobs:
       - name: Running static code analysis
         run: npm run jshint
       - name: Setting a Report Portal local reporter
-        run: npm run build-local-reporter
+        run: npm run build && npm run link-pkg
       - name: Downloading docker compose file
         run: npm run download-report-portal-latest-docker-compose-file
       - name: Docker version
