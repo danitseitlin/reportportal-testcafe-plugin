@@ -10,7 +10,7 @@ jobs:
     - name: Installing NPM dependencies
       run: sudo chown -R runner /usr/local/lib/node_modules && npm install
     - name: Setting up new build of the reporter
-      run: npm run build-local-reporter
+      run: npm run build && npm run link-pkg
     - name: Deploying version
       uses: danitseitlin/package-deployer@master
       with:
