@@ -16,7 +16,7 @@
     "test": "mocha -r ts-node/register",
     "lint": "eslint .",
     "jshint": "jshint src",
-    "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin",
+    "unlink-pkg": "npm unlink --no-save testcafe-reporter-reportportal-plugin && npm unlink && npm i",
     "link-pkg": "npm link && npm link testcafe-reporter-reportportal-plugin",
     "build-local-reporter": "npm run unlink-pkg && npm run build && npm run link-pkg",
     "testcafe-test": "testcafe chrome:headless ./tests/test.testcafe.ts --reporter reportportal-plugin",
