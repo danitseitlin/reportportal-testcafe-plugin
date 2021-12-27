@@ -31,7 +31,7 @@ exports["default"] = () => {
             if(debugMode){
                 await this.logManager.addAppenders(
                     { type: ConsoleLogAppender }
-                )
+                );
             }else{
                 await this.logManager.addAppenders(
                     { type: ConsoleLogAppender },
