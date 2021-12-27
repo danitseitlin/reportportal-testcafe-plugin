@@ -27,22 +27,22 @@ exports["default"] = () => {
             });
 
             this.logManager = new LogManager();
-            const debugMode = ( cliArguments.rdebug === "true")? true:false;
-            if(debugMode){
-                await this.logManager.addAppenders(
-                    { type: ConsoleLogAppender }
-                );
-            }else{
+            const debugMode = cliArguments.rdebug === "true" ? true : false;
+            if (debugMode) {
+                await this.logManager.addAppenders({
+                    type: ReportPortalAppender,
+                });
+            } else {
                 await this.logManager.addAppenders(
                     { type: ConsoleLogAppender },
                     { type: ReportPortalAppender }
                 );
             }
-           
+
             await this.logManager.appendMsg(LogActions.START_LAUNCH);
         },
         // testcafe reportFixtureStart
-        async reportFixtureStart(name = "", path = "", meta="") {
+        async reportFixtureStart(name = "", path = "", meta = "") {
             this.setIndent(1).useWordWrap(true);
 
             if (this.afterErrorList) this.afterErrorList = false;
@@ -51,7 +51,7 @@ exports["default"] = () => {
             this.write(this.chalk.cyan(`start Fixture: ${name}`))
                 .newline()
                 .newline();
-            
+
             await this.logManager.appendMsg(
                 LogActions.START_FIXTURE,
                 `${name}  \nmeta: ${JSON.stringify(meta)}  \npath:${path}`
@@ -102,7 +102,11 @@ exports["default"] = () => {
 
             if (hasErrors) await this._renderErrors(testRunInfo.errs);
 
-            const result = testRunInfo.skipped ? "skipped": hasErrors ? "failed": "passed";
+            const result = testRunInfo.skipped
+                ? "skipped"
+                : hasErrors
+                ? "failed"
+                : "passed";
 
             this.afterErrorList = hasErrors;
 
@@ -137,7 +141,9 @@ exports["default"] = () => {
 
             const failed = this.testCount - passed;
             var footer =
-                passed === this.testCount ? this.chalk.bold.green(`${this.testCount} passed`): this.chalk.bold.red(`${failed}/${this.testCount} failed`);
+                passed === this.testCount
+                    ? this.chalk.bold.green(`${this.testCount} passed`)
+                    : this.chalk.bold.red(`${failed}/${this.testCount} failed`);
 
             footer += this.chalk.grey(` (${durationStr})`);
 
@@ -160,11 +166,10 @@ exports["default"] = () => {
                 this.chalk.cyan("[" + filename + "] renderErrors")
             );
             this.setIndent(3).newline();
-            
+
             await errs.forEach(async (err) => {
                 await console.error(this.formatError(err));
             });
-            
         },
         //testcafe _renderWarnings
         async _renderWarnings(warnings) {
