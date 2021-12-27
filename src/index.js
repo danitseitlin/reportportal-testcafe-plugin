@@ -2,6 +2,7 @@ const LogManager = require("./log-manager");
 const LogActions = require("./log-appender").LogActions;
 const ConsoleLogAppender = require("./console-log-appender");
 const ReportPortalAppender = require("./reportportal-appender");
+const cliArguments = require("cli-argument-parser").cliArguments;
 const path = require("path");
 const filename = path.basename(__filename);
 
@@ -26,10 +27,18 @@ exports["default"] = () => {
             });
 
             this.logManager = new LogManager();
-            await this.logManager.addAppenders(
-                { type: ConsoleLogAppender },
-                { type: ReportPortalAppender }
-            );
+            const debugMode = ( cliArguments.rdebug === "true")? true:false;
+            if(debugMode){
+                await this.logManager.addAppenders(
+                    { type: ConsoleLogAppender }
+                )
+            }else{
+                await this.logManager.addAppenders(
+                    { type: ConsoleLogAppender },
+                    { type: ReportPortalAppender }
+                );
+            }
+           
             await this.logManager.appendMsg(LogActions.START_LAUNCH);
         },
         // testcafe reportFixtureStart

@@ -15,12 +15,7 @@ class ReportPortal {
         if (!cliArguments.rproject)
             throw new Error("Missing argument --rproject");
 
-        this.client = new RPClient({
-            protocol: cliArguments.rprotocol ? cliArguments.rprotocol : "https",
-            domain: cliArguments.rdomain,
-            apiPath: "/api/v1", //synchronous api
-            token: cliArguments.rtoken,
-        });
+       
         this.connected = true;
         this._itemsIds = []; //stack of parents
         this.launchName = cliArguments.rlaunch;
@@ -30,11 +25,18 @@ class ReportPortal {
             this._suiteStatus = "passed";
         }
         this._fixture = undefined;
-        this._debug = false;
+        this._debug = ( cliArguments.rdebug === "true")? true:false;
         this._queue = []; //msgs queue
         this._waitingForReply = false;
         this._testStatus = "passed";
         this._completedLaunch = false;
+
+        this.client = new RPClient({
+            protocol: cliArguments.rprotocol ? cliArguments.rprotocol : "https",
+            domain: cliArguments.rdomain,
+            apiPath: "/api/v1", //synchronous api
+            token: cliArguments.rtoken,
+        },this._debug);
     }
 
     //Verifying the connection to Report Portal
