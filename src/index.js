@@ -102,11 +102,7 @@ exports["default"] = () => {
 
             if (hasErrors) await this._renderErrors(testRunInfo.errs);
 
-            const result = testRunInfo.skipped
-                ? "skipped"
-                : hasErrors
-                ? "failed"
-                : "passed";
+            const result = testRunInfo.skipped ? "skipped": hasErrors ? "failed": "passed";
 
             this.afterErrorList = hasErrors;
 
@@ -140,10 +136,7 @@ exports["default"] = () => {
                 .format("h[h] mm[m] ss[s]");
 
             const failed = this.testCount - passed;
-            var footer =
-                passed === this.testCount
-                    ? this.chalk.bold.green(`${this.testCount} passed`)
-                    : this.chalk.bold.red(`${failed}/${this.testCount} failed`);
+            var footer = passed === this.testCount ? this.chalk.bold.green(`${this.testCount} passed`) : this.chalk.bold.red(`${failed}/${this.testCount} failed`);
 
             footer += this.chalk.grey(` (${durationStr})`);
 
