@@ -4,7 +4,7 @@ const path = require("path");
 const filename = path.basename(__filename);
 
 class API {
-    constructor(options) {
+    constructor(options,debug) {
         this.baseURL = `${options.protocol}://${options.domain}${options.apiPath}`;
         this.token = options.token;
         this.headers = {
@@ -15,7 +15,7 @@ class API {
             baseURL: this.baseURL,
             headers: this.headers,
         });
-        this._debug = false;
+        this._debug = debug || false;
     }
 
     /**
