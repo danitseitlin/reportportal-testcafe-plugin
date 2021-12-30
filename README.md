@@ -67,6 +67,3 @@ Please go to the [Testing section](https://github.com/danitseitlin/reportportal-
 
 # Interested in contributing?
 Please read our contributing guidelines [here](https://github.com/danitseitlin/reportportal-testcafe-plugin/blob/master/CONTRIBUTING.md)
-
-## Author
-Dani Tseitlin (https://github.com/danitseitlin)
