@@ -64,22 +64,30 @@ class LogManager {
     }
 
     async waitForLastMessageResponse() {
+        const minToWait = 5;
         process.stdout.write(`[${filename}]wait for last msg\n`);
         for (const appender of this._appenders) {
-            await this.waitUntil(() => appender.isCompleted());
+            await this.waitUntil(() => appender.isCompleted(),60000 * minToWait);
         }
+        process.stdout.write(`[${filename}]Finish waiting to appenders to complete \n`);
     }
 
-    async waitUntil(condition) {
+    async waitUntil(condition, timeout) {
+        const intervalTime = 1000;
+        let timeWaited = 0;
         return new Promise((resolve) => {
             let interval = setInterval(() => {
-                if (!condition()) {
-                    return;
+                timeWaited += intervalTime;
+                if (condition() || timeWaited > timeout) {
+                    process.stdout.write(`This is the time we waited ${timeWaited}`);
+                    if (timeWaited > timeout) {
+                        process.stdout.write(`Timeout has reached ${timeout}`);
+                    }
+                    clearInterval(interval);
+                    resolve();
                 }
-
-                clearInterval(interval);
-                resolve();
-            }, 100);
+                return;
+            }, intervalTime);
         });
     }
 }
