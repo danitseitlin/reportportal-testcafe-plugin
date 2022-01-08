@@ -48,6 +48,22 @@ class API {
         }
     }
 
+   /**
+   * Getting launch attributes
+   * @param {*} projectName The name of the project
+   * @param {*} launchId The id of the launch
+   */
+  async getLaunchAttributes(projectName, launchId) {
+    if (this._debug == true) process.stdout.write(`[${filename}] getting launch attributes: ${projectName}/launch/${launchId}\n`);
+
+    try {
+      const res = await this.handleResponse(await this.client.get(`/${projectName}/launch/uuid/${launchId}`));
+      return res.attributes
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
     /**
      * Finishing an existing launch
      * @param {*} projectName The name of the project
