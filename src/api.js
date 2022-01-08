@@ -58,7 +58,7 @@ class API {
 
     try {
       const res = await this.handleResponse(await this.client.get(`/${projectName}/launch/uuid/${launchId}`));
-      return res.attributes
+      return res.attributes;
     } catch (error) {
       return this.handleError(error);
     }
