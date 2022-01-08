@@ -72,9 +72,9 @@ class ReportPortal {
     if(launchAttributes.length > 0 ){
         const suiteDescription = `
         ${launchAttributes.map(attr =>{
-          return `* ${attr.key}: ${attr.value} \n`
+          return `* ${attr.key}: ${attr.value} \n`;
         })}
-      `.replace(/\n,/g,"\n")
+      `.replace(/\n,/g,"\n");
   
       const launchInfoSuite  = await this.client.createTestItem(this.projectName, {
         launchUuid: this.launch.id,
