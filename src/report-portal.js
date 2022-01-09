@@ -15,12 +15,7 @@ class ReportPortal {
         if (!cliArguments.rproject)
             throw new Error("Missing argument --rproject");
 
-        this.client = new RPClient({
-            protocol: cliArguments.rprotocol ? cliArguments.rprotocol : "https",
-            domain: cliArguments.rdomain,
-            apiPath: "/api/v1", //synchronous api
-            token: cliArguments.rtoken,
-        });
+       
         this.connected = true;
         this._itemsIds = []; //stack of parents
         this.launchName = cliArguments.rlaunch;
@@ -30,11 +25,18 @@ class ReportPortal {
             this._suiteStatus = "passed";
         }
         this._fixture = undefined;
-        this._debug = false;
+        this._debug = ( cliArguments.rdebug === "true")? true:false;
         this._queue = []; //msgs queue
         this._waitingForReply = false;
         this._testStatus = "passed";
         this._completedLaunch = false;
+
+        this.client = new RPClient({
+            protocol: cliArguments.rprotocol ? cliArguments.rprotocol : "https",
+            domain: cliArguments.rdomain,
+            apiPath: "/api/v1", //synchronous api
+            token: cliArguments.rtoken,
+        },this._debug);
     }
 
     //Verifying the connection to Report Portal
@@ -63,6 +65,33 @@ class ReportPortal {
             });
             this._completedLaunch = false;
         } else this.launch = { id: cliArguments["rlaunch-id"] };
+
+    // Adding suite with the attributes
+    const launchAttributes = await this.client.getLaunchAttributes(this.projectName, this.launch.id);
+
+    if(launchAttributes.length > 0 ){
+        const suiteDescription = `
+        ${launchAttributes.map(attr =>{
+          return `* ${attr.key}: ${attr.value} \n`;
+        })}
+      `.replace(/\n,/g,"\n");
+  
+      const launchInfoSuite  = await this.client.createTestItem(this.projectName, {
+        launchUuid: this.launch.id,
+        name: "Launch Info:",
+        startTime: time,
+        description: suiteDescription,
+        type: "SUITE"
+      });
+  
+      await this.client.finishTestItem(this.projectName, launchInfoSuite.id, {
+        launchUuid: this.launch.id,
+        status: "passed",
+        endTime: time
+      });
+  
+    }
+   
 
         this._itemsIds.push({ type: "LAUNCH", id: this.launch.id });
         if (this._debug == true)
