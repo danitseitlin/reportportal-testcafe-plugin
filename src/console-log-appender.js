@@ -35,13 +35,13 @@ class ConsoleLogAppender extends LogAppender {
     }
     group(arg) {
         if (arg === undefined) arg = "";
-        if (!(cliArguments.rSkipGroupInConsole === "true")) {
+        if (cliArguments.rSkipGroupInConsole !== "true") {
             process.stdout.write(` [Group] ${arg}\n`);
         }
     }
 
     groupEnd() {
-        if (!(cliArguments.rSkipGroupInConsole === "true")) {
+        if (cliArguments.rSkipGroupInConsole !== "true") {
             process.stdout.write(` [End group]\n`);
         }
     }
