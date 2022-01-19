@@ -69,6 +69,7 @@ class ReportPortal {
     // Adding suite with the attributes
     const launchAttributes = await this.client.getLaunchAttributes(this.projectName, this.launch.id);
     const FFaddingLaunchInfo = false;
+    // Adding FF for adding launch info
     if (FFaddingLaunchInfo){
         if(launchAttributes.length > 0 ){
             const suiteDescription = `
