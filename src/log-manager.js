@@ -79,9 +79,9 @@ class LogManager {
             let interval = setInterval(() => {
                 timeWaited += intervalTime;
                 if (condition() || timeWaited > timeout) {
-                    process.stdout.write(`This is the time we waited ${timeWaited}`);
+                    process.stdout.write(`This is the time we waited ${timeWaited}\n`);
                     if (timeWaited > timeout) {
-                        process.stdout.write(`Timeout has reached ${timeout}`);
+                        process.stdout.write(`!!!!! This timeout shouldn’t have reached - please inspect your launch report to validate it isn’t corrupted !!!!!!\n`);
                     }
                     clearInterval(interval);
                     resolve();
