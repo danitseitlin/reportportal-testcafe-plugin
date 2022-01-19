@@ -6,7 +6,7 @@ const {
     LMerror,
     LogAppender,
 } = require("./log-appender");
-
+const cliArguments = require("cli-argument-parser").cliArguments;
 // responsible for console logs
 class ConsoleLogAppender extends LogAppender {
     constructor() {
@@ -35,10 +35,15 @@ class ConsoleLogAppender extends LogAppender {
     }
     group(arg) {
         if (arg === undefined) arg = "";
-        process.stdout.write(` [Group] ${arg}\n`);
+        if (cliArguments.rSkipGroupInConsole !== "true") {
+            process.stdout.write(` [Group] ${arg}\n`);
+        }
     }
+
     groupEnd() {
-        process.stdout.write(` [End group]\n`);
+        if (cliArguments.rSkipGroupInConsole !== "true") {
+            process.stdout.write(` [End group]\n`);
+        }
     }
     startLaunch(arg) {
         if (arg === undefined) arg = "start launch";
