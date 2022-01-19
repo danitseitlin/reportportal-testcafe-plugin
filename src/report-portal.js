@@ -68,29 +68,32 @@ class ReportPortal {
 
     // Adding suite with the attributes
     const launchAttributes = await this.client.getLaunchAttributes(this.projectName, this.launch.id);
-
-    if(launchAttributes.length > 0 ){
-        const suiteDescription = `
-        ${launchAttributes.map(attr =>{
-          return `* ${attr.key}: ${attr.value} \n`;
-        })}
-      `.replace(/\n,/g,"\n");
-  
-      const launchInfoSuite  = await this.client.createTestItem(this.projectName, {
-        launchUuid: this.launch.id,
-        name: "Launch Info:",
-        startTime: time,
-        description: suiteDescription,
-        type: "SUITE"
-      });
-  
-      await this.client.finishTestItem(this.projectName, launchInfoSuite.id, {
-        launchUuid: this.launch.id,
-        status: "passed",
-        endTime: time
-      });
-  
-    }
+    const FFaddingLaunchInfo = false;
+    if (FFaddingLaunchInfo){
+        if(launchAttributes.length > 0 ){
+            const suiteDescription = `
+            ${launchAttributes.map(attr =>{
+              return `* ${attr.key}: ${attr.value} \n`;
+            })}
+          `.replace(/\n,/g,"\n");
+      
+          const launchInfoSuite  = await this.client.createTestItem(this.projectName, {
+            launchUuid: this.launch.id,
+            name: "Launch Info:",
+            startTime: time,
+            description: suiteDescription,
+            type: "SUITE"
+          });
+      
+          await this.client.finishTestItem(this.projectName, launchInfoSuite.id, {
+            launchUuid: this.launch.id,
+            status: "passed",
+            endTime: time
+          });
+      
+        }
+    }    
+    
    
 
         this._itemsIds.push({ type: "LAUNCH", id: this.launch.id });
