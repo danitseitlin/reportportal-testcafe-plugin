@@ -57,7 +57,7 @@
     "del": "^1.2.0",
     "dmock-server": "^1.5.5",
     "eslint": "8.5.0",
-    "jshint": "^2.13.1",
+    "jshint": "^2.13.4",
     "mocha": "^8.3.0",
     "normalize-newline": "^1.0.2",
     "read-file-relative": "^1.2.0",
