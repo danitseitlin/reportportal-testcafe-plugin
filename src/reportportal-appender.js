@@ -57,7 +57,7 @@ class ReportPortalAppender extends LogAppender {
     async startFixture(arg) {
         await this.reporter.appendAction(
             LogActions.START_FIXTURE,
-            `[before first Test] ${arg}`
+            `[Start Fixture (Before)] ${arg}`
         );
     }
 
