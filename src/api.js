@@ -18,6 +18,27 @@ class API {
             baseURL: this.baseURL,
             headers: this.headers,
         });
+        this.client.interceptors.response.use(response => {
+            return response;
+          }, error => {
+            error.config.retryCount = error.config.retryCount || 0;
+            if(error.config && error.config.retryCount++ < 3){
+                const resendRequestPromise = new Promise((resolve) => {
+                    setTimeout(() => 
+                    resolve(this.client(error.config)), 2000);
+                });
+                if (error.response && error.response.status >= 500){
+                    process.stdout.write(`${this.now()}  Error occured in Report Portal Plugin API
+                    Response: "${error}"
+                    Resending API request to Report Portal\n`);
+                    return resendRequestPromise;
+                } else if(error.response == null){
+                    process.stdout.write(`${this.now()}  Please check internet connectivity or requested URL, Resending API request to Report Portal\n`);
+                    return resendRequestPromise;
+                }
+            }
+            return Promise.reject(error);
+        });
         this._debug = debug || false;
     }
     /**
