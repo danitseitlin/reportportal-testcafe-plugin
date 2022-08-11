@@ -1,50 +1,44 @@
 const RPClient = require("./api");
-
-const cliArguments = require("cli-argument-parser").cliArguments;
-
 const { LMdebug, LogActions } = require("./log-appender");
-
 const path = require("path");
-
 const filename = path.basename(__filename);
 
-const isLocalUser = cliArguments.rproject.toUpperCase().includes("PERSONAL");
+const {rtoken: cliRtoken, rproject: cliRpoject, rlaunch: cliRlaunch,
+   rdomain: cliRdomain,["rlaunch-id"]: cliRlaunchId, rsuite: cliRsuite,
+   rdebug: cliRdebug, rprotocol: cliProtocol} = require("cli-argument-parser").cliArguments;
+const rprotocol = cliProtocol || 'https';
+
+const isLocalUser = cliRpoject.toUpperCase().includes("PERSONAL");
+const STATUS_PASSED = 'passed';
+const STATUS_FAILED = 'failed';
 
 class ReportPortal {
-    constructor() {
-        process.stdout.write("ReportPortal ctor\n");
-        if (!cliArguments.rdomain)
-            throw new Error("Missing argument --rdomain");
-        if (!cliArguments.rtoken) throw new Error("Missing argument --rtoken");
-        if (!cliArguments.rlaunch && !cliArguments["rlaunch-id"])
-            throw new Error("Missing argument --rlaunch/--rlaunch-id");
-        if (!cliArguments.rproject)
-            throw new Error("Missing argument --rproject");
-        this.connected = true;
-        this._itemsIds = []; //stack of parents
-        this.launchName = cliArguments.rlaunch;
-        this.projectName = cliArguments.rproject;
-        if (cliArguments.rsuite) {
-            this.suiteName = cliArguments.rsuite;
-            this._suiteStatus = "passed";
-        }
-        this._fixture = undefined;
-        this._debug = cliArguments.rdebug === "true" ? true : false;
-        this._queue = []; //msgs queue
-        this._waitingForReply = false;
-        this._testStatus = "passed";
-        this._completedLaunch = false;
-        this.client = new RPClient(
-            {
-                protocol: cliArguments.rprotocol ? cliArguments.rprotocol : "https",
-                domain: cliArguments.rdomain,
-                apiPath: "/api/v1",
-                //synchronous api
-                token: cliArguments.rtoken,
-            },
-            this._debug
-        );
-    } //Verifying the connection to Report Portal
+  
+  constructor() {
+    process.stdout.write("ReportPortal ctor\n");
+    this.initReportPortalArguments();
+    this.connected = true;
+    this._itemsIds = []; //stack of parents
+
+    if (cliRsuite){
+      this.suiteName = cliRsuite;
+      this._suiteStatus = STATUS_PASSED;
+    }
+
+    this._fixture = undefined;
+    this._debug = cliRdebug === "true" ? true : false;
+    this._queue = []; //msgs queue
+    this._waitingForReply = false;
+    this._testStatus = STATUS_PASSED;
+    this._completedLaunch = false;
+    this.client = new RPClient({
+      protocol: rprotocol,
+      domain: cliRdomain,
+      apiPath: "/api/v1",
+      //synchronous api
+      token: this.rtoken
+    }, this._debug);
+  } //Verifying the connection to Report Portal
 
     async verifyConnection() {
         try {
@@ -72,7 +66,7 @@ class ReportPortal {
             this._completedLaunch = false;
         } else
             this.launch = {
-                id: cliArguments["rlaunch-id"],
+                id: this.rlaunchId,
             };
 
         if (isLocalUser) this.addLinkToLaunchReport();
@@ -106,7 +100,7 @@ class ReportPortal {
                     launchInfoSuite.id,
                     {
                         launchUuid: this.launch.id,
-                        status: "passed",
+                        status: STATUS_PASSED,
                         endTime: time,
                     }
                 );
@@ -189,7 +183,7 @@ class ReportPortal {
     async _startTest(time, name = "START TEST") {
         //need to close former fixture
         await this._finishFixture(time);
-        this._testStatus = "passed";
+        this._testStatus = STATUS_PASSED;
         if (this.launch !== undefined && this.launch.id !== undefined) {
             const options = {
                 launchUuid: this.launch.id,
@@ -311,13 +305,13 @@ class ReportPortal {
     async _checkFixtureStatus() {
         try{
             if(this._queue[0] && this._queue[0].action==='error'){
-                return "failed";
+                return STATUS_FAILED;
             }
           }
           catch(error){
             if (this._debug == true) process.stdout.write(`\n[${filename}] Error in getting Fixture status from queue\n`);
         }
-        return "passed";
+        return STATUS_PASSED;
     }
 
     //Finishing a launch
@@ -325,8 +319,8 @@ class ReportPortal {
         await this._finishFixture(time);
 
         if (this.suiteName) {
-            if (this._suiteStatus === "failed" || status === "failed")
-                status = "failed";
+            if (this._suiteStatus === STATUS_FAILED || status === STATUS_FAILED)
+                status = STATUS_FAILED;
             if (this.suite !== undefined && this.suite.id !== undefined)
                 await this._finishSuite(this.suite.id, status, time);
         }
@@ -541,12 +535,32 @@ class ReportPortal {
         }
     }
 
-    addLinkToLaunchReport() {
-        const { rprotocol, rdomain, rproject } = cliArguments;
-        process.stdout.write(
-            `Report portal launch --> \x1b[34m${rprotocol}://${rdomain}/ui/#${rproject}/launches/all/${this.launch.id}\x1b[39m \n`
-        );
+    initReportPortalArguments(){
+        const {rtoken: envRtoken, rproject: envRproject, rdomain: envRdomain, ["rlaunch-id"]: envRlaunchId} = process.env;
+      
+        this.rtoken = envRtoken || cliRtoken;
+        if (!this.rtoken) throw new Error("Missing argument --rtoken");
+      
+        this.projectName = envRproject || cliRpoject;
+        if (!this.projectName) throw new Error("Missing argument --rproject");
+      
+        this.rdomain = envRdomain || cliRdomain;
+        if (!this.rdomain) throw new Error("Missing argument --rdomain");
+      
+        this.rlaunchId = envRlaunchId || cliRlaunchId;
+        if (!cliRlaunch && !this.rlaunchId)
+            throw new Error("Missing argument --rlaunch/--rlaunch-id");
+      
+        this.launchName = cliRlaunch;
+        this.rpojectName = cliRpoject;
     }
+
+    addLinkToLaunchReport() {
+        process.stdout.write(
+          `Report portal launch --> \x1b[34m${rprotocol}://${cliRdomain}/ui/#${cliRpoject}/launches/all/${this.launch.id}\x1b[39m \n`
+      );
+    }
+
 }
 
 module.exports = ReportPortal;
