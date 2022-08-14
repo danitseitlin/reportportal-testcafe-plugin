@@ -33,7 +33,7 @@ class ReportPortal {
     this._completedLaunch = false;
     this.client = new RPClient({
       protocol: rprotocol,
-      domain: cliRdomain,
+      domain: this.rdomain,
       apiPath: "/api/v1",
       //synchronous api
       token: this.rtoken
