@@ -536,7 +536,7 @@ class ReportPortal {
     }
 
     initReportPortalArguments(){
-        const {rtoken: envRtoken, rproject: envRproject, rdomain: envRdomain, ["rlaunch-id"]: envRlaunchId} = process.env;
+        const {rtoken: envRtoken, rproject: envRproject, rdomain: envRdomain, rlaunch_id: envRlaunchId} = process.env;
       
         this.rtoken = envRtoken || cliRtoken;
         if (!this.rtoken) throw new Error("Missing argument --rtoken");
