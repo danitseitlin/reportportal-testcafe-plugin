@@ -3,12 +3,12 @@ const { LMdebug, LogActions } = require("./log-appender");
 const path = require("path");
 const filename = path.basename(__filename);
 
-const {rtoken: cliRtoken, rproject: cliRpoject, rlaunch: cliRlaunch,
+const {rtoken: cliRtoken, rproject: cliRproject, rlaunch: cliRlaunch,
    rdomain: cliRdomain,["rlaunch-id"]: cliRlaunchId, rsuite: cliRsuite,
    rdebug: cliRdebug, rprotocol: cliProtocol} = require("cli-argument-parser").cliArguments;
 const rprotocol = cliProtocol || 'https';
 
-const isLocalUser = cliRpoject.toUpperCase().includes("PERSONAL");
+const isLocalUser = cliRproject.toUpperCase().includes("PERSONAL");
 const STATUS_PASSED = 'passed';
 const STATUS_FAILED = 'failed';
 
@@ -538,26 +538,26 @@ class ReportPortal {
     initReportPortalArguments(){
         const {rtoken: envRtoken, rproject: envRproject, rdomain: envRdomain, rlaunch_id: envRlaunchId} = process.env;
       
-        this.rtoken = envRtoken || cliRtoken;
+        this.rtoken = cliRtoken || envRtoken;
         if (!this.rtoken) throw new Error("Missing argument --rtoken");
       
-        this.projectName = envRproject || cliRpoject;
+        this.projectName = cliRproject || envRproject;
         if (!this.projectName) throw new Error("Missing argument --rproject");
       
-        this.rdomain = envRdomain || cliRdomain;
+        this.rdomain = cliRdomain || envRdomain;
         if (!this.rdomain) throw new Error("Missing argument --rdomain");
       
-        this.rlaunchId = envRlaunchId || cliRlaunchId;
+        this.rlaunchId = cliRlaunchId || envRlaunchId;
         if (!cliRlaunch && !this.rlaunchId)
             throw new Error("Missing argument --rlaunch/--rlaunch-id");
       
         this.launchName = cliRlaunch;
-        this.rpojectName = cliRpoject;
+        this.rpojectName = cliRproject;
     }
 
     addLinkToLaunchReport() {
         process.stdout.write(
-          `Report portal launch --> \x1b[34m${rprotocol}://${cliRdomain}/ui/#${cliRpoject}/launches/all/${this.launch.id}\x1b[39m \n`
+          `Report portal launch --> \x1b[34m${rprotocol}://${cliRdomain}/ui/#${cliRproject}/launches/all/${this.launch.id}\x1b[39m \n`
       );
     }
 
