@@ -8,7 +8,7 @@ const {rtoken: cliRtoken, rproject: cliRproject, rlaunch: cliRlaunch,
    rdebug: cliRdebug, rprotocol: cliProtocol} = require("cli-argument-parser").cliArguments;
 const rprotocol = cliProtocol || 'https';
 
-const isLocalUser = cliRproject.toUpperCase().includes("PERSONAL");
+const isLocalUser = cliRproject?.toUpperCase().includes("PERSONAL");
 const STATUS_PASSED = 'passed';
 const STATUS_FAILED = 'failed';
 
