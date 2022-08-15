@@ -8,7 +8,7 @@ const {rtoken: cliRtoken, rproject: cliRproject, rlaunch: cliRlaunch,
    rdebug: cliRdebug, rprotocol: cliProtocol} = require("cli-argument-parser").cliArguments;
 const rprotocol = cliProtocol || 'https';
 
-const isLocalUser = cliRproject.toUpperCase().includes("PERSONAL");
+const isLocalUser = cliRproject?.toUpperCase().includes("PERSONAL");
 const STATUS_PASSED = 'passed';
 const STATUS_FAILED = 'failed';
 
@@ -33,7 +33,7 @@ class ReportPortal {
     this._completedLaunch = false;
     this.client = new RPClient({
       protocol: rprotocol,
-      domain: cliRdomain,
+      domain: this.rdomain,
       apiPath: "/api/v1",
       //synchronous api
       token: this.rtoken
