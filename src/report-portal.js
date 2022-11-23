@@ -396,6 +396,7 @@ class ReportPortal {
                 launchUuid: this.launch.id,
                 status: status,
                 endTime: time,
+                description: process.env.S3_BUCKET_URL ? `[Test Recordings](${encodeURI(process.env.S3_BUCKET_URL)})` : ''
             });
             this._itemsIds.pop();
             this.suite = undefined;
