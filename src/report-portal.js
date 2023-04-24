@@ -231,6 +231,7 @@ class ReportPortal {
             startTime: time,
             type: "STEP",
             hasStats: false,
+            attributes: [{ key: "Framework", value: "Testcafe" }]
         };
         const stepParent = this.getLastItem();
         if (stepParent) {
