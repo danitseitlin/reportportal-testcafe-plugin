@@ -40,7 +40,7 @@ jobs:
       - name: Setting a Report Portal local reporter
         run: npm run build && npm run link-pkg
       - name: Downloading docker compose file
-        run: npm run download-report-portal-latest-docker-compose-file
+        run: npm run download-report-portal-docker-compose-file
       - name: Docker version
         run: docker -v
       - name: Setting up a local Report Portal environment
