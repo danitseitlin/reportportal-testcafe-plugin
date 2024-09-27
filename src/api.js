@@ -18,7 +18,7 @@ class API {
      */
     async checkConnect () {
         try {
-            return this.handleResponse(await this.client.get('/user'));
+            return this.handleResponse(await this.client.get('/users'));
         }
         catch (error) {
             if(this.displayDebugLogs === true){
@@ -35,7 +35,7 @@ class API {
      */
     async createLaunch (projectName, options) {
         try {
-            return this.handleResponse(await this.client.post(`/${projectName}/launch`, options));
+            return this.handleResponse(await this.client.post(`/v1/${projectName}/launch`, options));
         }
         catch (error) {
             return this.handleError(error);
@@ -50,7 +50,7 @@ class API {
      */
     async finishLaunch (projectName, launchId, options) {
         try {
-            return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/finish`, options));
+            return this.handleResponse(await this.client.put(`/v1/${projectName}/launch/${launchId}/finish`, options));
         }
         catch (error) {
             return this.handleError(error);
@@ -65,7 +65,7 @@ class API {
      */
     async forceStopLaunch (projectName, launchId, options) {
         try {
-            return this.handleResponse(await this.client.put(`/${projectName}/launch/${launchId}/stop`, options));
+            return this.handleResponse(await this.client.put(`/v1/${projectName}/launch/${launchId}/stop`, options));
         }
         catch (error) {
             return this.handleError(error);
@@ -79,7 +79,7 @@ class API {
      */
     async createTestItem (projectName, options) {
         try {
-            return this.handleResponse(await this.client.post(`/${projectName}/item`, options));
+            return this.handleResponse(await this.client.post(`/v1/${projectName}/item`, options));
         }
         catch (error) {
             return this.handleError(error);
@@ -94,7 +94,7 @@ class API {
      */
     async createChildTestItem (projectName, parentItem, options) {
         try {
-            return this.handleResponse(await this.client.post(`/${projectName}/item/${parentItem}`, options));
+            return this.handleResponse(await this.client.post(`/v1/${projectName}/item/${parentItem}`, options));
         }
         catch (error) {
             return this.handleError(error);
@@ -109,7 +109,7 @@ class API {
      */
     async finishTestItem (projectName, testItemId, options) {
         try {
-            return this.handleResponse(await this.client.put(`/${projectName}/item/${testItemId}`, options));
+            return this.handleResponse(await this.client.put(`/v1/${projectName}/item/${testItemId}`, options));
         }
         catch (error) {
             return this.handleError(error);
@@ -159,16 +159,49 @@ class API {
                     headers: { 'Content-type': `multipart/form-data; boundary=${MULTIPART_BOUNDARY}`, 'Authorization': `Bearer ${this.token}` }
                 });
                 
-                await instance.post(`${this.baseURL}/${projectName}/log`, this.buildMultiPartStream([options], {
+                await instance.post(`${this.baseURL}/v1/${projectName}/log`, this.buildMultiPartStream([options], {
                     name:    options.file.name,
                     type:    'image/png',
                     content: fs.readFileSync(fullPath)
                 }, MULTIPART_BOUNDARY));
             }
-            else this.handleResponse(await this.client.post(`/${projectName}/log`, options));
+            else this.handleResponse(await this.client.post(`/v1/${projectName}/log`, options));
         }
         catch (error) {
             this.handleError(error);
+        }
+    }
+
+    async getLaunches(projectName) {
+        try {
+            const response = await this.client.get(`/v1/${projectName}/launch/latest`);
+            return this.handleResponse(response).content;
+        }
+        catch (error) {
+            return this.handleError(error);
+        }
+    }
+
+    async getItems(projectName, launchId) {
+        try {
+            const response = await this.client.get(`/v1/${projectName}/item?filter.eq.launchId=${launchId}&isLatest=false&launchesLimit=0`)//filter.eq.launchId=${launchId}&isLatest=false&launchesLimit=0`);
+            return this.handleResponse(response).content;
+        }
+        catch (error) {
+            return this.handleError(error);
+        }
+    }
+
+    async getItemLogs(projectName, itemId, logLevel='info') {
+        try {
+            const response = await this.client.post(`/v1/${projectName}/log/under`, {
+                itemIds: [itemId],
+                logLevel: logLevel
+            });
+            return this.handleResponse(response)[itemId];
+        }
+        catch (error) {
+            return this.handleError(error);
         }
     }
 
@@ -179,7 +212,7 @@ class API {
      */
     async getLogs(projectName) {
         try {
-            const response = await this.client.get(`/${projectName}/log`);
+            const response = await this.client.get(`/v1/${projectName}/log`);
             return this.handleResponse(response);
         }
         catch (error) {

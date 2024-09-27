@@ -17,7 +17,7 @@ class ReportPortal {
         this.client = new RPClient({
             protocol: (cliArguments.rprotocol) ? cliArguments.rprotocol: 'https',
             domain:   cliArguments.rdomain,
-            apiPath:  '/api/v1',
+            apiPath:  '/api',
             token:    cliArguments.rtoken,
         });
         this.connected = true;

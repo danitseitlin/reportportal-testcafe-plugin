@@ -9,16 +9,21 @@ describe('Performing Integration testing', async function() {
     this.timeout(10 * 60 * 60 * 60);
     before(async () => {
         loadArguments();
-        const client = new UAT({
+        let client = new UAT({
             protocol: 'http',
             domain:  'localhost:8080',
             apiPath:  '/uat',
         });
-        const token = await client.getApiToken('superadmin', 'erebus');
+        const token = await client.getApiToken('default', '1q2w3e');
         console.log(`Got the following token: ${JSON.stringify(token)}`)
-        const apiToken = await client.generateApiToken(token.access_token);
-        console.log(`Generated the following report portal token: ${apiToken.access_token}`)
-        cliArguments.rtoken = token.access_token;
+        client = new UAT({
+            protocol: 'http',
+            domain:  'localhost:8080',
+            apiPath:  '/',
+        });
+        const apiToken = await client.createApiToken(token.access_token, 1, 'testing'+new Date().getTime() );
+        console.log(`Generated the following report portal token: ${JSON.stringify(apiToken)}`)
+        cliArguments.rtoken = apiToken.api_key;
         console.log(`List of arguments: ${JSON.stringify(cliArguments)}`)
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });
@@ -30,6 +35,7 @@ describe('Performing Integration testing', async function() {
     });
 
     it('Running TestCafe Tests', async () => {
+        cliArguments.rlaunch="TestCafe Tests"
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
         .src(['tests/integration/integration.testcafe.ts'])
@@ -40,6 +46,7 @@ describe('Performing Integration testing', async function() {
         console.log('Tests failed: ' + failedCount);
     });
     it('Retry mechanism Tests', async () => {
+        cliArguments.rlaunch="Retry mechanism Tests"
         const runner = testcafeServer.createRunner();
         const failedCount = await runner
         .src(['tests/integration/integration.retry.testcafe.ts'])

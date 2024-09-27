@@ -87,6 +87,30 @@ class UAT {
             return this.handleError(error); 
         }
     }
+
+    async getApiKeys(token, userId) {
+        try {
+            this.setApiToken(token);
+            const response = await this.client.get(`api/users/${userId}/api-keys`)
+            console.log(response);
+            return this.handleResponse(response).items;
+        }
+        catch (error) {
+            return this.handleError(error);
+        }
+    }
+    
+    async createApiToken(token, userId, name) {
+        try {
+            this.setApiToken(token);
+            const response = await this.client.post(`api/users/${userId}/api-keys`, {name: name})
+            console.log(response);
+            return this.handleResponse(response);
+        }
+        catch (error) {
+            return this.handleError(error);
+        }
+    }
     
     /**
      * Checking if item is a valid JSON
