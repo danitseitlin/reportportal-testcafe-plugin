@@ -66,6 +66,7 @@ class UAT {
             return this.handleResponse(response);
         }
         catch (error) {
+            console.log(error);
             return this.handleError(error);
         }
     }
