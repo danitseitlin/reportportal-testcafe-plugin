@@ -62,6 +62,7 @@ class UAT {
             const token = Buffer.from('ui:uiman').toString('base64');
             this.setUiToken(token);
             const response = await this.client.post(`/sso/oauth/token?${encodedURI}`);
+            console.log(response)
             return this.handleResponse(response);
         }
         catch (error) {
@@ -81,6 +82,7 @@ class UAT {
             return this.handleResponse(response);
         }
         catch(error) {
+            console.log(error)
             return this.handleError(error); 
         }
     }
