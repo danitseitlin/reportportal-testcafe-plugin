@@ -184,7 +184,7 @@ class API {
 
     async getItems(projectName, launchId) {
         try {
-            const response = await this.client.get(`/v1/${projectName}/item?filter.eq.launchId=${launchId}&isLatest=false&launchesLimit=0`)//filter.eq.launchId=${launchId}&isLatest=false&launchesLimit=0`);
+            const response = await this.client.get(`/v1/${projectName}/item?filter.eq.launchId=${launchId}&isLatest=false&launchesLimit=0`);
             return this.handleResponse(response).content;
         }
         catch (error) {

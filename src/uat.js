@@ -61,12 +61,10 @@ class UAT {
             });
             const token = Buffer.from('ui:uiman').toString('base64');
             this.setUiToken(token);
-            const response = await this.client.post(`/sso/oauth/token?${encodedURI}`);
-            console.log(response);
+            const response = await this.client.post(`uat/sso/oauth/token?${encodedURI}`);
             return this.handleResponse(response);
         }
         catch (error) {
-            console.log(error);
             return this.handleError(error);
         }
     }
@@ -79,11 +77,10 @@ class UAT {
     async generateApiToken(token) {
         this.setApiToken(token);
         try {
-            const response = await this.client.post('/sso/me/apitoken?authenticated=true');
+            const response = await this.client.post('uat/sso/me/apitoken?authenticated=true');
             return this.handleResponse(response);
         }
         catch(error) {
-            console.log(error);
             return this.handleError(error); 
         }
     }
@@ -91,8 +88,7 @@ class UAT {
     async getApiKeys(token, userId) {
         try {
             this.setApiToken(token);
-            const response = await this.client.get(`api/users/${userId}/api-keys`)
-            console.log(response);
+            const response = await this.client.get(`uat/api/users/${userId}/api-keys`);
             return this.handleResponse(response).items;
         }
         catch (error) {
@@ -103,8 +99,7 @@ class UAT {
     async createApiToken(token, userId, name) {
         try {
             this.setApiToken(token);
-            const response = await this.client.post(`api/users/${userId}/api-keys`, {name: name})
-            console.log(response);
+            const response = await this.client.post(`api/users/${userId}/api-keys`, {name: name});
             return this.handleResponse(response);
         }
         catch (error) {

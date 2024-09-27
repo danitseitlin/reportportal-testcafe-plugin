@@ -12,19 +12,11 @@ describe('Performing Integration testing', async function() {
         let client = new UAT({
             protocol: 'http',
             domain:  'localhost:8080',
-            apiPath:  '/uat',
-        });
-        const token = await client.getApiToken('default', '1q2w3e');
-        console.log(`Got the following token: ${JSON.stringify(token)}`)
-        client = new UAT({
-            protocol: 'http',
-            domain:  'localhost:8080',
             apiPath:  '/',
         });
+        const token = await client.getApiToken('default', '1q2w3e');
         const apiToken = await client.createApiToken(token.access_token, 1, 'testing'+new Date().getTime() );
-        console.log(`Generated the following report portal token: ${JSON.stringify(apiToken)}`)
         cliArguments.rtoken = apiToken.api_key;
-        console.log(`List of arguments: ${JSON.stringify(cliArguments)}`)
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });
 
