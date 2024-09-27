@@ -14,11 +14,11 @@ describe('Performing Integration testing', async function() {
             domain:  'localhost:8080',
             apiPath:  '/uat',
         });
-        const token = await client.getApiToken('default', '1q2w3e');
+        const token = await client.getApiToken('superadmin', 'erebus');
         console.log(`Got the following token: ${JSON.stringify(token)}`)
         const apiToken = await client.generateApiToken(token.access_token);
         console.log(`Generated the following report portal token: ${apiToken.access_token}`)
-        cliArguments.rtoken = apiToken.access_token;
+        cliArguments.rtoken = token.access_token;
         console.log(`List of arguments: ${JSON.stringify(cliArguments)}`)
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });
