@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-class UAT {
+class ApiTestingClient {
     constructor (options) {
         this.baseURL = `${options.protocol}://${options.domain}${options.apiPath}`;
         this.token = options.token;
@@ -61,7 +61,7 @@ class UAT {
             });
             const token = Buffer.from('ui:uiman').toString('base64');
             this.setUiToken(token);
-            const response = await this.client.post(`/sso/oauth/token?${encodedURI}`);
+            const response = await this.client.post(`uat/sso/oauth/token?${encodedURI}`);
             return this.handleResponse(response);
         }
         catch (error) {
@@ -70,18 +70,20 @@ class UAT {
     }
 
     /**
-     * Generating an API token
-     * @param {*} token The UI token to authenticate with
-     * @returns A response obj with the API token data
+     * We create an API key to use it later on in our tests.
+     * @param {*} token The UAT token to gain permissions to create an API key
+     * @param {*} userId The id of the user
+     * @param {*} name The name of the token
+     * @returns The api key object
      */
-    async generateApiToken(token) {
-        this.setApiToken(token);
+    async createApiKey(token, userId, name) {
         try {
-            const response = await this.client.post('/sso/me/apitoken?authenticated=true');
+            this.setApiToken(token);
+            const response = await this.client.post(`api/users/${userId}/api-keys`, {name: name});
             return this.handleResponse(response);
         }
-        catch(error) {
-            return this.handleError(error); 
+        catch (error) {
+            return this.handleError(error);
         }
     }
     
@@ -150,4 +152,4 @@ class UAT {
     }
 }
 
-module.exports = UAT;
+module.exports = ApiTestingClient;

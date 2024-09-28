@@ -1,7 +1,7 @@
 import { Route, Request } from 'dmock-server';
 
 export const mock: Route[] = [{
-    path: '/api/v1/user',
+    path: '/api/users',
     method: 'get',
     response: {}
 },{
