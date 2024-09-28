@@ -77,7 +77,7 @@ exports['default'] = () => {
         },
         async reportLogs(testId, level, message, time, attachment) {
             if(message !== undefined) {
-                const isJSON = (msg) => { return this.reporter.client.isJSON(msg) || Array.isArray(msg); }
+                const isJSON = (msg) => { return this.reporter.client.isJSON(msg) || Array.isArray(msg); };
                 const isException = isJSON(message) && JSON.parse(message).errMsg !== undefined;
                 //If the log is a stacktrace, and we want to focus on printing the error message itself.
                 if(isException) message = JSON.parse(message).errMsg;
