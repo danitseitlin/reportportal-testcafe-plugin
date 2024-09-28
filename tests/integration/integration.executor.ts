@@ -15,7 +15,10 @@ describe('Performing Integration testing', async function() {
             apiPath:  '/',
         });
         const token = await client.getApiToken('default', '1q2w3e');
+        console.log(JSON.stringify(token))
         const apiToken = await client.createApiToken(token.access_token, 1, 'testing'+new Date().getTime() );
+        console.log(JSON.stringify(apiToken))
+
         cliArguments.rtoken = apiToken.api_key;
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });
