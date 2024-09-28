@@ -47,8 +47,6 @@ jobs:
         run: sudo docker compose -f docker-compose.yml -p reportportal up -d --force-recreate
       - name: Waiting for services to be up
         run: ./scripts/healthcheck.bash
-      #- name: Waiting for services to be up
-      #  run: ./scripts/healthcheck2.bash
       - name: Report Portal server status
         run: npm run status
       - name: Creating a .env file from existing example
