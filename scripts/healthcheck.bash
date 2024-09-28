@@ -13,7 +13,7 @@
 
 while true; do
   # Run the command and capture the output
-  output=$(npm run start)
+  output=$(npm run status)
 
   # Check if the output contains 'starting' or 'exited'
   if echo "$output" | grep -q -e "starting" -e "exited"; then
