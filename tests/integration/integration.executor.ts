@@ -17,7 +17,7 @@ describe('Performing Integration testing', async function() {
 
         //Using the default user provided by report portal
         const token = await client.getApiToken('default', '1q2w3e');
-        const apiToken = await client.createApiToken(token.access_token, 1, `testing-${new Date().getTime()}` );
+        const apiToken = await client.createApiKey(token.access_token, 1, `testing-${new Date().getTime()}` );
         cliArguments.rtoken = apiToken.api_key;
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });

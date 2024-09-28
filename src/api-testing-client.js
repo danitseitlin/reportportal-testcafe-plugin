@@ -71,12 +71,12 @@ class ApiTestingClient {
 
     /**
      * We create an API key to use it later on in our tests.
-     * @param {*} token 
-     * @param {*} userId 
-     * @param {*} name 
-     * @returns 
+     * @param {*} token The UAT token to gain permissions to create an API key
+     * @param {*} userId The id of the user
+     * @param {*} name The name of the token
+     * @returns The api key object
      */
-    async createApiToken(token, userId, name) {
+    async createApiKey(token, userId, name) {
         try {
             this.setApiToken(token);
             const response = await this.client.post(`api/users/${userId}/api-keys`, {name: name});

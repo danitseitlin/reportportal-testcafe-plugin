@@ -1,12 +1,5 @@
 import { t } from 'testcafe';
 import { cliArguments } from 'cli-argument-parser';
-declare global {
-    interface TestController {
-        testRun: {
-            name: string;
-        };
-    }
-}
 const API = require('../../src/api.js');
 let api: typeof API;
 fixture `First fixture`
@@ -51,10 +44,10 @@ async function logAndVerify(testName: string, logMsg: any) {
     let launches = await api.getLaunches(cliArguments.rproject);
     launches = launches.filter(l => l.name === cliArguments.rlaunch)
     const launchId = launches[0].id;
-    const items = await api.getItems(cliArguments.rproject, launchId, testName)
+    const items = await api.getTestItems(cliArguments.rproject, launchId, testName)
 
     const item = items.find(item => item.name === testName && item.type === 'TEST')
-    const logs = await api.getItemLogs(cliArguments.rproject, item.id)
+    const logs = await api.getTestItemLogs(cliArguments.rproject, item.id)
     
     const filteredLogs = logs.filter(l => l.message === message);
     

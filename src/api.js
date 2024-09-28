@@ -172,6 +172,11 @@ class API {
         }
     }
 
+    /**
+     * Retrieves a list of the project latest launches
+     * @param {*} projectName The project name
+     * @returns A list of the latest project launches
+     */
     async getLaunches(projectName) {
         try {
             const response = await this.client.get(`/v1/${projectName}/launch/latest`);
@@ -182,7 +187,13 @@ class API {
         }
     }
 
-    async getItems(projectName, launchId) {
+    /**
+     * Retrieves a list of test items 
+     * @param {*} projectName The project name
+     * @param {*} launchId The launch id
+     * @returns A list of test items that are part of a project and a launch
+     */
+    async getTestItems(projectName, launchId) {
         try {
             const response = await this.client.get(`/v1/${projectName}/item?filter.eq.launchId=${launchId}&isLatest=false&launchesLimit=0`);
             return this.handleResponse(response).content;
@@ -192,10 +203,17 @@ class API {
         }
     }
 
-    async getItemLogs(projectName, itemId, logLevel='info') {
+    /**
+     * Retrieves a list of logs under a test item
+     * @param {*} projectName The project name
+     * @param {*} itemId The test item id
+     * @param {*} logLevel The log level. Default: info
+     * @returns A list of test item logs
+     */
+    async getTestItemLogs(projectName, testItemId, logLevel='info') {
         try {
             const response = await this.client.post(`/v1/${projectName}/log/under`, {
-                itemIds: [itemId],
+                itemIds: [testItemId],
                 logLevel: logLevel
             });
             return this.handleResponse(response)[itemId];
@@ -204,24 +222,9 @@ class API {
             return this.handleError(error);
         }
     }
-
-    /**
-     * Retrieving all logs in a project
-     * @param {*} projectName The name of the project
-     * @returns A list of logs
-     */
-    async getLogs(projectName) {
-        try {
-            const response = await this.client.get(`/v1/${projectName}/log`);
-            return this.handleResponse(response);
-        }
-        catch (error) {
-            return this.handleError(error);
-        }
-    }
     
     /**
-     * Checking if item is a valid JSON
+     * Checking if item is a valid JSON by attempting to parse it
      * @param {*} json The string of the JSON
      */
     isJSON (json) {
