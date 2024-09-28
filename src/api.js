@@ -206,7 +206,7 @@ class API {
     /**
      * Retrieves a list of logs under a test item
      * @param {*} projectName The project name
-     * @param {*} itemId The test item id
+     * @param {*} testItemId The test item id
      * @param {*} logLevel The log level. Default: info
      * @returns A list of test item logs
      */
@@ -216,7 +216,7 @@ class API {
                 itemIds: [testItemId],
                 logLevel: logLevel
             });
-            return this.handleResponse(response)[itemId];
+            return this.handleResponse(response)[testItemId];
         }
         catch (error) {
             return this.handleError(error);
