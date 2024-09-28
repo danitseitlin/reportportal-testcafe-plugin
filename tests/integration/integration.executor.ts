@@ -2,23 +2,22 @@ import { loadArguments } from '../utils/cli-loader';
 import createTestCafe from 'testcafe';
 import { cliArguments } from 'cli-argument-parser';
 import { expect } from 'chai';
-import UAT from '../../src/uat.js'
+import ApiTestingClient from '../../src/api-testing-client.js'
 let testcafeServer: TestCafe;
 
 describe('Performing Integration testing', async function() {
     this.timeout(10 * 60 * 60 * 60);
     before(async () => {
         loadArguments();
-        let client = new UAT({
-            protocol: 'http',
-            domain:  'localhost:8080',
+        let client = new ApiTestingClient({
+            protocol: cliArguments.rprotocol,
+            domain:  cliArguments.rdomain,
             apiPath:  '/',
         });
-        const token = await client.getApiToken('default', '1q2w3e');
-        console.log(JSON.stringify(token))
-        const apiToken = await client.createApiToken(token.access_token, 1, 'testing'+new Date().getTime() );
-        console.log(JSON.stringify(apiToken))
 
+        //Using the default user provided by report portal
+        const token = await client.getApiToken('default', '1q2w3e');
+        const apiToken = await client.createApiToken(token.access_token, 1, `testing-${new Date().getTime()}` );
         cliArguments.rtoken = apiToken.api_key;
         testcafeServer = await createTestCafe('localhost', 1337, 1338);
     });

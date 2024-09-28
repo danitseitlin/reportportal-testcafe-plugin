@@ -13,8 +13,8 @@ fixture `First fixture`
     .page('https://google.com')
     .before(async () => {
         api = new API({
-            protocol: 'http',
-            domain: 'localhost:8080',
+            protocol: cliArguments.rprotocol,
+            domain:  cliArguments.rdomain,
             apiPath: '/api',
             token: cliArguments.rtoken,
         })
