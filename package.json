@@ -31,7 +31,7 @@
     "run-full-unit-tests": "npm run build-local-reporter && npm run unit-tests && npm run unit-retry-tests && npm run unit-no-live-reporting-tests && npm run unit-display-debug-logs-tests",
     "integration-tests": "npm run test ./tests/integration/integration.executor.ts -- --display-debug-logs",
     "run-integration-tests": "npm run build-local-reporter && npm run integration-tests",
-    "download-report-portal-docker-compose-file": "curl https://raw.githubusercontent.com/reportportal/reportportal/f388a37cd3a96817f37a081ae3290304d13a17c3/docker-compose.yml -o docker-compose.yml",
+    "download-report-portal-docker-compose-file": "curl https://raw.githubusercontent.com/reportportal/reportportal/a9f2fe18dfe9cb2a631d8a60fdbe254ced6963e7/docker-compose.yml -o docker-compose.yml",
     "download-report-portal-latest-docker-compose-file": "curl https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml -o docker-compose.yml",
     "up": "docker compose -p reportportal up",
     "start": "docker compose -p reportportal start",
