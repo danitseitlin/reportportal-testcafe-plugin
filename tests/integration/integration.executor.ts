@@ -9,7 +9,7 @@ describe('Performing Integration testing', async function() {
     this.timeout(10 * 60 * 60 * 60);
     before(async () => {
         loadArguments();
-        let client = new ApiTestingClient({
+        const client = new ApiTestingClient({
             protocol: cliArguments.rprotocol,
             domain:  cliArguments.rdomain,
             apiPath:  '/',
